@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
@@ -35,18 +36,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         graph = (GraphView) findViewById(R.id.graph);
         Button button = findViewById(R.id.button);
-        lineGraphSeries.setThickness(2);graph.addSeries(lineGraphSeries);
+        lineGraphSeries.setThickness(2);
+        graph.addSeries(lineGraphSeries);
         Viewport viewport = graph.getViewport();
-        viewport.setMinY(-10);
-        viewport.setMaxY(10);
+        viewport.setMinY(-40);
+        viewport.setMaxY(40);
         viewport.setYAxisBoundsManual(true);
 
         viewport.setMinX(0);
-        viewport.setMaxX(5000);
+        viewport.setMaxX(1000);
         viewport.setXAxisBoundsManual(true);
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         staticLabelsFormatter.setHorizontalLabels(new String[] {"", "", "","","","","","",""});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+        graph.getGridLabelRenderer().setNumVerticalLabels(9);
 
         button.setOnClickListener(view-> {
         ;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        //mSensorManager.unregisterListener(this);
     }
 
 
@@ -76,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("sensorstest value", (event.values[0]) + "\n");
 
         boolean scrollToEnd = false;
-        if  (i>=5000)scrollToEnd = true;
-        lineGraphSeries.appendData(new DataPoint(i, event.values[0]), scrollToEnd, 5000);
+        if  (i>=1000)scrollToEnd = true;
+        lineGraphSeries.appendData(new DataPoint(i, event.values[0]), scrollToEnd, 1000);
         i++;
     }
 
