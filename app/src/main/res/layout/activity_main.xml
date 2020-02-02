@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
+        android:id="@+id/graph_accelerometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,18 +15,29 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.107"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="87dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/button_zoom_in"
+        android:layout_width="40dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_zoom_in_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/graph_accelerometer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graph"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.037" />
+
+    <Button
+        android:id="@+id/button_zoom_out"
+        android:layout_width="40dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_zoom_out_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/graph_accelerometer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_zoom_in"
+        app:layout_constraintVertical_bias="0.035" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
