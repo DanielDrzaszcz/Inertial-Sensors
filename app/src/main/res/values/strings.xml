@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">InertialSensorsViewer</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_accelerometer">Akcelerometr</string>
+    <string name="title_gyroscope">Żyroskop</string>
+    <string name="title_magnetometer">Magnetometr</string>
 </resources>
