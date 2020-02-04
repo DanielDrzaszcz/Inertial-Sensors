@@ -4,16 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button_zoom_out"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/ic_zoom_out_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/graph_accelerometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_zoom_in"
-        app:layout_constraintVertical_bias="0.034" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph_magnetometer"
@@ -36,4 +26,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.037" />
+
+    <Button
+        android:id="@+id/button_zoom_out"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_zoom_out_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_zoom_in" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
