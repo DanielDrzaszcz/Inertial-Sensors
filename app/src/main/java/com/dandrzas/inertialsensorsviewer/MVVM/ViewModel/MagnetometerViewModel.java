@@ -1,16 +1,16 @@
-package com.dandrzas.inertialsensorsviewer.UI.gyroscope;
+package com.dandrzas.inertialsensorsviewer.MVVM.ViewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GyroscopeViewModel extends ViewModel {
+public class MagnetometerViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public GyroscopeViewModel() {
+    public MagnetometerViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is notifications fragment");
     }
 
     public LiveData<String> getText() {

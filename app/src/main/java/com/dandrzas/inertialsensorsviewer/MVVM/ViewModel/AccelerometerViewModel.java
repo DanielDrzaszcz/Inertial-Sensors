@@ -1,25 +1,23 @@
-package com.dandrzas.inertialsensorsviewer.UI.accelerometer;
+package com.dandrzas.inertialsensorsviewer.MVVM.ViewModel;
 
 import android.app.Application;
-import android.content.Context;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.dandrzas.inertialsensorsviewer.MVVM.Model.SensorsData;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class AccelerometerViewModel extends AndroidViewModel implements SensorEventListener {
+public class AccelerometerViewModel extends AndroidViewModel  implements Observer {
 
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesXLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesYLiveData;
@@ -28,16 +26,13 @@ public class AccelerometerViewModel extends AndroidViewModel implements SensorEv
     private LineGraphSeries<DataPoint> graphSeriesY;
     private LineGraphSeries<DataPoint> graphSeriesZ;
     private final int GRAPH_LENGTH = 2000;
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
     private List<float[]> eventList = new ArrayList<>();
+    private SensorsData sensorsData;
 
     public AccelerometerViewModel(Application application) {
         super(application);
-        mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        Log.d("magnetometer type", mAccelerometer.getName());
+        sensorsData = SensorsData.getInstance();
+        sensorsData.addObserver(this);
 
         graphSeriesX = new LineGraphSeries<>();
         graphSeriesY = new LineGraphSeries<>();
@@ -103,30 +98,33 @@ public class AccelerometerViewModel extends AndroidViewModel implements SensorEv
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        float[] eventToList = {event.values[0], event.values[1], event.values[2]};
-        eventList.add(eventToList);
+    public void update(Observable o, Object arg) {
+        if(o instanceof SensorsData) {
 
-        boolean scrollToEnd = false;
-        if  (graphSeriesY.getHighestValueX()>=GRAPH_LENGTH)scrollToEnd = true;
+            float[] values = ((SensorsData) o).getSensorValue();
 
-        if (eventList.size()>=50)
-        {
-            for (int j=0; j<eventList.size()-1; j++)
+            Log.d("observer test: ", "update" + values[0]+ "\n");
+            Log.d("observer test: ", "update" + values[1]+ "\n");
+            Log.d("observer test: ", "update" + values[2]+ "\n");
+            Log.d("observer test: ", "\n");
+
+            float[] eventToList = {values[0], values[1], values[2]};
+            eventList.add(eventToList);
+
+            boolean scrollToEnd = false;
+            if  (graphSeriesY.getHighestValueX()>=GRAPH_LENGTH)scrollToEnd = true;
+
+            if (eventList.size()>=50)
             {
-                float[] eventFromList = eventList.get(j);
-                graphSeriesX.appendData(new DataPoint(graphSeriesX.getHighestValueX()+1, eventFromList[1]), scrollToEnd, GRAPH_LENGTH);
-                graphSeriesY.appendData(new DataPoint(graphSeriesY.getHighestValueX()+1, eventFromList[0]), scrollToEnd, GRAPH_LENGTH);
-                graphSeriesZ.appendData(new DataPoint(graphSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd, GRAPH_LENGTH);
-                eventList.remove(j);
+                for (int j=0; j<eventList.size()-1; j++)
+                {
+                    float[] eventFromList = eventList.get(j);
+                    graphSeriesX.appendData(new DataPoint(graphSeriesX.getHighestValueX()+1, eventFromList[1]), scrollToEnd, GRAPH_LENGTH);
+                    graphSeriesY.appendData(new DataPoint(graphSeriesY.getHighestValueX()+1, eventFromList[0]), scrollToEnd, GRAPH_LENGTH);
+                    graphSeriesZ.appendData(new DataPoint(graphSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd, GRAPH_LENGTH);
+                    eventList.remove(j);
+                }
             }
         }
-
-
-}
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 }

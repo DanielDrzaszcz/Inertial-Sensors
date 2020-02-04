@@ -1,10 +1,8 @@
-package com.dandrzas.inertialsensorsviewer.UI.accelerometer;
+package com.dandrzas.inertialsensorsviewer.MVVM.View;
 
-import android.content.Context;
 import android.graphics.Color;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.dandrzas.inertialsensorsviewer.MVVM.ViewModel.AccelerometerViewModel;
 import com.dandrzas.inertialsensorsviewer.R;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;

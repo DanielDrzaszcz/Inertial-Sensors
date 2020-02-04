@@ -1,4 +1,4 @@
-package com.dandrzas.inertialsensorsviewer.UI.magnetometer;
+package com.dandrzas.inertialsensorsviewer.MVVM.View;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.dandrzas.inertialsensorsviewer.MVVM.ViewModel.MagnetometerViewModel;
 import com.dandrzas.inertialsensorsviewer.R;
-import com.dandrzas.inertialsensorsviewer.UI.accelerometer.AccelerometerViewModel;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.Viewport;
