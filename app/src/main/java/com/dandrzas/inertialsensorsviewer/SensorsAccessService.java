@@ -17,7 +17,9 @@ public class SensorsAccessService extends IntentService implements SensorEventLi
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private SensorsData sersorsRepository;
+    private SensorsData sensorsData;
+    private Sensor mMagnetometer;
+    private Sensor mGyroscope;
 
     public SensorsAccessService() {
         super("SensorsAccessService");
@@ -41,17 +43,38 @@ public class SensorsAccessService extends IntentService implements SensorEventLi
     private void handleActionStart() {
 
         mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        Log.d("magnetometer type", mAccelerometer.getName());
 
-        sersorsRepository = SensorsData.getInstance();
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_UI);
+
+        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI);
+
+        sensorsData = SensorsData.getInstance();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        sersorsRepository.setSensorValue(event.values);
-        Log.d("dataRead: ", Float.toString(event.values[0])+"\n");
+        if(event.sensor==mAccelerometer)
+        {
+            sensorsData.setAccelerometerValue(event.values);
+           // Log.d("dataReadAccelerom: ", Float.toString(event.values[0]) + "\n");
+        }
+        else if(event.sensor==mGyroscope)
+        {
+            sensorsData.setGyroscopeValue(event.values);
+           // Log.d("dataReadGyroscope: ", Float.toString(event.values[0]) + "\n");
+
+        }
+        else if(event.sensor==mMagnetometer)
+        {
+            sensorsData.setMagnetometerValue(event.values);
+           // Log.d("dataReadMagnetometer: ", Float.toString(event.values[0]) + "\n");
+
+        }
     }
 
     @Override

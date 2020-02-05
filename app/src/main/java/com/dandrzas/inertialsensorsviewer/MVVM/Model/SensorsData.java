@@ -5,7 +5,9 @@ import java.util.Observable;
 
 public class SensorsData extends Observable {
 
-    private float[] sensorValue = {0,0,0};
+    private float[] AccelerometerValue = {0,0,0};
+    private float[] GyroscopeValue = {0,0,0};
+    private float[] MagnetometerValue = {0,0,0};
 
     private static final SensorsData ourInstance = new SensorsData();
 
@@ -18,14 +20,33 @@ public class SensorsData extends Observable {
         return ourInstance;
     }
 
-    public float[] getSensorValue() {
-        return sensorValue;
+    public float[] getAccelerometerValue() {
+        return AccelerometerValue;
     }
 
-    public void setSensorValue(float[] sensorValue) {
-        this.sensorValue = sensorValue;
+    public void setAccelerometerValue(float[] accelerometerValue) {
+        this.AccelerometerValue = accelerometerValue;
         setChanged();
         notifyObservers();
     }
 
+    public float[] getGyroscopeValue() {
+        return GyroscopeValue;
+    }
+
+    public void setGyroscopeValue(float[] gyroscopeValue) {
+        GyroscopeValue = gyroscopeValue;
+        setChanged();
+        notifyObservers();
+    }
+
+    public float[] getMagnetometerValue() {
+        return MagnetometerValue;
+    }
+
+    public void setMagnetometerValue(float[] magnetometerValue) {
+        MagnetometerValue = magnetometerValue;
+        setChanged();
+        notifyObservers();
+    }
 }

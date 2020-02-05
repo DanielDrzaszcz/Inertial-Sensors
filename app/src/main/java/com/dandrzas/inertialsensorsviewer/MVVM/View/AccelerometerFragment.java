@@ -63,7 +63,6 @@ public class AccelerometerFragment extends Fragment {
             viewport.setMaxY(graphMaxY);
             graph.refreshDrawableState();
             graph.invalidate();
-            //accelerometerViewModel.addData();
         });
 
         button_zoom_out.setOnClickListener(view-> {
