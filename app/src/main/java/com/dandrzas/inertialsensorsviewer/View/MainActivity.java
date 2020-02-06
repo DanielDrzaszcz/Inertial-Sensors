@@ -29,11 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Viewport viewport;
     private int graphMaxY = 40;
     private final int GRAPH_LENGTH = 2000;
-    GraphSeriesObserver graphSeriesXObserver;
-    GraphSeriesObserver graphSeriesYObserver;
-    GraphSeriesObserver graphSeriesZObserver;
     private int bottomMenuSelectedItem = 1;
-    SensorDataSwitch sensorDataSwitchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +38,15 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         activityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         graph = findViewById(R.id.graph_view);
-        graphInit();
         Button button_zoom_in = findViewById(R.id.button_zoom_in);
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
-        graphSeriesXObserver = new GraphSeriesObserver();
-        graphSeriesYObserver = new GraphSeriesObserver();
-        graphSeriesZObserver = new GraphSeriesObserver();
 
-        activityViewModel.getGraphSeriesX().observe(this, graphSeriesXObserver);
-        activityViewModel.getGraphSeriesY().observe(this, graphSeriesYObserver);
-        activityViewModel.getGraphSeriesZ().observe(this, graphSeriesZObserver);
+        activityViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
+        activityViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
+        activityViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
 
+        graphInit();
         SensorsDataReadService.start(getApplicationContext());
-
-        sensorDataSwitchRunnable = new SensorDataSwitch();
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -64,17 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_accelerometer:
                         bottomMenuSelectedItem = 1;
-                        sensorDataSwitchRunnable.run();
+                        new SensorDataSwitch().run();
                         return true;
 
                     case R.id.navigation_gyroscope:
                         bottomMenuSelectedItem = 2;
-                       sensorDataSwitchRunnable.run();
+                        new SensorDataSwitch().run();
                         return true;
 
                     case R.id.navigation_magnetometer:
                         bottomMenuSelectedItem = 3;
-                        sensorDataSwitchRunnable.run();
+                        new SensorDataSwitch().run();
                         return true;
                 }
                 return false;
