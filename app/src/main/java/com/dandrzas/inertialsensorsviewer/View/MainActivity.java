@@ -26,12 +26,14 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel activityViewModel;
     GraphView graph;
+    Viewport viewport;
     private int graphMaxY = 40;
     private final int GRAPH_LENGTH = 2000;
-    private int bottomMenuSelectedItem = 1;
     GraphSeriesObserver graphSeriesXObserver;
     GraphSeriesObserver graphSeriesYObserver;
     GraphSeriesObserver graphSeriesZObserver;
+    private int bottomMenuSelectedItem = 1;
+    SensorDataSwitch sensorDataSwitchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         activityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        graph = findViewById(R.id.graph_accelerometer);
+        graph = findViewById(R.id.graph_view);
+        graphInit();
         Button button_zoom_in = findViewById(R.id.button_zoom_in);
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
         graphSeriesXObserver = new GraphSeriesObserver();
@@ -50,54 +53,33 @@ public class MainActivity extends AppCompatActivity {
         activityViewModel.getGraphSeriesY().observe(this, graphSeriesYObserver);
         activityViewModel.getGraphSeriesZ().observe(this, graphSeriesZObserver);
 
-
         SensorsDataReadService.start(getApplicationContext());
+
+        sensorDataSwitchRunnable = new SensorDataSwitch();
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_accelerometer:
-                        graph.removeAllSeries();
                         bottomMenuSelectedItem = 1;
-                        activityViewModel.setSelectedSensor(1);
-                        Log.d("TestBottomMenu ", "Accelerometer");
+                        sensorDataSwitchRunnable.run();
                         return true;
 
                     case R.id.navigation_gyroscope:
-                        graph.removeAllSeries();
                         bottomMenuSelectedItem = 2;
-                        activityViewModel.setSelectedSensor(2);
-                        Log.d("TestBottomMenu ", "Gyroscope");
+                       sensorDataSwitchRunnable.run();
                         return true;
 
                     case R.id.navigation_magnetometer:
-                        graph.removeAllSeries();
                         bottomMenuSelectedItem = 3;
-                        activityViewModel.setSelectedSensor(3);
-                        Log.d("TestBottomMenu ", "Magnetometer");
+                        sensorDataSwitchRunnable.run();
                         return true;
                 }
                 return false;
             }
         });
-
-
-        //graph config
-        Viewport viewport = graph.getViewport();
-        viewport.setMinY((-1)*graphMaxY);
-        viewport.setMaxY(graphMaxY);
-        viewport.setYAxisBoundsManual(true);
-        viewport.setMinX(0);
-        viewport.setMaxX(GRAPH_LENGTH);
-        viewport.setXAxisBoundsManual(true);
-        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"", "", "","","","","","",""});
-        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-        graph.getGridLabelRenderer().setNumVerticalLabels(9);
-        graph.getLegendRenderer().setVisible(true);
-        graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
 
         button_zoom_in.setOnClickListener(view-> {
             graphMaxY = graphMaxY/2;
@@ -119,7 +101,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>>
+    private void graphInit()
+    {
+        viewport = graph.getViewport();
+        viewport.setMinY((-1)*graphMaxY);
+        viewport.setMaxY(graphMaxY);
+        viewport.setYAxisBoundsManual(true);
+        viewport.setMinX(0);
+        viewport.setMaxX(GRAPH_LENGTH);
+        viewport.setXAxisBoundsManual(true);
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"", "", "","","","","","",""});
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+        graph.getGridLabelRenderer().setNumVerticalLabels(9);
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
+    }
+
+    private class SensorDataSwitch implements Runnable
+    {
+        @Override
+        public void run() {
+            graph.getSeries().get(0).clearReference(graph);
+            graph.getSeries().get(1).clearReference(graph);
+            graph.getSeries().get(2).clearReference(graph);
+            graph.removeAllSeries();
+            activityViewModel.setSelectedSensor(bottomMenuSelectedItem);
+        }
+    }
+
+    private class GraphSeriesObserver  implements Observer<LineGraphSeries<DataPoint>>
     {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {

@@ -41,6 +41,8 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
 
     private void handleActionStart() {
 
+        sensorsDataRepository = SensorsDataRepository.getInstance();
+
         mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -52,7 +54,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI);
 
-        sensorsDataRepository = SensorsDataRepository.getInstance();
     }
 
     @Override

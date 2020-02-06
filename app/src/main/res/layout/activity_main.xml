@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph_accelerometer"
+        android:id="@+id/graph_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,7 +20,7 @@
         android:layout_height="35dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/ic_zoom_in_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/graph_accelerometer"
+        app:layout_constraintBottom_toBottomOf="@+id/graph_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.037" />
