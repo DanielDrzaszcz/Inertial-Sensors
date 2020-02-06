@@ -1,11 +1,13 @@
-package com.dandrzas.inertialsensorsviewer;
+package com.dandrzas.inertialsensorsviewer.ViewModel;
 
 import android.graphics.Color;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.dandrzas.inertialsensorsviewer.MVVM.Model.SensorsData;
+import com.dandrzas.inertialsensorsviewer.Model.SensorsDataRepository;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -16,40 +18,53 @@ import java.util.Observer;
 
 public class MainActivityViewModel extends ViewModel implements Observer {
 
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphAccelerometerSeriesXLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphAccelerometerSeriesYLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphAccelerometerSeriesZLiveData;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesX;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesY;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesZ;
     private List<float[]> accelerometerEventList = new ArrayList<>();
 
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphGyroscopeSeriesXLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphGyroscopeSeriesYLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphGyroscopeSeriesZLiveData;
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesX;
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesY;
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesZ;
     private List<float[]> gyroscopeEventList = new ArrayList<>();
 
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphMagnetometerSeriesXLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphMagnetometerSeriesYLiveData;
-    private MutableLiveData<LineGraphSeries<DataPoint>> graphMagnetometerSeriesZLiveData;
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesX;
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesY;
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesZ;
     private List<float[]> magnetometerEventList = new ArrayList<>();
 
+    private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesXLiveData;
+    private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesYLiveData;
+    private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesZLiveData;
+    private LineGraphSeries<DataPoint> graphSeriesX;
+    private LineGraphSeries<DataPoint> graphSeriesY;
+    private LineGraphSeries<DataPoint> graphSeriesZ;
+
     private final int GRAPH_LENGTH = 2000;
-    private SensorsData sensorsData;
+    private SensorsDataRepository sensorsData;
+    private int selectedSensor = 1;
 
     public MainActivityViewModel()
     {
-        sensorsData = SensorsData.getInstance();
+        sensorsData = SensorsDataRepository.getInstance();
         sensorsData.addObserver(this);
         initAccelerometerSeries();
         initGyroscopeSeries();
         initMagnetometerSeries();
+
+        graphSeriesX = new LineGraphSeries<>();
+        graphSeriesY = new LineGraphSeries<>();
+        graphSeriesZ = new LineGraphSeries<>();
+        graphSeriesX = graphAccelerometerSeriesX;
+        graphSeriesY = graphAccelerometerSeriesY;
+        graphSeriesZ = graphAccelerometerSeriesZ;
+        graphSeriesXLiveData = new MutableLiveData<>();
+        graphSeriesXLiveData.setValue(graphSeriesX);
+        graphSeriesYLiveData = new MutableLiveData<>();
+        graphSeriesYLiveData.setValue(graphSeriesY);
+        graphSeriesZLiveData = new MutableLiveData<>();
+        graphSeriesZLiveData.setValue(graphSeriesZ);
+
     }
 
     private void initAccelerometerSeries()
@@ -58,22 +73,16 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         graphAccelerometerSeriesX.setThickness(2);
         graphAccelerometerSeriesX.setColor(Color.BLUE);
         graphAccelerometerSeriesX.setTitle("Oś X [m/s2]");
-        graphAccelerometerSeriesXLiveData = new MutableLiveData<>();
-        graphAccelerometerSeriesXLiveData.setValue(graphAccelerometerSeriesX);
 
         graphAccelerometerSeriesY = new LineGraphSeries<>();
         graphAccelerometerSeriesY.setThickness(2);
         graphAccelerometerSeriesY.setColor(Color.RED);
         graphAccelerometerSeriesY.setTitle("Oś Y [m/s2]");
-        graphAccelerometerSeriesYLiveData = new MutableLiveData<>();
-        graphAccelerometerSeriesYLiveData.setValue(graphAccelerometerSeriesY);
 
         graphAccelerometerSeriesZ = new LineGraphSeries<>();
         graphAccelerometerSeriesZ.setThickness(2);
         graphAccelerometerSeriesZ.setColor(Color.GREEN);
         graphAccelerometerSeriesZ.setTitle("Oś Z [m/s2]");
-        graphAccelerometerSeriesZLiveData = new MutableLiveData<>();
-        graphAccelerometerSeriesZLiveData.setValue(graphAccelerometerSeriesZ);
     }
 
     private void initGyroscopeSeries()
@@ -82,22 +91,16 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         graphGyroscopeSeriesX.setThickness(2);
         graphGyroscopeSeriesX.setColor(Color.BLUE);
         graphGyroscopeSeriesX.setTitle("Oś X [rad/s]");
-        graphGyroscopeSeriesXLiveData = new MutableLiveData<>();
-        graphGyroscopeSeriesXLiveData.setValue(graphGyroscopeSeriesX);
 
         graphGyroscopeSeriesY = new LineGraphSeries<>();
         graphGyroscopeSeriesY.setThickness(2);
         graphGyroscopeSeriesY.setColor(Color.RED);
         graphGyroscopeSeriesY.setTitle("Oś Y [rad/s]");
-        graphGyroscopeSeriesYLiveData = new MutableLiveData<>();
-        graphGyroscopeSeriesYLiveData.setValue(graphGyroscopeSeriesY);
 
         graphGyroscopeSeriesZ = new LineGraphSeries<>();
         graphGyroscopeSeriesZ.setThickness(2);
         graphGyroscopeSeriesZ.setColor(Color.GREEN);
         graphGyroscopeSeriesZ.setTitle("Oś Z [rad/s]");
-        graphGyroscopeSeriesZLiveData = new MutableLiveData<>();
-        graphGyroscopeSeriesZLiveData.setValue(graphGyroscopeSeriesZ);
     }
 
     private void initMagnetometerSeries()
@@ -105,30 +108,24 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         graphMagnetometerSeriesX = new LineGraphSeries<>();
         graphMagnetometerSeriesX.setThickness(2);
         graphMagnetometerSeriesX.setColor(Color.BLUE);
-        graphMagnetometerSeriesX.setTitle("Oś X [rad/s]");
-        graphMagnetometerSeriesXLiveData = new MutableLiveData<>();
-        graphMagnetometerSeriesXLiveData.setValue(graphMagnetometerSeriesX);
+        graphMagnetometerSeriesX.setTitle("Oś X [uT]");
 
         graphMagnetometerSeriesY = new LineGraphSeries<>();
         graphMagnetometerSeriesY.setThickness(2);
         graphMagnetometerSeriesY.setColor(Color.RED);
-        graphMagnetometerSeriesY.setTitle("Oś Y [rad/s]");
-        graphMagnetometerSeriesYLiveData = new MutableLiveData<>();
-        graphMagnetometerSeriesYLiveData.setValue(graphMagnetometerSeriesY);
+        graphMagnetometerSeriesY.setTitle("Oś Y [uT]");
 
         graphMagnetometerSeriesZ = new LineGraphSeries<>();
         graphMagnetometerSeriesZ.setThickness(2);
         graphMagnetometerSeriesZ.setColor(Color.GREEN);
-        graphMagnetometerSeriesZ.setTitle("Oś Z [rad/s]");
-        graphMagnetometerSeriesZLiveData = new MutableLiveData<>();
-        graphMagnetometerSeriesZLiveData.setValue(graphMagnetometerSeriesZ);
+        graphMagnetometerSeriesZ.setTitle("Oś Z [uT]");
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof SensorsData) {
+        if(o instanceof SensorsDataRepository) {
 
-            float[] valuesAccelerometer = ((SensorsData) o).getAccelerometerValue();
+            float[] valuesAccelerometer = ((SensorsDataRepository) o).getAccelerometerValue();
             float[] eventsAccelerometerToList = {valuesAccelerometer[0], valuesAccelerometer[1], valuesAccelerometer[2]};
             accelerometerEventList.add(eventsAccelerometerToList);
             boolean scrollToEnd1 = false;
@@ -145,7 +142,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 }
             }
 
-            float[] valuesGyroscope = ((SensorsData) o).getGyroscopeValue();
+            float[] valuesGyroscope = ((SensorsDataRepository) o).getGyroscopeValue();
             float[] eventsGyroscopeToList = {valuesGyroscope[0], valuesGyroscope[1], valuesGyroscope[2]};
             gyroscopeEventList.add(eventsGyroscopeToList);
             boolean scrollToEnd2 = false;
@@ -162,7 +159,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 }
             }
 
-            float[] valuesMagnetometer = ((SensorsData) o).getMagnetometerValue();
+            float[] valuesMagnetometer = ((SensorsDataRepository) o).getMagnetometerValue();
             float[] eventsMagnetometerToList = {valuesMagnetometer[0], valuesMagnetometer[1], valuesMagnetometer[2]};
             magnetometerEventList.add(eventsMagnetometerToList);
             boolean scrollToEnd3 = false;
@@ -181,42 +178,42 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphAccelerometerSeriesX()
-    {
-        return graphAccelerometerSeriesXLiveData;
+    public void setSelectedSensor(int selectedSensor) {
+        this.selectedSensor = selectedSensor;
+        switch(selectedSensor)
+        {
+            case 1:
+                graphSeriesX = graphAccelerometerSeriesX;
+                graphSeriesY = graphAccelerometerSeriesY;
+                graphSeriesZ = graphAccelerometerSeriesZ;
+                break;
+            case 2:
+                graphSeriesX = graphGyroscopeSeriesX;
+                graphSeriesY = graphGyroscopeSeriesY;
+                graphSeriesZ = graphGyroscopeSeriesZ;
+                break;
+            case 3:
+                graphSeriesX = graphMagnetometerSeriesX;
+                graphSeriesY = graphMagnetometerSeriesY;
+                graphSeriesZ = graphMagnetometerSeriesZ;
+                break;
+        }
+        graphSeriesXLiveData.setValue(graphSeriesX);
+        graphSeriesYLiveData.setValue(graphSeriesY);
+        graphSeriesZLiveData.setValue(graphSeriesZ);
+
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphAccelerometerSeriesY()
-    {
-        return graphAccelerometerSeriesYLiveData;
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
+        return graphSeriesXLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphAccelerometerSeriesZ()
-    {
-        return graphAccelerometerSeriesZLiveData;
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesY() {
+        return graphSeriesYLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphGyroscopeSeriesXLiveData() {
-        return graphGyroscopeSeriesXLiveData;
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesZ() {
+        return graphSeriesZLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphGyroscopeSeriesYLiveData() {
-        return graphGyroscopeSeriesYLiveData;
-    }
-
-    public LiveData<LineGraphSeries<DataPoint>> getGraphGyroscopeSeriesZLiveData() {
-        return graphGyroscopeSeriesZLiveData;
-    }
-
-    public LiveData<LineGraphSeries<DataPoint>> getGraphMagnetometerSeriesXLiveData() {
-        return graphMagnetometerSeriesXLiveData;
-    }
-
-    public LiveData<LineGraphSeries<DataPoint>> getGraphMagnetometerSeriesYLiveData() {
-        return graphMagnetometerSeriesYLiveData;
-    }
-
-    public LiveData<LineGraphSeries<DataPoint>> getGraphMagnetometerSeriesZLiveData() {
-        return graphMagnetometerSeriesZLiveData;
-    }
 }

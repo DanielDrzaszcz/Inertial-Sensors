@@ -1,22 +1,25 @@
-package com.dandrzas.inertialsensorsviewer.MVVM.Model;
+package com.dandrzas.inertialsensorsviewer.Model;
 
 
 import java.util.Observable;
 
-public class SensorsData extends Observable {
+public class SensorsDataRepository extends Observable {
 
     private float[] AccelerometerValue = {0,0,0};
     private float[] GyroscopeValue = {0,0,0};
     private float[] MagnetometerValue = {0,0,0};
+    private static SensorsDataRepository ourInstance;
 
-    private static final SensorsData ourInstance = new SensorsData();
-
-    private SensorsData()
+    private SensorsDataRepository()
     {
     }
 
-    public static SensorsData getInstance()
+    public static SensorsDataRepository getInstance()
     {
+        if(ourInstance==null)
+        {
+            ourInstance = new SensorsDataRepository();
+        }
         return ourInstance;
     }
 

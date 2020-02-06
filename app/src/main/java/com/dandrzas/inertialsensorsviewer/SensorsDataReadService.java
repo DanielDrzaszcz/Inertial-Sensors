@@ -7,25 +7,24 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
-import com.dandrzas.inertialsensorsviewer.MVVM.Model.SensorsData;
+import com.dandrzas.inertialsensorsviewer.Model.SensorsDataRepository;
 
-public class SensorsAccessService extends IntentService implements SensorEventListener {
+public class SensorsDataReadService extends IntentService implements SensorEventListener {
 
     private static final String ACTION_START = "com.dandrzas.inertialsensorsviewer.action.FOO";
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private SensorsData sensorsData;
+    private SensorsDataRepository sensorsDataRepository;
     private Sensor mMagnetometer;
     private Sensor mGyroscope;
 
-    public SensorsAccessService() {
-        super("SensorsAccessService");
+    public SensorsDataReadService() {
+        super("SensorsDataReadService");
     }
     public static void start(Context context) {
-        Intent intent = new Intent(context, SensorsAccessService.class);
+        Intent intent = new Intent(context, SensorsDataReadService.class);
         intent.setAction(ACTION_START);
         context.startService(intent);
     }
@@ -53,27 +52,25 @@ public class SensorsAccessService extends IntentService implements SensorEventLi
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_UI);
 
-        sensorsData = SensorsData.getInstance();
+        sensorsDataRepository = SensorsDataRepository.getInstance();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.sensor==mAccelerometer)
-        {
-            sensorsData.setAccelerometerValue(event.values);
-           // Log.d("dataReadAccelerom: ", Float.toString(event.values[0]) + "\n");
-        }
-        else if(event.sensor==mGyroscope)
-        {
-            sensorsData.setGyroscopeValue(event.values);
-           // Log.d("dataReadGyroscope: ", Float.toString(event.values[0]) + "\n");
 
-        }
-        else if(event.sensor==mMagnetometer)
-        {
-            sensorsData.setMagnetometerValue(event.values);
-           // Log.d("dataReadMagnetometer: ", Float.toString(event.values[0]) + "\n");
+        if(sensorsDataRepository!=null) {
+            if (event.sensor == mAccelerometer) {
+                sensorsDataRepository.setAccelerometerValue(event.values);
+                // Log.d("dataReadAccelerom: ", Float.toString(event.values[0]) + "\n");
+            } else if (event.sensor == mGyroscope) {
+                sensorsDataRepository.setGyroscopeValue(event.values);
+                // Log.d("dataReadGyroscope: ", Float.toString(event.values[0]) + "\n");
 
+            } else if (event.sensor == mMagnetometer) {
+                sensorsDataRepository.setMagnetometerValue(event.values);
+                // Log.d("dataReadMagnetometer: ", Float.toString(event.values[0]) + "\n");
+
+            }
         }
     }
 
