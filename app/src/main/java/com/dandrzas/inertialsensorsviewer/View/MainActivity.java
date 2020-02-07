@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel activityViewModel;
     GraphView graph;
-    Viewport viewport;
-    private int graphMaxY = 40;
-    private final int GRAPH_LENGTH = 2000;
     private int bottomMenuSelectedItem = 1;
 
     @Override
@@ -73,38 +70,49 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button_zoom_in.setOnClickListener(view-> {
-            graphMaxY = graphMaxY/2;
-            if(graphMaxY<1) graphMaxY=1;
-            viewport.setMinY((-1)*graphMaxY);
-            viewport.setMaxY(graphMaxY);
+            graph.getViewport().setMinY(graph.getViewport().getMinY(false)/2);
+            graph.getViewport().setMaxY(graph.getViewport().getMaxY(false)/2);
             graph.refreshDrawableState();
-            graph.invalidate();
         });
 
         button_zoom_out.setOnClickListener(view-> {
-            graphMaxY = graphMaxY*2;
-            if(graphMaxY>100) graphMaxY=100;
-            viewport.setMinY((-1)*graphMaxY);
-            viewport.setMaxY(graphMaxY);
+            graph.getViewport().setMinY(graph.getViewport().getMinY(false)*2);
+            graph.getViewport().setMaxY(graph.getViewport().getMaxY(false)*2);
             graph.refreshDrawableState();
-            graph.invalidate();
         });
 
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d("Testiloscserii",  Integer.toString(graph.getSeries().size()));
+        graph.getSeries().get(0).clearReference(graph);
+        graph.getSeries().get(1).clearReference(graph);
+        graph.getSeries().get(2).clearReference(graph);
+        activityViewModel.getGraphSeriesX().removeObservers(this);
+        super.onDestroy();
+    }
+
     private void graphInit()
     {
-        viewport = graph.getViewport();
-        viewport.setMinY((-1)*graphMaxY);
-        viewport.setMaxY(graphMaxY);
-        viewport.setYAxisBoundsManual(true);
-        viewport.setMinX(0);
-        viewport.setMaxX(GRAPH_LENGTH);
-        viewport.setXAxisBoundsManual(true);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-30);
+        graph.getViewport().setMaxY(30);
+        graph.getViewport().setScalableY(false);
+        graph.getViewport().setScrollableY(false);
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(activityViewModel.getGraphSeriesLength());
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScrollable(true);
+
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         staticLabelsFormatter.setHorizontalLabels(new String[] {"", "", "","","","","","",""});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         graph.getGridLabelRenderer().setNumVerticalLabels(9);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(5);
+
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);

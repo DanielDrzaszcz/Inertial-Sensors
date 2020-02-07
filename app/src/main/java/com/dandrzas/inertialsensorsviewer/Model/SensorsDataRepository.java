@@ -5,9 +5,9 @@ import java.util.Observable;
 
 public class SensorsDataRepository extends Observable {
 
-    private float[] AccelerometerValue = {0,0,0};
-    private float[] GyroscopeValue = {0,0,0};
-    private float[] MagnetometerValue = {0,0,0};
+    private float[] AccelerometerValue = new float[3];
+    private float[] GyroscopeValue = new float[3];
+    private float[] MagnetometerValue = new float[3];
     private static SensorsDataRepository ourInstance;
 
     private SensorsDataRepository()

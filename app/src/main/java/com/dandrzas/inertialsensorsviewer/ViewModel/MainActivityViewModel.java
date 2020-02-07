@@ -1,7 +1,6 @@
 package com.dandrzas.inertialsensorsviewer.ViewModel;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -40,9 +39,8 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> graphSeriesY;
     private LineGraphSeries<DataPoint> graphSeriesZ;
 
-    private final int GRAPH_LENGTH = 2000;
     private SensorsDataRepository sensorsData;
-    private int selectedSensor = 1;
+    private int graphSeriesLength = 10000;
 
     public MainActivityViewModel()
     {
@@ -129,15 +127,15 @@ public class MainActivityViewModel extends ViewModel implements Observer {
             float[] eventsAccelerometerToList = {valuesAccelerometer[0], valuesAccelerometer[1], valuesAccelerometer[2]};
             accelerometerEventList.add(eventsAccelerometerToList);
             boolean scrollToEnd1 = false;
-            if  (graphAccelerometerSeriesY.getHighestValueX()>=GRAPH_LENGTH)scrollToEnd1 = true;
+            if  (graphAccelerometerSeriesY.getHighestValueX()>= graphSeriesLength)scrollToEnd1 = true;
             if (accelerometerEventList.size()>=50)
             {
                 for (int j = 0; j< accelerometerEventList.size()-1; j++)
                 {
                     float[] eventFromList = accelerometerEventList.get(j);
-                    graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX()+1, eventFromList[1]), scrollToEnd1, GRAPH_LENGTH);
-                    graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX()+1, eventFromList[0]), scrollToEnd1, GRAPH_LENGTH);
-                    graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd1, GRAPH_LENGTH);
+                    graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX()+1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
+                    graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX()+1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
+                    graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd1, graphSeriesLength);
                     accelerometerEventList.remove(j);
                 }
             }
@@ -146,15 +144,15 @@ public class MainActivityViewModel extends ViewModel implements Observer {
             float[] eventsGyroscopeToList = {valuesGyroscope[0], valuesGyroscope[1], valuesGyroscope[2]};
             gyroscopeEventList.add(eventsGyroscopeToList);
             boolean scrollToEnd2 = false;
-            if  (graphGyroscopeSeriesY.getHighestValueX()>=GRAPH_LENGTH)scrollToEnd2 = true;
+            if  (graphGyroscopeSeriesY.getHighestValueX()>= graphSeriesLength)scrollToEnd2 = true;
             if (gyroscopeEventList.size()>=50)
             {
                 for (int j = 0; j< gyroscopeEventList.size()-1; j++)
                 {
                     float[] eventFromList = gyroscopeEventList.get(j);
-                    graphGyroscopeSeriesX.appendData(new DataPoint(graphGyroscopeSeriesX.getHighestValueX()+1, eventFromList[0]), scrollToEnd2, GRAPH_LENGTH);
-                    graphGyroscopeSeriesY.appendData(new DataPoint(graphGyroscopeSeriesY.getHighestValueX()+1, eventFromList[1]), scrollToEnd2, GRAPH_LENGTH);
-                    graphGyroscopeSeriesZ.appendData(new DataPoint(graphGyroscopeSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd2, GRAPH_LENGTH);
+                    graphGyroscopeSeriesX.appendData(new DataPoint(graphGyroscopeSeriesX.getHighestValueX()+1, eventFromList[0]), scrollToEnd2, graphSeriesLength);
+                    graphGyroscopeSeriesY.appendData(new DataPoint(graphGyroscopeSeriesY.getHighestValueX()+1, eventFromList[1]), scrollToEnd2, graphSeriesLength);
+                    graphGyroscopeSeriesZ.appendData(new DataPoint(graphGyroscopeSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd2, graphSeriesLength);
                     gyroscopeEventList.remove(j);
                 }
             }
@@ -163,15 +161,15 @@ public class MainActivityViewModel extends ViewModel implements Observer {
             float[] eventsMagnetometerToList = {valuesMagnetometer[0], valuesMagnetometer[1], valuesMagnetometer[2]};
             magnetometerEventList.add(eventsMagnetometerToList);
             boolean scrollToEnd3 = false;
-            if  (graphMagnetometerSeriesY.getHighestValueX()>=GRAPH_LENGTH)scrollToEnd3 = true;
+            if  (graphMagnetometerSeriesY.getHighestValueX()>= graphSeriesLength)scrollToEnd3 = true;
             if (magnetometerEventList.size()>=50)
             {
                 for (int j = 0; j< magnetometerEventList.size()-1; j++)
                 {
                     float[] eventFromList = magnetometerEventList.get(j);
-                    graphMagnetometerSeriesX.appendData(new DataPoint(graphMagnetometerSeriesX.getHighestValueX()+1, eventFromList[0]), scrollToEnd3, GRAPH_LENGTH);
-                    graphMagnetometerSeriesY.appendData(new DataPoint(graphMagnetometerSeriesY.getHighestValueX()+1, eventFromList[1]), scrollToEnd3, GRAPH_LENGTH);
-                    graphMagnetometerSeriesZ.appendData(new DataPoint(graphMagnetometerSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd3, GRAPH_LENGTH);
+                    graphMagnetometerSeriesX.appendData(new DataPoint(graphMagnetometerSeriesX.getHighestValueX()+1, eventFromList[0]), scrollToEnd3, graphSeriesLength);
+                    graphMagnetometerSeriesY.appendData(new DataPoint(graphMagnetometerSeriesY.getHighestValueX()+1, eventFromList[1]), scrollToEnd3, graphSeriesLength);
+                    graphMagnetometerSeriesZ.appendData(new DataPoint(graphMagnetometerSeriesZ.getHighestValueX()+1, eventFromList[2]), scrollToEnd3, graphSeriesLength);
                     magnetometerEventList.remove(j);
                 }
             }
@@ -179,7 +177,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     }
 
     public void setSelectedSensor(int selectedSensor) {
-        this.selectedSensor = selectedSensor;
         switch(selectedSensor)
         {
             case 1:
@@ -204,16 +201,24 @@ public class MainActivityViewModel extends ViewModel implements Observer {
 
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX()
+    {
         return graphSeriesXLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesY() {
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesY()
+    {
         return graphSeriesYLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesZ() {
+    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesZ()
+    {
         return graphSeriesZLiveData;
+    }
+
+    public int getGraphSeriesLength()
+    {
+        return graphSeriesLength;
     }
 
 }
