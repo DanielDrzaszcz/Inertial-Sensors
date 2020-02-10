@@ -10,9 +10,9 @@ import com.dandrzas.inertialsensorsviewer.SensorsDataReadService;
 import com.dandrzas.inertialsensorsviewer.ViewModel.MainActivityViewModel;
 import com.dandrzas.inertialsensorsviewer.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel activityViewModel;
     GraphView graph;
     private int bottomMenuSelectedItem = 1;
+    private FloatingActionButton buttonStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,14 @@ public class MainActivity extends AppCompatActivity {
         graph = findViewById(R.id.graph_view);
         Button button_zoom_in = findViewById(R.id.button_zoom_in);
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
+        buttonStart = findViewById(R.id.floatingActionButton_start);
 
         activityViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
 
         graphInit();
-        SensorsDataReadService.start(getApplicationContext());
+        //SensorsDataReadService.start(getApplicationContext());
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -69,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonStart.setOnClickListener(view ->
+        {
+            boolean isEnable = SensorsDataReadService.isEnable();
+            Log.d("testEnable", Boolean.toString(isEnable));
+
+            if(!isEnable)
+                {
+                    SensorsDataReadService.start(getApplicationContext());
+                }
+                else {
+                    SensorsDataReadService.stop(getApplicationContext());
+
+                }
+
+        });
+
         button_zoom_in.setOnClickListener(view-> {
             graph.getViewport().setMinY(graph.getViewport().getMinY(false)/2);
             graph.getViewport().setMaxY(graph.getViewport().getMaxY(false)/2);
@@ -85,11 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d("Testiloscserii",  Integer.toString(graph.getSeries().size()));
         graph.getSeries().get(0).clearReference(graph);
         graph.getSeries().get(1).clearReference(graph);
         graph.getSeries().get(2).clearReference(graph);
         activityViewModel.getGraphSeriesX().removeObservers(this);
+        activityViewModel.getGraphSeriesY().removeObservers(this);
+        activityViewModel.getGraphSeriesZ().removeObservers(this);
         super.onDestroy();
     }
 
