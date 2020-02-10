@@ -1,11 +1,12 @@
 package com.dandrzas.inertialsensorsviewer.View;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Button;
-import android.widget.Switch;
 
 import com.dandrzas.inertialsensorsviewer.SensorsDataReadService;
 import com.dandrzas.inertialsensorsviewer.ViewModel.MainActivityViewModel;
@@ -30,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
     GraphView graph;
     private int bottomMenuSelectedItem = 1;
     private FloatingActionButton buttonStart;
+    private float previousTouchY;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,22 +44,18 @@ public class MainActivity extends AppCompatActivity {
         Button button_zoom_in = findViewById(R.id.button_zoom_in);
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
         buttonStart = findViewById(R.id.floatingActionButton_start);
-        if(SensorsDataReadService.isEnable())
-        {
-            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
-        }
-        else
-            {
-                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
 
-            }
+        if (SensorsDataReadService.isEnable()) {
+            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+        } else {
+            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
+        }
 
         activityViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
 
         graphInit();
-        //SensorsDataReadService.start(getApplicationContext());
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -85,33 +84,79 @@ public class MainActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(view ->
         {
             boolean isEnable = SensorsDataReadService.isEnable();
-            //Log.d("testEnable", Boolean.toString(isEnable));
 
-            if(!isEnable)
-                {
-                    SensorsDataReadService.start(getApplicationContext());
-                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
-                    //buttonStart.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccentDark));
-                }
-                else {
-                    SensorsDataReadService.stop(getApplicationContext());
-                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
-                    //buttonStart.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
+            if (!isEnable) {
+                SensorsDataReadService.start(getApplicationContext());
+                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+            } else {
+                SensorsDataReadService.stop(getApplicationContext());
+                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
             }
 
         });
 
-        button_zoom_in.setOnClickListener(view-> {
-            graph.getViewport().setMinY(graph.getViewport().getMinY(false)/2);
-            graph.getViewport().setMaxY(graph.getViewport().getMaxY(false)/2);
-            graph.refreshDrawableState();
+        // Zoom in
+        button_zoom_in.setOnClickListener(view -> {
+            double actualMinY = graph.getViewport().getMinY(false);
+            double actualMaxY = graph.getViewport().getMaxY(false);
+            double actualYRange = actualMaxY - actualMinY;
+
+            if (actualYRange > 4) {
+                graph.getViewport().setMinY(actualMinY + actualYRange / 10);
+                graph.getViewport().setMaxY(actualMaxY - actualYRange / 10);
+                graph.onDataChanged(true, false);
+            }
+
         });
 
-        button_zoom_out.setOnClickListener(view-> {
-            graph.getViewport().setMinY(graph.getViewport().getMinY(false)*2);
-            graph.getViewport().setMaxY(graph.getViewport().getMaxY(false)*2);
-            graph.refreshDrawableState();
+        button_zoom_out.setOnClickListener(view -> {
+            double actualMinY = graph.getViewport().getMinY(false);
+            double actualMaxY = graph.getViewport().getMaxY(false);
+            double actualYRange = actualMaxY - actualMinY;
+
+            graph.getViewport().setMinY(actualMinY - actualYRange / 10);
+            graph.getViewport().setMaxY(actualMaxY + actualYRange / 10);
+            graph.onDataChanged(true, false);
+
         });
+
+        graph.setOnTouchListener((v, event) ->
+                {
+                    float y = event.getY();
+
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_MOVE:
+
+                            float dy = y - previousTouchY;
+                            double actualMinY = graph.getViewport().getMinY(false);
+                            double actualMaxY = graph.getViewport().getMaxY(false);
+                            double actualYRange;
+                            if ((actualMinY < 0) && actualMaxY > 0)
+                                actualYRange = Math.abs(actualMaxY) + Math.abs(actualMinY);
+                            else if ((actualMaxY >= 0) && (actualMinY >= 0))
+                                actualYRange = actualMaxY - actualMinY;
+                            else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
+
+                            if (dy < -1) {
+                                Log.d("dandxtestmove", " góra");
+                                graph.getViewport().setMinY(graph.getViewport().getMinY(false) - 0.02 * actualYRange);
+                                graph.getViewport().setMaxY(graph.getViewport().getMaxY(false) - 0.02 * actualYRange);
+                                graph.refreshDrawableState();
+                            }
+
+                            if (dy > 1) {
+                                Log.d("dandxtestmove", " dół");
+                                graph.getViewport().setMinY(graph.getViewport().getMinY(false) + 0.02 * actualYRange);
+                                graph.getViewport().setMaxY(graph.getViewport().getMaxY(false) + 0.02 * actualYRange);
+                                graph.refreshDrawableState();
+                            }
+
+                    }
+
+                    previousTouchY = y;
+                    return false;
+                }
+        );
 
     }
 
@@ -126,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void graphInit()
-    {
+    private void graphInit() {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(-30);
         graph.getViewport().setMaxY(30);
@@ -141,18 +185,16 @@ public class MainActivity extends AppCompatActivity {
         graph.getViewport().setScrollable(true);
 
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"", "", "","","","","","",""});
+        staticLabelsFormatter.setHorizontalLabels(new String[]{"", "", "", "", "", "", "", "", ""});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         graph.getGridLabelRenderer().setNumVerticalLabels(9);
         graph.getGridLabelRenderer().setNumHorizontalLabels(5);
-
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
     }
 
-    private class SensorDataSwitch implements Runnable
-    {
+    private class SensorDataSwitch implements Runnable {
         @Override
         public void run() {
             graph.getSeries().get(0).clearReference(graph);
@@ -160,17 +202,14 @@ public class MainActivity extends AppCompatActivity {
             graph.getSeries().get(2).clearReference(graph);
             graph.removeAllSeries();
             activityViewModel.setSelectedSensor(bottomMenuSelectedItem);
-
-
         }
     }
 
-    private class GraphSeriesObserver  implements Observer<LineGraphSeries<DataPoint>>
-    {
+    private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>> {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
             graph.addSeries(dataPointLineGraphSeries);
-            graph.refreshDrawableState();
+            graphInit();
             graph.getLegendRenderer().resetStyles();
             graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
             graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);

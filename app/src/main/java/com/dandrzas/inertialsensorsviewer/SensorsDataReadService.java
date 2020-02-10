@@ -106,7 +106,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             Log.d("dandx magnet min:", Integer.toString(mMagnetometer.getMinDelay()));
         }
 
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if(mGyroscope!=null)
         {
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);

@@ -61,7 +61,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         graphSeriesYLiveData.setValue(graphSeriesY);
         graphSeriesZLiveData = new MutableLiveData<>();
         graphSeriesZLiveData.setValue(graphSeriesZ);
-
     }
 
     private void initAccelerometerSeries() {
