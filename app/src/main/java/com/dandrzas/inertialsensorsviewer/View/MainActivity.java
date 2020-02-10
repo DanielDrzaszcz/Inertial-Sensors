@@ -41,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         Button button_zoom_in = findViewById(R.id.button_zoom_in);
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
         buttonStart = findViewById(R.id.floatingActionButton_start);
+        if(SensorsDataReadService.isEnable())
+        {
+            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+        }
+        else
+            {
+                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
+
+            }
 
         activityViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
@@ -88,9 +97,6 @@ public class MainActivity extends AppCompatActivity {
                     SensorsDataReadService.stop(getApplicationContext());
                     buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
                     //buttonStart.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
-
-
-
             }
 
         });
@@ -154,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
             graph.getSeries().get(2).clearReference(graph);
             graph.removeAllSeries();
             activityViewModel.setSelectedSensor(bottomMenuSelectedItem);
+
+
         }
     }
 
@@ -162,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
             graph.addSeries(dataPointLineGraphSeries);
+            graph.refreshDrawableState();
+            graph.getLegendRenderer().resetStyles();
+            graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
+            graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
         }
     }
 }

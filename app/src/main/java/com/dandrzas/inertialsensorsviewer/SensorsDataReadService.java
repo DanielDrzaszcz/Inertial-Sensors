@@ -33,7 +33,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
     private CSVWriter csvWriterMagnetometer;
     private String[] csvDataMagnetometer;
     private long startTime;
-    public static boolean isEnable =  false;
+    public static volatile boolean isEnable =  false;
     public static volatile boolean shouldContinueService = true;
 
     public SensorsDataReadService() {
@@ -91,13 +91,29 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         startTime = SystemClock.elapsedRealtimeNanos();
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+       if (mAccelerometer!=null)
+       {
+           mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+           Log.d("dandx akcelerometr max:", Integer.toString(mAccelerometer.getMaxDelay()));
+           Log.d("dandx akcelerometr min:", Integer.toString(mAccelerometer.getMinDelay()));
+       }
 
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+        if(mMagnetometer!=null)
+        {
+            mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+            Log.d("dandx magnet max:", Integer.toString(mMagnetometer.getMaxDelay()));
+            Log.d("dandx magnet min:", Integer.toString(mMagnetometer.getMinDelay()));
+        }
 
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        if(mGyroscope!=null)
+        {
+            mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+            Log.d("dandx gyro max:", Integer.toString(mGyroscope.getMaxDelay()));
+            Log.d("dandx gyro min:", Integer.toString(mGyroscope.getMinDelay()));
+        }
+
     }
 
 

@@ -30,7 +30,7 @@ public class SensorsDataRepository extends Observable {
     public void setAccelerometerValue(float[] accelerometerValue) {
         this.AccelerometerValue = accelerometerValue;
         setChanged();
-        notifyObservers();
+        notifyObservers(1);
     }
 
     public float[] getGyroscopeValue() {
@@ -40,7 +40,7 @@ public class SensorsDataRepository extends Observable {
     public void setGyroscopeValue(float[] gyroscopeValue) {
         GyroscopeValue = gyroscopeValue;
         setChanged();
-        notifyObservers();
+        notifyObservers(2);
     }
 
     public float[] getMagnetometerValue() {
@@ -50,6 +50,6 @@ public class SensorsDataRepository extends Observable {
     public void setMagnetometerValue(float[] magnetometerValue) {
         MagnetometerValue = magnetometerValue;
         setChanged();
-        notifyObservers();
+        notifyObservers(3);
     }
 }
