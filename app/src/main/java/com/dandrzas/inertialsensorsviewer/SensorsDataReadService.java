@@ -21,7 +21,6 @@ import java.util.Locale;
 
 public class SensorsDataReadService extends IntentService implements SensorEventListener {
     private static final String ACTION_START = "com.dandrzas.inertialsensorsviewer.action.START";
-    private static final String ACTION_STOP = "com.dandrzas.inertialsensorsviewer.action.STOP";
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private SensorsDataRepository sensorsDataRepository;
@@ -35,12 +34,14 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
     private String[] csvDataMagnetometer;
     private long startTime;
     public static boolean isEnable =  false;
+    public static volatile boolean shouldContinueService = true;
 
     public SensorsDataReadService() {
         super("SensorsDataReadService");
     }
 
     public static void start(Context context) {
+        shouldContinueService = true;
         Intent intent = new Intent(context, SensorsDataReadService.class);
         intent.setAction(ACTION_START);
         context.startService(intent);
@@ -48,9 +49,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
 
     public static void stop(Context context)
     {
-        Intent intent = new Intent(context, SensorsDataReadService.class);
-        intent.setAction(ACTION_STOP);
-        context.stopService(intent);
+        shouldContinueService = false;
     }
 
     @Override
@@ -63,9 +62,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (ACTION_STOP.equals(action)) {
-                Log.d("ServiceTest","IntentStopodebrany");
-                  handleActionStop();
             }
         }
     }
@@ -75,7 +71,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         SimpleDateFormat dateSimpleFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
         Date dateActual = new Date();
         String dateActualString = dateSimpleFormat.format(dateActual);
-/*
+
         csvWriterAccelerometer = new CSVWriter(new FileWriter(getApplicationContext().getExternalFilesDir(null).getPath()+"/"+dateActualString+"_Accelerometer.csv"));
         csvDataAccelerometer = "Czas [ms]#Akcelerometr X#Akcelerometr Y#Akcelerometr Z".split("#");
         csvWriterAccelerometer.writeNext(csvDataAccelerometer);
@@ -87,7 +83,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         csvWriterMagnetometer = new CSVWriter(new FileWriter(getApplicationContext().getExternalFilesDir(null).getPath()+"/"+dateActualString+"_MagnetometerData.csv"));
         csvDataMagnetometer = "Czas [ms]#Magnetometr X#Magnetometr Y#Magnetometr Z".split("#");
         csvWriterMagnetometer.writeNext(csvDataMagnetometer);
-*/
+
         sensorsDataRepository = SensorsDataRepository.getInstance();
 
         mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
@@ -104,25 +100,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    private void handleActionStop()
-    {
-        mSensorManager.unregisterListener(this);
-        isEnable = false;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-       /* try {
-            csvWriterAccelerometer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        //isEnable = false;
-        //mSensorManager.unregisterListener(this);
-        Log.d("Servicedestroy"," Servicedestroy");
-    }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -130,31 +107,31 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         if(sensorsDataRepository!=null) {
             if (event.sensor == mAccelerometer) {
                 sensorsDataRepository.setAccelerometerValue(event.values);
-               // csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-              //  csvWriterAccelerometer.writeNext(csvDataAccelerometer);
-
+                csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[1]+"#"+event.values[0]+"#"+event.values[2]).split("#");
+                csvWriterAccelerometer.writeNext(csvDataAccelerometer);
                // Log.d("SSSSSSTime", Float.toString((event.timestamp-startTime)/1000000));
             } else if (event.sensor == mGyroscope) {
                 sensorsDataRepository.setGyroscopeValue(event.values);
-               // csvDataGyroscope = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                //csvWriterGyroscope.writeNext(csvDataGyroscope);
+                csvDataGyroscope = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
+                csvWriterGyroscope.writeNext(csvDataGyroscope);
                 // Log.d("dataReadGyroscope: ", Float.toString(event.values[0]) + "\n");
 
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
-                //csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                //csvWriterMagnetometer.writeNext(csvDataMagnetometer);
+                csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
+                csvWriterMagnetometer.writeNext(csvDataMagnetometer);
                 // Log.d("dataReadMagnetometer: ", Float.toString(event.values[0]) + "\n");
-
             }
+        }
+        if(!shouldContinueService) {
+            mSensorManager.unregisterListener(this);
+            isEnable = false;
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
-
 
     public static boolean isEnable() {
         return isEnable;

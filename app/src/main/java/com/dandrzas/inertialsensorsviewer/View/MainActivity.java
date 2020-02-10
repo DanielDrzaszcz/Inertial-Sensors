@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Switch;
 
 import com.dandrzas.inertialsensorsviewer.SensorsDataReadService;
 import com.dandrzas.inertialsensorsviewer.ViewModel.MainActivityViewModel;
@@ -19,6 +20,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -74,16 +76,22 @@ public class MainActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(view ->
         {
             boolean isEnable = SensorsDataReadService.isEnable();
-            Log.d("testEnable", Boolean.toString(isEnable));
+            //Log.d("testEnable", Boolean.toString(isEnable));
 
             if(!isEnable)
                 {
                     SensorsDataReadService.start(getApplicationContext());
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+                    //buttonStart.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccentDark));
                 }
                 else {
                     SensorsDataReadService.stop(getApplicationContext());
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
+                    //buttonStart.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
 
-                }
+
+
+            }
 
         });
 
