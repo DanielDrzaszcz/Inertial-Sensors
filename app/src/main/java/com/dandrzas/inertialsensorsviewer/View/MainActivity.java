@@ -209,7 +209,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
             graph.addSeries(dataPointLineGraphSeries);
+            graph.refreshDrawableState();
             graphInit();
+            graph.invalidate();
             graph.getLegendRenderer().resetStyles();
             graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
             graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);

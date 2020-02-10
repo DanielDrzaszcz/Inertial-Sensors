@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InertialSensorsViewer</string>
+    <string name="app_name">Inertial Sensors Viewer</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_accelerometer">Akcelerometr</string>
     <string name="title_gyroscope">Żyroskop</string>
