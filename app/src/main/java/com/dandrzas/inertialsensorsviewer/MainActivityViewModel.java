@@ -128,8 +128,8 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 if (accelerometerEventList.size() >= 50) {
                     for (int j = 0; j < accelerometerEventList.size() - 1; j++) {
                         float[] eventFromList = accelerometerEventList.get(j);
-                        graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
-                        graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
+                        graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
+                        graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
                         graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX() + 1, eventFromList[2]), scrollToEnd1, graphSeriesLength);
                         accelerometerEventList.remove(j);
                     }
