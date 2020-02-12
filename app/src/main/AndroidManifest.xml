@@ -16,7 +16,7 @@
             android:name=".SensorsDataReadService"
             android:exported="false"></service>
 
-        <activity android:name=".View.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

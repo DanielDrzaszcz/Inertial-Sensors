@@ -12,13 +12,10 @@ import android.hardware.SensorManager;
 import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.dandrzas.inertialsensorsviewer.Model.SensorsDataRepository;
 import com.opencsv.CSVWriter;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -78,18 +75,8 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         Date dateActual = new Date();
         String dateActualString = dateSimpleFormat.format(dateActual);
 
-        Log.d("Pamiec ContextgetExternalFilesDir: ", getApplicationContext().getExternalFilesDir(null).getPath());
-        Log.d("Pamiec ContextgetDataDir: ", getApplicationContext().getDataDir().getPath());
-        Log.d("Pamiec getRootDirectory: ", Environment.getRootDirectory().getPath());
-        Log.d("Pamiec getDataDirectory: ", Environment.getDataDirectory().getPath());
-        Log.d("Pamiec getExternalStorageDirectory: ", Environment.getExternalStorageDirectory ().getPath());
-        Log.d("Pamiec getExternalStoragePublicDirectoryDOWNLOADS: ", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath());
-        Log.d("Pamiec getExternalStoragePublicDirectoryPICTURES: ", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath());
-        Log.d("Pamiec getExternalStoragePublicDirectoryDCIM: ", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath());
-
        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
         {
-            //csvWriterAccelerometer = new CSVWriter(new FileWriter(getApplicationContext().getExternalFilesDir(null).getPath()+"/"+dateActualString+"_Accelerometer.csv"), ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
             File filesCatalog = new File(Environment.getExternalStorageDirectory() + "/InertialSensorsViewer/");
             if (!filesCatalog.exists()) filesCatalog.mkdir();
 
@@ -114,24 +101,18 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
        if (mAccelerometer!=null)
        {
            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-           Log.d("dandx akcelerometr max:", Integer.toString(mAccelerometer.getMaxDelay()));
-           Log.d("dandx akcelerometr min:", Integer.toString(mAccelerometer.getMinDelay()));
        }
 
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if(mMagnetometer!=null)
         {
             mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-            Log.d("dandx magnet max:", Integer.toString(mMagnetometer.getMaxDelay()));
-            Log.d("dandx magnet min:", Integer.toString(mMagnetometer.getMinDelay()));
         }
 
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if(mGyroscope!=null)
         {
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
-            Log.d("dandx gyro max:", Integer.toString(mGyroscope.getMaxDelay()));
-            Log.d("dandx gyro min:", Integer.toString(mGyroscope.getMinDelay()));
         }
 
     }
@@ -139,16 +120,14 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d("SetwisDziala!","czujnik sie zmienia");
         if(sensorsDataRepository!=null) {
             if (event.sensor == mAccelerometer) {
                 sensorsDataRepository.setAccelerometerValue(event.values);
-                csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[1]+"#"+event.values[0]+"#"+event.values[2]).split("#");
+                csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
                 {
                     csvWriterAccelerometer.writeNext(csvDataAccelerometer);
                 }
-               // Log.d("SSSSSSTime", Float.toString((event.timestamp-startTime)/1000000));
             } else if (event.sensor == mGyroscope) {
                 sensorsDataRepository.setGyroscopeValue(event.values);
                 csvDataGyroscope = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
@@ -156,7 +135,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
                 {
                     csvWriterGyroscope.writeNext(csvDataGyroscope);
                 }
-                // Log.d("dataReadGyroscope: ", Float.toString(event.values[0]) + "\n");
 
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
@@ -165,7 +143,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
                 {
                     csvWriterMagnetometer.writeNext(csvDataMagnetometer);
                 }
-                // Log.d("dataReadMagnetometer: ", Float.toString(event.values[0]) + "\n");
             }
         }
         if(!shouldContinueService) {

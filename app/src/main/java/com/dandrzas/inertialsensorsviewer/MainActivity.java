@@ -1,18 +1,14 @@
-package com.dandrzas.inertialsensorsviewer.View;
+package com.dandrzas.inertialsensorsviewer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-import com.dandrzas.inertialsensorsviewer.SensorsDataReadService;
-import com.dandrzas.inertialsensorsviewer.ViewModel.MainActivityViewModel;
-import com.dandrzas.inertialsensorsviewer.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
@@ -117,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        // Zoom out
         button_zoom_out.setOnClickListener(view -> {
             double actualMinY = graph.getViewport().getMinY(false);
             double actualMaxY = graph.getViewport().getMaxY(false);
@@ -146,21 +143,17 @@ public class MainActivity extends AppCompatActivity {
                             else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
 
                             if (dy < -1) {
-                                Log.d("dandxtestmove", " góra");
                                 graph.getViewport().setMinY(graph.getViewport().getMinY(false) - 0.02 * actualYRange);
                                 graph.getViewport().setMaxY(graph.getViewport().getMaxY(false) - 0.02 * actualYRange);
                                 graph.refreshDrawableState();
                             }
 
                             if (dy > 1) {
-                                Log.d("dandxtestmove", " dół");
                                 graph.getViewport().setMinY(graph.getViewport().getMinY(false) + 0.02 * actualYRange);
                                 graph.getViewport().setMaxY(graph.getViewport().getMaxY(false) + 0.02 * actualYRange);
                                 graph.refreshDrawableState();
                             }
-
                     }
-
                     previousTouchY = y;
                     return false;
                 }
