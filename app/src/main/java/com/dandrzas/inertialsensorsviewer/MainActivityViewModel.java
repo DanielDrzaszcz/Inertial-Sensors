@@ -1,15 +1,13 @@
 package com.dandrzas.inertialsensorsviewer;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.dandrzas.inertialsensorsviewer.SensorsDataRepository;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -41,6 +39,15 @@ public class MainActivityViewModel extends ViewModel implements Observer {
 
     private SensorsDataRepository sensorsData;
     private int graphSeriesLength = 3000;
+    private float graphMaxYAccelerometer = 30;
+    private float graphMaxYGyroscope = 10;
+    private float graphMaxYMagnetometer = 50;
+    private float graphMinYAccelerometer = -30;
+    private float graphMinYGyroscope = -10;
+    private float graphMinYMagnetometer = -50;
+    private int graphMaxXAccelerometer=3000;
+    private int graphMaxXGyroscope=3000;
+    private int graphMaxXMagnetometer=3000;
 
     public MainActivityViewModel() {
         sensorsData = SensorsDataRepository.getInstance();
@@ -128,8 +135,8 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 if (accelerometerEventList.size() >= 50) {
                     for (int j = 0; j < accelerometerEventList.size() - 1; j++) {
                         float[] eventFromList = accelerometerEventList.get(j);
-                        graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
-                        graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
+                        graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
+                        graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
                         graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX() + 1, eventFromList[2]), scrollToEnd1, graphSeriesLength);
                         accelerometerEventList.remove(j);
                     }
@@ -172,6 +179,25 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                     }
                 }
             }
+
+            if (arg.equals(4))
+            {
+                graphMaxXAccelerometer = (int)(15000/sensorsData.getMinDelayAccelerometer());
+                Log.d("maxDelayTestActivityVMLength", Integer.toString(graphMaxXAccelerometer));
+            }
+
+            if (arg.equals(5))
+            {
+                graphMaxXGyroscope = (int)(15000/sensorsData.getMinDelayGyroscope());
+                Log.d("maxDelayTestActivityVMLength", Integer.toString(graphMaxXGyroscope));
+            }
+
+            if (arg.equals(6))
+            {
+                graphMaxXMagnetometer = (int)(15000/sensorsData.getMinDelayMagnetometer());
+                Log.d("maxDelayTestActivityVMLength", Integer.toString(graphMaxXMagnetometer));
+
+            }
         }
     }
 
@@ -211,8 +237,77 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphSeriesZLiveData;
     }
 
-    public int getGraphSeriesLength() {
+    public int getGraphSeriesLength(int selectedSensor) {
+
+        switch (selectedSensor) {
+            case 1:
+                graphSeriesLength = graphMaxXAccelerometer;
+                break;
+            case 2:
+                graphSeriesLength = graphMaxXGyroscope;
+
+                break;
+            case 3:
+                graphSeriesLength = graphMaxXMagnetometer;
+                break;
+        }
         return graphSeriesLength;
+    }
+
+    public void setGraphMinY(int selectedSensor, float newMinYValue) {
+        switch(selectedSensor)
+        {
+            case 1:
+                this.graphMinYAccelerometer = newMinYValue;
+                break;
+            case 2:
+                this.graphMinYGyroscope = newMinYValue;
+                break;
+            case 3:
+                this.graphMinYMagnetometer = newMinYValue;
+                break;
+        }
+    }
+
+    public float getGraphMinY(int selectedSensor) {
+        switch(selectedSensor)
+        {
+            case 1:
+                return graphMinYAccelerometer;
+            case 2:
+                return graphMinYGyroscope;
+            case 3:
+                return graphMinYMagnetometer;
+        }
+        return graphMinYAccelerometer;
+    }
+
+    public void setGraphMaxY(int selectedSensor, float newMaxYValue) {
+        switch(selectedSensor)
+        {
+            case 1:
+                this.graphMaxYAccelerometer = newMaxYValue;
+                break;
+            case 2:
+                this.graphMaxYGyroscope = newMaxYValue;
+                break;
+            case 3:
+                this.graphMaxYMagnetometer = newMaxYValue;
+                break;
+        }
+    }
+
+    public float getGraphMaxY(int selectedSensor) {
+        switch(selectedSensor)
+        {
+            case 1:
+                return graphMaxYAccelerometer;
+            case 2:
+                return graphMaxYGyroscope;
+            case 3:
+                return graphMaxYMagnetometer;
+        }
+        return graphMaxYAccelerometer;
     }
 
 }

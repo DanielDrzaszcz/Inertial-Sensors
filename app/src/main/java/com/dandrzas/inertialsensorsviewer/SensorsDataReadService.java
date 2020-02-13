@@ -12,9 +12,7 @@ import android.hardware.SensorManager;
 import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 import android.os.SystemClock;
-
 import androidx.core.content.ContextCompat;
-
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -100,19 +98,23 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
        if (mAccelerometer!=null)
        {
+           sensorsDataRepository.setMinDelayAccelerometer(mAccelerometer.getMinDelay()/1000);
            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
        }
-
-        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        if(mMagnetometer!=null)
-        {
-            mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-        }
 
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if(mGyroscope!=null)
         {
+            sensorsDataRepository.setMinDelayGyroscope(mGyroscope.getMinDelay()/1000);
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+        }
+
+
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        if(mMagnetometer!=null)
+        {
+            sensorsDataRepository.setMinDelayMagnetometer(mMagnetometer.getMinDelay()/1000);
+            mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
     }
