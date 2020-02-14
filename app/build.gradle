@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+33333
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -8,7 +8,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 2
-        versionName "2.2.1"
+        versionName "2.3.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

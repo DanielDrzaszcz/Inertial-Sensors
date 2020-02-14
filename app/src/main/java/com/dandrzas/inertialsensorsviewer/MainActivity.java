@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
-
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
             graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
-            graph.onDataChanged(true, false);
+            graph.onDataChanged(true, true);
         });
 
         button_zoom_out.setOnClickListener(view -> {
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
             graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
-            graph.onDataChanged(true, false);
+            graph.onDataChanged(true, true);
         });
 
         graph.setOnTouchListener((v, event) ->
@@ -160,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
                             graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
                             graph.onDataChanged(true, false);
-
                     }
 
                     previousTouchY = y;
@@ -182,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void graphInit() {
-        graph.getGridLabelRenderer().setHighlightZeroLines(false);
-
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
         graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
@@ -191,20 +187,21 @@ public class MainActivity extends AppCompatActivity {
         graph.getViewport().setScrollableY(false);
 
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
+        graph.getViewport().setMinX(activityViewModel.getGraphMinX(bottomMenuSelectedItem));
         graph.getViewport().setMaxX(activityViewModel.getGraphSeriesLength(bottomMenuSelectedItem));
         graph.getViewport().setScalable(true);
         graph.getViewport().setScrollable(true);
-        graph.onDataChanged(false, false);
 
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         staticLabelsFormatter.setHorizontalLabels(new String[]{"", "", "", "", "", "", "", "", ""});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         graph.getGridLabelRenderer().setNumVerticalLabels(9);
         graph.getGridLabelRenderer().setNumHorizontalLabels(5);
+        graph.getLegendRenderer().resetStyles();
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
+        graph.onDataChanged(true, true);
     }
 
     private class SensorDataSwitch implements Runnable {
@@ -214,20 +211,17 @@ public class MainActivity extends AppCompatActivity {
             graph.getSeries().get(1).clearReference(graph);
             graph.getSeries().get(2).clearReference(graph);
             graph.removeAllSeries();
-            graphInit();
             activityViewModel.setSelectedSensor(bottomMenuSelectedItem);
-
         }
     }
 
     private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>> {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
-
             graph.addSeries(dataPointLineGraphSeries);
-            graph.refreshDrawableState();
-            graph.invalidate();
-
+            graphInit();
+            Log.d("TestTestMinX", Double.toString(graph.getViewport().getMinX(true)));
+            Log.d("TestTestMaxX", Double.toString(graph.getViewport().getMaxX(true)));
         }
     }
 }

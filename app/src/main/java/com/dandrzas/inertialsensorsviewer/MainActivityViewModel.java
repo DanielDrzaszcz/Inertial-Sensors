@@ -8,8 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,17 +16,14 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesX;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesY;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesZ;
-    private List<float[]> accelerometerEventList = new ArrayList<>();
 
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesX;
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesY;
     private LineGraphSeries<DataPoint> graphGyroscopeSeriesZ;
-    private List<float[]> gyroscopeEventList = new ArrayList<>();
 
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesX;
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesY;
     private LineGraphSeries<DataPoint> graphMagnetometerSeriesZ;
-    private List<float[]> magnetometerEventList = new ArrayList<>();
 
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesXLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesYLiveData;
@@ -38,7 +33,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> graphSeriesZ;
 
     private SensorsDataRepository sensorsData;
-    private int graphSeriesLength = 3000;
     private float graphMaxYAccelerometer = 30;
     private float graphMaxYGyroscope = 10;
     private float graphMaxYMagnetometer = 50;
@@ -127,57 +121,46 @@ public class MainActivityViewModel extends ViewModel implements Observer {
 
             if (arg.equals(1)) {
                 float[] valuesAccelerometer = ((SensorsDataRepository) o).getAccelerometerValue();
-                float[] eventsAccelerometerToList = {valuesAccelerometer[0], valuesAccelerometer[1], valuesAccelerometer[2]};
-                accelerometerEventList.add(eventsAccelerometerToList);
                 boolean scrollToEnd1 = false;
-                if (graphAccelerometerSeriesY.getHighestValueX() >= graphSeriesLength)
+                if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer)
+                {
                     scrollToEnd1 = true;
-                if (accelerometerEventList.size() >= 50) {
-                    for (int j = 0; j < accelerometerEventList.size() - 1; j++) {
-                        float[] eventFromList = accelerometerEventList.get(j);
-                        graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, eventFromList[1]), scrollToEnd1, graphSeriesLength);
-                        graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, eventFromList[0]), scrollToEnd1, graphSeriesLength);
-                        graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX() + 1, eventFromList[2]), scrollToEnd1, graphSeriesLength);
-                        accelerometerEventList.remove(j);
-                    }
                 }
+                graphAccelerometerSeriesX.appendData(new DataPoint(graphAccelerometerSeriesX.getHighestValueX() + 1, valuesAccelerometer[1]), scrollToEnd1, graphMaxXAccelerometer);
+                graphAccelerometerSeriesY.appendData(new DataPoint(graphAccelerometerSeriesY.getHighestValueX() + 1, valuesAccelerometer[0]), scrollToEnd1, graphMaxXAccelerometer);
+                graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX() + 1, valuesAccelerometer[2]), scrollToEnd1, graphMaxXAccelerometer);
+            Log.d("SeriesMaxAccelerometer: ", Double.toString(graphAccelerometerSeriesX.getHighestValueX()));
+                Log.d("SeriesMinAccelerometer: ", Double.toString(graphAccelerometerSeriesX.getLowestValueX()));
+
             }
 
             if (arg.equals(2)) {
                 float[] valuesGyroscope = ((SensorsDataRepository) o).getGyroscopeValue();
-                float[] eventsGyroscopeToList = {valuesGyroscope[0], valuesGyroscope[1], valuesGyroscope[2]};
-                gyroscopeEventList.add(eventsGyroscopeToList);
                 boolean scrollToEnd2 = false;
-                if (graphGyroscopeSeriesY.getHighestValueX() >= graphSeriesLength)
+                if (graphGyroscopeSeriesY.getHighestValueX() >= graphMaxXGyroscope)
+                {
                     scrollToEnd2 = true;
-                if (gyroscopeEventList.size() >= 50) {
-                    for (int j = 0; j < gyroscopeEventList.size() - 1; j++) {
-                        float[] eventFromList = gyroscopeEventList.get(j);
-                        graphGyroscopeSeriesX.appendData(new DataPoint(graphGyroscopeSeriesX.getHighestValueX() + 1, eventFromList[0]), scrollToEnd2, graphSeriesLength);
-                        graphGyroscopeSeriesY.appendData(new DataPoint(graphGyroscopeSeriesY.getHighestValueX() + 1, eventFromList[1]), scrollToEnd2, graphSeriesLength);
-                        graphGyroscopeSeriesZ.appendData(new DataPoint(graphGyroscopeSeriesZ.getHighestValueX() + 1, eventFromList[2]), scrollToEnd2, graphSeriesLength);
-                        gyroscopeEventList.remove(j);
-                    }
                 }
+                graphGyroscopeSeriesX.appendData(new DataPoint(graphGyroscopeSeriesX.getHighestValueX() + 1, valuesGyroscope[0]), scrollToEnd2, graphMaxXGyroscope);
+                graphGyroscopeSeriesY.appendData(new DataPoint(graphGyroscopeSeriesY.getHighestValueX() + 1, valuesGyroscope[1]), scrollToEnd2, graphMaxXGyroscope);
+                graphGyroscopeSeriesZ.appendData(new DataPoint(graphGyroscopeSeriesZ.getHighestValueX() + 1, valuesGyroscope[2]), scrollToEnd2, graphMaxXGyroscope);
+                Log.d("SeriesMaxGyroscope: ", Double.toString(graphGyroscopeSeriesX.getHighestValueX()));
+                Log.d("SeriesMinGyroscope: ", Double.toString(graphGyroscopeSeriesX.getLowestValueX()));
             }
 
             if (arg.equals(3))
             {
                 float[] valuesMagnetometer = ((SensorsDataRepository) o).getMagnetometerValue();
-                float[] eventsMagnetometerToList = {valuesMagnetometer[0], valuesMagnetometer[1], valuesMagnetometer[2]};
-                magnetometerEventList.add(eventsMagnetometerToList);
                 boolean scrollToEnd3 = false;
-                if (graphMagnetometerSeriesY.getHighestValueX() >= graphSeriesLength)
+                if (graphMagnetometerSeriesY.getHighestValueX() >= graphMaxXMagnetometer)
+                {
                     scrollToEnd3 = true;
-                if (magnetometerEventList.size() >= 50) {
-                    for (int j = 0; j < magnetometerEventList.size() - 1; j++) {
-                        float[] eventFromList = magnetometerEventList.get(j);
-                        graphMagnetometerSeriesX.appendData(new DataPoint(graphMagnetometerSeriesX.getHighestValueX() + 1, eventFromList[0]), scrollToEnd3, graphSeriesLength);
-                        graphMagnetometerSeriesY.appendData(new DataPoint(graphMagnetometerSeriesY.getHighestValueX() + 1, eventFromList[1]), scrollToEnd3, graphSeriesLength);
-                        graphMagnetometerSeriesZ.appendData(new DataPoint(graphMagnetometerSeriesZ.getHighestValueX() + 1, eventFromList[2]), scrollToEnd3, graphSeriesLength);
-                        magnetometerEventList.remove(j);
-                    }
                 }
+                graphMagnetometerSeriesX.appendData(new DataPoint(graphMagnetometerSeriesX.getHighestValueX() + 1, valuesMagnetometer[0]), scrollToEnd3, graphMaxXMagnetometer);
+                graphMagnetometerSeriesY.appendData(new DataPoint(graphMagnetometerSeriesY.getHighestValueX() + 1, valuesMagnetometer[1]), scrollToEnd3, graphMaxXMagnetometer);
+                graphMagnetometerSeriesZ.appendData(new DataPoint(graphMagnetometerSeriesZ.getHighestValueX() + 1, valuesMagnetometer[2]), scrollToEnd3, graphMaxXMagnetometer);
+                Log.d("SeriesMaxMagnetometer: ", Double.toString(graphMagnetometerSeriesX.getHighestValueX()));
+                Log.d("SeriesMinMagnetometer: ", Double.toString(graphMagnetometerSeriesX.getLowestValueX()));
             }
 
             if (arg.equals(4))
@@ -238,21 +221,64 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     }
 
     public int getGraphSeriesLength(int selectedSensor) {
+        int graphSeriesLength=graphMaxXAccelerometer;
 
         switch (selectedSensor) {
             case 1:
-                graphSeriesLength = graphMaxXAccelerometer;
+                if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer)
+                {
+                    graphSeriesLength = (int)(graphAccelerometerSeriesX.getHighestValueX());
+                }
+                else graphSeriesLength = graphMaxXAccelerometer;
                 break;
-            case 2:
-                graphSeriesLength = graphMaxXGyroscope;
 
+            case 2:
+                if (graphGyroscopeSeriesX.getHighestValueX() >= graphMaxXGyroscope)
+                {
+                    graphSeriesLength = (int)(graphGyroscopeSeriesX.getHighestValueX());
+                }
+                else graphSeriesLength = graphMaxXGyroscope;
                 break;
+
             case 3:
-                graphSeriesLength = graphMaxXMagnetometer;
+                if (graphMagnetometerSeriesX.getHighestValueX() >= graphMaxXMagnetometer)
+                {
+                    graphSeriesLength = (int)(graphMagnetometerSeriesX.getHighestValueX());
+                }
+                else graphSeriesLength = graphMaxXMagnetometer;
                 break;
         }
         return graphSeriesLength;
     }
+
+    public int getGraphMinX(int selectedSensor) {
+
+        switch (selectedSensor) {
+            case 1:
+                if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer)
+                {
+                    return (int)(graphAccelerometerSeriesX.getLowestValueX());
+                }
+                else return 0;
+
+            case 2:
+                if (graphGyroscopeSeriesY.getHighestValueX() >= graphMaxXGyroscope)
+                {
+                    return (int)(graphGyroscopeSeriesX.getLowestValueX());
+                }
+                else return 0;
+
+                case 3:
+                    if (graphMagnetometerSeriesY.getHighestValueX() >= graphMaxXMagnetometer)
+                    {
+                        return (int)(graphMagnetometerSeriesX.getLowestValueX());
+                    }
+                    else return 0;
+        }
+        return (int)(graphAccelerometerSeriesX.getLowestValueX());
+    }
+
+
 
     public void setGraphMinY(int selectedSensor, float newMinYValue) {
         switch(selectedSensor)
