@@ -1,6 +1,5 @@
 package com.dandrzas.inertialsensorsviewer;
 
-
 import java.util.Observable;
 
 public class SensorsDataRepository extends Observable {

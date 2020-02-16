@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Button;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private int bottomMenuSelectedItem = 1;
     private FloatingActionButton buttonStart;
     private float previousTouchY;
+    private final int permissionMemoryWriteCode = 1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -56,14 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         graphInit();
 
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-        }
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_accelerometer:
                         bottomMenuSelectedItem = 1;
@@ -89,13 +86,19 @@ public class MainActivity extends AppCompatActivity {
             boolean isEnable = SensorsDataReadService.isEnable();
 
             if (!isEnable) {
-                SensorsDataReadService.start(getApplicationContext());
-                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    SensorsDataReadService.start(getApplicationContext());
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionMemoryWriteCode);
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+                }
+
             } else {
                 SensorsDataReadService.stop(getApplicationContext());
                 buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
             }
-
         });
 
         // Zoom in
@@ -105,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             double actualYRange = actualMaxY - actualMinY;
 
             if (actualYRange > 4) {
-                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float)(actualMinY + actualYRange / 10));
-                activityViewModel.setGraphMaxY(bottomMenuSelectedItem,  (float)(actualMaxY - actualYRange / 10));
+                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + actualYRange / 10));
+                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - actualYRange / 10));
             }
             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
             graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
@@ -118,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
             double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
             double actualYRange = actualMaxY - actualMinY;
 
-            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float)(actualMinY - actualYRange / 10));
-            activityViewModel.setGraphMaxY(bottomMenuSelectedItem,  (float)(actualMaxY + actualYRange / 10));
+            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - actualYRange / 10));
+            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + actualYRange / 10));
 
             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
             graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
@@ -146,14 +149,14 @@ public class MainActivity extends AppCompatActivity {
 
                             if (dy < -2) {
                                 Log.d("dandxtestmove", " góra");
-                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float)(actualMinY - 0.02 * actualYRange));
-                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem,  (float)(actualMaxY - 0.02 * actualYRange));
+                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - 0.02 * actualYRange));
+                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - 0.02 * actualYRange));
                             }
 
                             if (dy > 2) {
                                 Log.d("dandxtestmove", " dół‚");
-                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float)(actualMinY + 0.02 * actualYRange));
-                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem,  (float)(actualMaxY + 0.02 * actualYRange));
+                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + 0.02 * actualYRange));
+                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + 0.02 * actualYRange));
                             }
 
                             graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
@@ -165,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
         );
-
     }
 
     @Override
@@ -177,6 +179,12 @@ public class MainActivity extends AppCompatActivity {
         activityViewModel.getGraphSeriesY().removeObservers(this);
         activityViewModel.getGraphSeriesZ().removeObservers(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+       if(requestCode == permissionMemoryWriteCode) SensorsDataReadService.start(getApplicationContext());
     }
 
     private void graphInit() {

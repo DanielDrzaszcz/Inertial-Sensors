@@ -1,6 +1,7 @@
 package com.dandrzas.inertialsensorsviewer;
 
 import android.Manifest;
+import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
@@ -10,10 +11,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.util.Log;
-
 import androidx.core.content.ContextCompat;
 import com.opencsv.CSVWriter;
 import java.io.File;
@@ -69,40 +69,23 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         }
     }
     private void handleActionStart() throws IOException {
-
+        File filesCatalog;
         isEnable = true;
         SimpleDateFormat dateSimpleFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
         Date dateActual = new Date();
         String dateActualString = dateSimpleFormat.format(dateActual);
 
-       if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
-        {
-            File filesCatalog = new File(Environment.getExternalStorageDirectory() + "/InertialSensorsViewer/");
-            if (!filesCatalog.exists()) filesCatalog.mkdir();
-
-            csvWriterAccelerometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Accelerometer.csv"));
-            csvDataAccelerometer = "Czas [sek]#Akcelerometr X [m/s2]#Akcelerometr Y [m/s2]Y#Akcelerometr Z [m/s2]".split("#");
-            csvWriterAccelerometer.writeNext(csvDataAccelerometer);
-
-            csvWriterGyroscope = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Gyroscope.csv"));
-            csvDataGyroscope = "Czas [sek]#Zyroskop X [rad/s]#Zyroskop Y[rad/s]Y#Zyroskop Z [rad/s]".split("#");
-            csvWriterGyroscope.writeNext(csvDataGyroscope);
-
-            csvWriterMagnetometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Magnetometer.csv"));
-            csvDataMagnetometer = "Czas [sek]#Magnetometr X [uT]#Magnetometr Y [uT]#Magnetometr Z [uT]".split("#");
-            csvWriterMagnetometer.writeNext(csvDataMagnetometer);
-        }
-
         sensorsDataRepository = SensorsDataRepository.getInstance();
+
         mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
         startTime = SystemClock.elapsedRealtimeNanos();
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-       if (mAccelerometer!=null)
-       {
-           sensorsDataRepository.setMinDelayAccelerometer(mAccelerometer.getMinDelay()/1000);
-           mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-       }
+        if (mAccelerometer!=null)
+        {
+            sensorsDataRepository.setMinDelayAccelerometer(mAccelerometer.getMinDelay()/1000);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        }
 
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if(mGyroscope!=null)
@@ -111,7 +94,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
-
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if(mMagnetometer!=null)
         {
@@ -119,6 +101,39 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
+       if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
+        {
+            if(Build.VERSION.SDK_INT>=29)
+            {
+                filesCatalog = new File(getApplicationContext().getExternalFilesDir(null).getPath());
+            }
+            else
+            {
+                filesCatalog = new File(Environment.getExternalStorageDirectory() + "/InertialSensorsViewer/");
+                if (!filesCatalog.exists()) filesCatalog.mkdir();
+            }
+
+            if (mAccelerometer!=null)
+            {
+                csvWriterAccelerometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Accelerometer.csv"));
+                csvDataAccelerometer = "Czas [sek]#Akcelerometr X [m/s2]#Akcelerometr Y [m/s2]Y#Akcelerometr Z [m/s2]".split("#");
+                csvWriterAccelerometer.writeNext(csvDataAccelerometer);
+            }
+
+            if (mGyroscope!=null)
+            {
+                csvWriterGyroscope = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Gyroscope.csv"));
+                csvDataGyroscope = "Czas [sek]#Zyroskop X [rad/s]#Zyroskop Y[rad/s]Y#Zyroskop Z [rad/s]".split("#");
+                csvWriterGyroscope.writeNext(csvDataGyroscope);
+            }
+
+            if (mMagnetometer!=null)
+            {
+                csvWriterMagnetometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Magnetometer.csv"));
+                csvDataMagnetometer = "Czas [sek]#Magnetometr X [uT]#Magnetometr Y [uT]#Magnetometr Z [uT]".split("#");
+                csvWriterMagnetometer.writeNext(csvDataMagnetometer);
+            }
+        }
     }
 
 
@@ -142,8 +157,6 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
 
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
-                Log.d("MagnetometerTest: ", Float.toString(event.values[0]) + " "+ Float.toString(event.values[1]) + " "+Float.toString(event.values[2]));
-
                 csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
                 {

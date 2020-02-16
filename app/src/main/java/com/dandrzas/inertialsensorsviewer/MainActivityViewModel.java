@@ -1,8 +1,6 @@
 package com.dandrzas.inertialsensorsviewer;
 
 import android.graphics.Color;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -174,7 +172,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
             if (arg.equals(6))
             {
                 graphMaxXMagnetometer = (int)(15000/sensorsData.getMinDelayMagnetometer());
-
             }
         }
     }
@@ -280,8 +277,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
         return (int)(graphAccelerometerSeriesX.getLowestValueX());
     }
-
-
 
     public void setGraphMinY(int selectedSensor, float newMinYValue) {
         switch(selectedSensor)
