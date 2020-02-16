@@ -12,6 +12,8 @@ import android.hardware.SensorManager;
 import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.util.Log;
+
 import androidx.core.content.ContextCompat;
 import com.opencsv.CSVWriter;
 import java.io.File;
@@ -140,6 +142,8 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
 
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
+                Log.d("MagnetometerTest: ", Float.toString(event.values[0]) + " "+ Float.toString(event.values[1]) + " "+Float.toString(event.values[2]));
+
                 csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
                 {

@@ -1,14 +1,12 @@
 package com.dandrzas.inertialsensorsviewer;
 
 
-import android.util.Log;
-
 import java.util.Observable;
 
 public class SensorsDataRepository extends Observable {
 
-    private float[] AccelerometerValue = new float[3];
-    private float[] GyroscopeValue = new float[3];
+    private float[] AccelerometerValue = new float[6];
+    private float[] GyroscopeValue = new float[6];
     private float[] MagnetometerValue = new float[3];
     private static SensorsDataRepository ourInstance;
     private float minDelayAccelerometer;
@@ -64,7 +62,6 @@ public class SensorsDataRepository extends Observable {
 
     public void setMinDelayAccelerometer(float minDelayAccelerometer) {
         this.minDelayAccelerometer = minDelayAccelerometer;
-        Log.d("maxDelayTestAccelerometer: ", Float.toString(minDelayAccelerometer));
         setChanged();
         notifyObservers(4);
     }
@@ -75,7 +72,6 @@ public class SensorsDataRepository extends Observable {
 
     public void setMinDelayGyroscope(float minDelayGyroscope) {
         this.minDelayGyroscope = minDelayGyroscope;
-        Log.d("maxDelayTestGyro: ", Float.toString(minDelayGyroscope));
         setChanged();
         notifyObservers(5);
     }
@@ -86,7 +82,6 @@ public class SensorsDataRepository extends Observable {
 
     public void setMinDelayMagnetometer(float minDelayMagnetometer) {
         this.minDelayMagnetometer = minDelayMagnetometer;
-        Log.d("maxDelayTestMagnetometer: ", Float.toString(minDelayMagnetometer));
         setChanged();
         notifyObservers(6);
     }

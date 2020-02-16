@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-33333
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
