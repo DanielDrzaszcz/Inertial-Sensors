@@ -40,6 +40,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private int graphMaxXAccelerometer = 3000;
     private int graphMaxXGyroscope = 3000;
     private int graphMaxXMagnetometer = 3000;
+    private int selectedSensor = 1;
 
     public MainActivityViewModel() {
 
@@ -177,6 +178,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     // Przełączenie przekazywanych do widoku serii danych
     public void setSelectedSensor(int selectedSensor) {
 
+        this.selectedSensor = selectedSensor;
         graphMaxYAccelerometer = graphInitialMaxYAccelerometer;
         graphMinYAccelerometer = (-1) * graphInitialMaxYAccelerometer;
         graphMaxYGyroscope = graphInitialMaxYGyroscope;
@@ -204,7 +206,10 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         graphSeriesXLiveData.setValue(graphSeriesX);
         graphSeriesYLiveData.setValue(graphSeriesY);
         graphSeriesZLiveData.setValue(graphSeriesZ);
+    }
 
+    public int getSelectedSensor() {
+        return selectedSensor;
     }
 
     public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
@@ -219,7 +224,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphSeriesZLiveData;
     }
 
-    public int getGraphMaxX(int selectedSensor) {
+    public int getGraphMaxX() {
         int graphSeriesMaxX = graphMaxXAccelerometer;
 
         switch (selectedSensor) {
@@ -250,7 +255,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphSeriesMaxX;
     }
 
-    public int getGraphMinX(int selectedSensor) {
+    public int getGraphMinX() {
 
         switch (selectedSensor) {
             case 1:
@@ -271,7 +276,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return (int) (graphAccelerometerSeriesX.getLowestValueX());
     }
 
-    public void setGraphMinY(int selectedSensor, float newMinYValue) {
+    public void setGraphMinY(float newMinYValue) {
         switch (selectedSensor) {
             case 1:
                 this.graphMinYAccelerometer = newMinYValue;
@@ -285,7 +290,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
     }
 
-    public float getGraphMinY(int selectedSensor) {
+    public float getGraphMinY() {
         switch (selectedSensor) {
             case 1:
                 return graphMinYAccelerometer;
@@ -297,7 +302,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphMinYAccelerometer;
     }
 
-    public void setGraphMaxY(int selectedSensor, float newMaxYValue) {
+    public void setGraphMaxY(float newMaxYValue) {
         switch (selectedSensor) {
             case 1:
                 this.graphMaxYAccelerometer = newMaxYValue;
@@ -311,7 +316,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
     }
 
-    public float getGraphMaxY(int selectedSensor) {
+    public float getGraphMaxY() {
         switch (selectedSensor) {
             case 1:
                 return graphMaxYAccelerometer;

@@ -111,30 +111,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Obsługa kliknięcia w przycisk Zoom in
         button_zoom_in.setOnClickListener(view -> {
-            double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
-            double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
+            double actualMinY = activityViewModel.getGraphMinY();
+            double actualMaxY = activityViewModel.getGraphMaxY();
             double actualYRange = actualMaxY - actualMinY;
 
             if (actualYRange > 4) {
-                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + actualYRange / 10));
-                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - actualYRange / 10));
+                activityViewModel.setGraphMinY((float) (actualMinY + actualYRange / 10));
+                activityViewModel.setGraphMaxY((float) (actualMaxY - actualYRange / 10));
             }
-            graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
-            graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
+            graph.getViewport().setMinY(activityViewModel.getGraphMinY());
+            graph.getViewport().setMaxY(activityViewModel.getGraphMaxY());
             graph.onDataChanged(true, true);
         });
 
         // Obsługa kliknięcia w przycisk Zoom out
         button_zoom_out.setOnClickListener(view -> {
-            double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
-            double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
+            double actualMinY = activityViewModel.getGraphMinY();
+            double actualMaxY = activityViewModel.getGraphMaxY();
             double actualYRange = actualMaxY - actualMinY;
 
-            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - actualYRange / 10));
-            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + actualYRange / 10));
+            activityViewModel.setGraphMinY((float) (actualMinY - actualYRange / 10));
+            activityViewModel.setGraphMaxY((float) (actualMaxY + actualYRange / 10));
 
-            graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
-            graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
+            graph.getViewport().setMinY(activityViewModel.getGraphMinY());
+            graph.getViewport().setMaxY(activityViewModel.getGraphMaxY());
             graph.onDataChanged(true, true);
         });
 
@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
                     if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
                         float dy = y - previousTouchY;
-                        double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
-                        double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
+                        double actualMinY = activityViewModel.getGraphMinY();
+                        double actualMaxY = activityViewModel.getGraphMaxY();
                         double actualYRange;
 
                         // Wyliczenie aktualnie wyświetlanego zakresu
@@ -159,18 +159,18 @@ public class MainActivity extends AppCompatActivity {
 
                         // Przesunięcie w górę
                         if (dy < -2) {
-                            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - 0.02 * actualYRange));
-                            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - 0.02 * actualYRange));
+                            activityViewModel.setGraphMinY((float) (actualMinY - 0.02 * actualYRange));
+                            activityViewModel.setGraphMaxY((float) (actualMaxY - 0.02 * actualYRange));
                         }
 
                         // Przesunięcie w dół
                         if (dy > 2) {
-                            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + 0.02 * actualYRange));
-                            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + 0.02 * actualYRange));
+                            activityViewModel.setGraphMinY((float) (actualMinY + 0.02 * actualYRange));
+                            activityViewModel.setGraphMaxY((float) (actualMaxY + 0.02 * actualYRange));
                         }
 
-                        graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
-                        graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
+                        graph.getViewport().setMinY(activityViewModel.getGraphMinY());
+                        graph.getViewport().setMaxY(activityViewModel.getGraphMaxY());
                         graph.onDataChanged(true, false);
                     }
                     previousTouchY = y;
@@ -201,14 +201,14 @@ public class MainActivity extends AppCompatActivity {
     // Konfiguracja osi i legendy wykresu
     private void graphConfig() {
         graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
-        graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
+        graph.getViewport().setMinY(activityViewModel.getGraphMinY());
+        graph.getViewport().setMaxY(activityViewModel.getGraphMaxY());
         graph.getViewport().setScalableY(false);
         graph.getViewport().setScrollableY(false);
 
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(activityViewModel.getGraphMinX(bottomMenuSelectedItem));
-        graph.getViewport().setMaxX(activityViewModel.getGraphMaxX(bottomMenuSelectedItem));
+        graph.getViewport().setMinX(activityViewModel.getGraphMinX());
+        graph.getViewport().setMaxX(activityViewModel.getGraphMaxX());
         graph.getViewport().setScalable(true);
         graph.getViewport().setScrollable(true);
 
