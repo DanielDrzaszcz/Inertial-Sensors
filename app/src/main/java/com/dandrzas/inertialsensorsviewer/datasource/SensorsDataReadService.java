@@ -13,9 +13,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
-
 import androidx.core.content.ContextCompat;
-
 import com.dandrzas.inertialsensorsviewer.model.data.SensorsDataRepository;
 import com.opencsv.CSVWriter;
 import java.io.File;
@@ -38,7 +36,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
     private CSVWriter csvWriterMagnetometer;
     private String[] csvDataMagnetometer;
     private long startTime;
-    public static volatile boolean isEnable =  false;
+    public static volatile boolean isEnable = false;
     public static volatile boolean shouldContinueService = true;
 
     public SensorsDataReadService() {
@@ -52,8 +50,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
         context.startService(intent);
     }
 
-    public static void stop(Context context)
-    {
+    public static void stop(Context context) {
         shouldContinueService = false;
     }
 
@@ -74,64 +71,59 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
     private void handleActionStart() throws IOException {
         File filesCatalog;
         isEnable = true;
+
+        // Pobranie aktualnej daty i godziny do zapisania jako nazwa pliku CSV
         SimpleDateFormat dateSimpleFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.GERMANY);
         Date dateActual = new Date();
         String dateActualString = dateSimpleFormat.format(dateActual);
 
         sensorsDataRepository = SensorsDataRepository.getInstance();
-
         mSensorManager = (SensorManager) getApplication().getSystemService(Context.SENSOR_SERVICE);
         startTime = SystemClock.elapsedRealtimeNanos();
 
+        // Akcelerometr
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        if (mAccelerometer!=null)
-        {
-            sensorsDataRepository.setMinDelayAccelerometer(mAccelerometer.getMinDelay()/1000);
+        if (mAccelerometer != null) {
+            sensorsDataRepository.setMinDelayAccelerometer(mAccelerometer.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
+        // Żyroskop
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        if(mGyroscope!=null)
-        {
-            sensorsDataRepository.setMinDelayGyroscope(mGyroscope.getMinDelay()/1000);
+        if (mGyroscope != null) {
+            sensorsDataRepository.setMinDelayGyroscope(mGyroscope.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
+        // Magnetometr
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        if(mMagnetometer!=null)
-        {
-            sensorsDataRepository.setMinDelayMagnetometer(mMagnetometer.getMinDelay()/1000);
+        if (mMagnetometer != null) {
+            sensorsDataRepository.setMinDelayMagnetometer(mMagnetometer.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
-       if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
-        {
-            if(Build.VERSION.SDK_INT>=29)
-            {
+        // Utworzenie pliku CSV do zapisu danych
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= 29) {
                 filesCatalog = new File(getApplicationContext().getExternalFilesDir(null).getPath());
-            }
-            else
-            {
+            } else {
                 filesCatalog = new File(Environment.getExternalStorageDirectory() + "/InertialSensorsViewer/");
                 if (!filesCatalog.exists()) filesCatalog.mkdir();
             }
 
-            if (mAccelerometer!=null)
-            {
+            if (mAccelerometer != null) {
                 csvWriterAccelerometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Accelerometer.csv"));
                 csvDataAccelerometer = "Czas [sek]#Akcelerometr X [m/s2]#Akcelerometr Y [m/s2]Y#Akcelerometr Z [m/s2]".split("#");
                 csvWriterAccelerometer.writeNext(csvDataAccelerometer);
             }
 
-            if (mGyroscope!=null)
-            {
+            if (mGyroscope != null) {
                 csvWriterGyroscope = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Gyroscope.csv"));
                 csvDataGyroscope = "Czas [sek]#Zyroskop X [rad/s]#Zyroskop Y[rad/s]Y#Zyroskop Z [rad/s]".split("#");
                 csvWriterGyroscope.writeNext(csvDataGyroscope);
             }
 
-            if (mMagnetometer!=null)
-            {
+            if (mMagnetometer != null) {
                 csvWriterMagnetometer = new CSVWriter(new FileWriter(filesCatalog.getPath() + "/" + dateActualString + "_Magnetometer.csv"));
                 csvDataMagnetometer = "Czas [sek]#Magnetometr X [uT]#Magnetometr Y [uT]#Magnetometr Z [uT]".split("#");
                 csvWriterMagnetometer.writeNext(csvDataMagnetometer);
@@ -140,34 +132,34 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
     }
 
 
+    //  Zmiana wartości któregokolwiek z czujników
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(sensorsDataRepository!=null) {
+        if (sensorsDataRepository != null) {
             if (event.sensor == mAccelerometer) {
                 sensorsDataRepository.setAccelerometerValue(event.values);
-                csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterAccelerometer!=null))
-                {
+                csvDataAccelerometer = (((float) (event.timestamp - startTime) / 1000000000) + "#" + event.values[0] + "#" + event.values[1] + "#" + event.values[2]).split("#");
+                if ((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && (csvWriterAccelerometer != null)) {
                     csvWriterAccelerometer.writeNext(csvDataAccelerometer);
                 }
             } else if (event.sensor == mGyroscope) {
                 sensorsDataRepository.setGyroscopeValue(event.values);
-                csvDataGyroscope = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterGyroscope!=null))
-                {
+                csvDataGyroscope = (((float) (event.timestamp - startTime) / 1000000000) + "#" + event.values[0] + "#" + event.values[1] + "#" + event.values[2]).split("#");
+                if ((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && (csvWriterGyroscope != null)) {
                     csvWriterGyroscope.writeNext(csvDataGyroscope);
                 }
 
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
-                csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterMagnetometer!=null))
-                {
+                csvDataMagnetometer = (((float) (event.timestamp - startTime) / 1000000000) + "#" + event.values[0] + "#" + event.values[1] + "#" + event.values[2]).split("#");
+                if ((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) && (csvWriterMagnetometer != null)) {
                     csvWriterMagnetometer.writeNext(csvDataMagnetometer);
                 }
             }
         }
-        if(!shouldContinueService) {
+
+        // Zatrzymanie nasłuchiwania czujników
+        if (!shouldContinueService) {
             mSensorManager.unregisterListener(this);
             isEnable = false;
         }

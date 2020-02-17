@@ -1,7 +1,6 @@
 package com.dandrzas.inertialsensorsviewer.model.data;
 
 import com.dandrzas.inertialsensorsviewer.model.domain.SensorData;
-
 import java.util.Observable;
 
 public class SensorsDataRepository extends Observable {
@@ -12,14 +11,11 @@ public class SensorsDataRepository extends Observable {
     private SensorData sensorGyroscope = new SensorData();
     private SensorData sensorMagnetometer = new SensorData();
 
-    private SensorsDataRepository()
-    {
+    private SensorsDataRepository() {
     }
 
-    public static SensorsDataRepository getInstance()
-    {
-        if(ourInstance==null)
-        {
+    public static SensorsDataRepository getInstance() {
+        if (ourInstance == null) {
             ourInstance = new SensorsDataRepository();
         }
         return ourInstance;

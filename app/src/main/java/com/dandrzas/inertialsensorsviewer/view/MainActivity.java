@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Bindowanie elementów UI
         BottomNavigationView navView = findViewById(R.id.nav_view);
         activityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         graph = findViewById(R.id.graph_view);
@@ -49,18 +50,21 @@ public class MainActivity extends AppCompatActivity {
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
         buttonStart = findViewById(R.id.floatingActionButton_start);
 
+        // Wyświetlenie stanu pracy Service na FOA po ponownym stworzeniu Activity
         if (SensorsDataReadService.isEnable()) {
             buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
         } else {
             buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
         }
 
+        // Podpięcie pod LiveData z ViewModel
         activityViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
         activityViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
 
-        graphInit();
+        graphConfig();
 
+        // Obsługa bottom navigation menu
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Obsługa kliknięcia w FOA - Service start
         buttonStart.setOnClickListener(view ->
         {
             boolean isEnable = SensorsDataReadService.isEnable();
@@ -104,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Zoom in
+        // Obsługa kliknięcia w przycisk Zoom in
         button_zoom_in.setOnClickListener(view -> {
             double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
             double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
@@ -119,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             graph.onDataChanged(true, true);
         });
 
+        // Obsługa kliknięcia w przycisk Zoom out
         button_zoom_out.setOnClickListener(view -> {
             double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
             double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
@@ -132,41 +138,41 @@ public class MainActivity extends AppCompatActivity {
             graph.onDataChanged(true, true);
         });
 
+        // Touch eventy Graph View - przesunięcie wyświetlanego zakresu osi Y
         graph.setOnTouchListener((v, event) ->
                 {
                     float y = event.getY();
 
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_MOVE:
+                    if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
-                            float dy = y - previousTouchY;
-                            double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
-                            double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
-                            double actualYRange;
-                            if ((actualMinY < 0) && actualMaxY > 0)
-                                actualYRange = Math.abs(actualMaxY) + Math.abs(actualMinY);
-                            else if ((actualMaxY >= 0) && (actualMinY >= 0))
-                                actualYRange = actualMaxY - actualMinY;
-                            else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
-                            Log.d("dandxtestmovexRange", Double.toString(actualYRange));
+                        float dy = y - previousTouchY;
+                        double actualMinY = activityViewModel.getGraphMinY(bottomMenuSelectedItem);
+                        double actualMaxY = activityViewModel.getGraphMaxY(bottomMenuSelectedItem);
+                        double actualYRange;
 
-                            if (dy < -2) {
-                                Log.d("dandxtestmove", " góra");
-                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - 0.02 * actualYRange));
-                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - 0.02 * actualYRange));
-                            }
+                        // Wyliczenie aktualnie wyświetlanego zakresu
+                        if ((actualMinY < 0) && actualMaxY > 0)
+                            actualYRange = Math.abs(actualMaxY) + Math.abs(actualMinY);
+                        else if ((actualMaxY >= 0) && (actualMinY >= 0))
+                            actualYRange = actualMaxY - actualMinY;
+                        else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
 
-                            if (dy > 2) {
-                                Log.d("dandxtestmove", " dół‚");
-                                activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + 0.02 * actualYRange));
-                                activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + 0.02 * actualYRange));
-                            }
+                        // Przesunięcie w górę
+                        if (dy < -2) {
+                            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY - 0.02 * actualYRange));
+                            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY - 0.02 * actualYRange));
+                        }
 
-                            graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
-                            graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
-                            graph.onDataChanged(true, false);
+                        // Przesunięcie w dół
+                        if (dy > 2) {
+                            activityViewModel.setGraphMinY(bottomMenuSelectedItem, (float) (actualMinY + 0.02 * actualYRange));
+                            activityViewModel.setGraphMaxY(bottomMenuSelectedItem, (float) (actualMaxY + 0.02 * actualYRange));
+                        }
+
+                        graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
+                        graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
+                        graph.onDataChanged(true, false);
                     }
-
                     previousTouchY = y;
                     return false;
                 }
@@ -175,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        graph.getSeries().get(0).clearReference(graph);
+        graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
         graph.getSeries().get(1).clearReference(graph);
         graph.getSeries().get(2).clearReference(graph);
         activityViewModel.getGraphSeriesX().removeObservers(this);
@@ -184,13 +190,16 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    // Start serwisu po żądaniu od użytkownika uprawnienia do zapisu danych do pamięci zewnętrznej
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-       if(requestCode == permissionMemoryWriteCode) SensorsDataReadService.start(getApplicationContext());
+        if (requestCode == permissionMemoryWriteCode)
+            SensorsDataReadService.start(getApplicationContext());
     }
 
-    private void graphInit() {
+    // Konfiguracja osi i legendy wykresu
+    private void graphConfig() {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(activityViewModel.getGraphMinY(bottomMenuSelectedItem));
         graph.getViewport().setMaxY(activityViewModel.getGraphMaxY(bottomMenuSelectedItem));
@@ -199,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(activityViewModel.getGraphMinX(bottomMenuSelectedItem));
-        graph.getViewport().setMaxX(activityViewModel.getGraphSeriesLength(bottomMenuSelectedItem));
+        graph.getViewport().setMaxX(activityViewModel.getGraphMaxX(bottomMenuSelectedItem));
         graph.getViewport().setScalable(true);
         graph.getViewport().setScrollable(true);
 
@@ -215,10 +224,11 @@ public class MainActivity extends AppCompatActivity {
         graph.onDataChanged(true, true);
     }
 
+    // Implementacja interfejsu Runnable do przełączenia wyświetlanych danych z czujników w osobnym wątku
     private class SensorDataSwitch implements Runnable {
         @Override
         public void run() {
-            graph.getSeries().get(0).clearReference(graph);
+            graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
             graph.getSeries().get(1).clearReference(graph);
             graph.getSeries().get(2).clearReference(graph);
             graph.removeAllSeries();
@@ -226,13 +236,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Implementacja obserwatora do odbierania danych z ViewModel
     private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>> {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
             graph.addSeries(dataPointLineGraphSeries);
-            graphInit();
-            Log.d("TestTestMinX", Double.toString(graph.getViewport().getMinX(true)));
-            Log.d("TestTestMaxX", Double.toString(graph.getViewport().getMaxX(true)));
+            graphConfig();
         }
     }
 }
