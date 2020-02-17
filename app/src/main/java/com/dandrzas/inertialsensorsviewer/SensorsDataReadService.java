@@ -14,6 +14,8 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.util.Log;
+
 import androidx.core.content.ContextCompat;
 import com.opencsv.CSVWriter;
 import java.io.File;
@@ -68,6 +70,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             }
         }
     }
+
     private void handleActionStart() throws IOException {
         File filesCatalog;
         isEnable = true;
@@ -143,14 +146,14 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             if (event.sensor == mAccelerometer) {
                 sensorsDataRepository.setAccelerometerValue(event.values);
                 csvDataAccelerometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
+                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterAccelerometer!=null))
                 {
                     csvWriterAccelerometer.writeNext(csvDataAccelerometer);
                 }
             } else if (event.sensor == mGyroscope) {
                 sensorsDataRepository.setGyroscopeValue(event.values);
                 csvDataGyroscope = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
+                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterGyroscope!=null))
                 {
                     csvWriterGyroscope.writeNext(csvDataGyroscope);
                 }
@@ -158,7 +161,7 @@ public class SensorsDataReadService extends IntentService implements SensorEvent
             } else if (event.sensor == mMagnetometer) {
                 sensorsDataRepository.setMagnetometerValue(event.values);
                 csvDataMagnetometer = (((float)(event.timestamp-startTime)/1000000000)+"#"+event.values[0]+"#"+event.values[1]+"#"+event.values[2]).split("#");
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
+                if((ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)&&(csvWriterMagnetometer!=null))
                 {
                     csvWriterMagnetometer.writeNext(csvDataMagnetometer);
                 }

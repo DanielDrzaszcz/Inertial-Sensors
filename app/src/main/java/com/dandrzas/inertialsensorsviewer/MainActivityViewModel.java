@@ -30,7 +30,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> graphSeriesY;
     private LineGraphSeries<DataPoint> graphSeriesZ;
 
-    private SensorsDataRepository sensorsData;
+    private SensorsDataRepository sensorsDataRepository;
 
     private final float graphInitialMaxYAccelerometer = 40;
     private final float graphInitialMaxYGyroscope = 10;
@@ -47,8 +47,8 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private int graphMaxXMagnetometer=3000;
 
     public MainActivityViewModel() {
-        sensorsData = SensorsDataRepository.getInstance();
-        sensorsData.addObserver(this);
+        sensorsDataRepository = SensorsDataRepository.getInstance();
+        sensorsDataRepository.addObserver(this);
         initAccelerometerSeries();
         initGyroscopeSeries();
         initMagnetometerSeries();
@@ -161,17 +161,17 @@ public class MainActivityViewModel extends ViewModel implements Observer {
 
             if (arg.equals(4))
             {
-                graphMaxXAccelerometer = (int)(15000/sensorsData.getMinDelayAccelerometer());
+                graphMaxXAccelerometer = (int)(15000/ sensorsDataRepository.getMinDelayAccelerometer());
             }
 
             if (arg.equals(5))
             {
-                graphMaxXGyroscope = (int)(15000/sensorsData.getMinDelayGyroscope());
+                graphMaxXGyroscope = (int)(15000/ sensorsDataRepository.getMinDelayGyroscope());
             }
 
             if (arg.equals(6))
             {
-                graphMaxXMagnetometer = (int)(15000/sensorsData.getMinDelayMagnetometer());
+                graphMaxXMagnetometer = (int)(15000/ sensorsDataRepository.getMinDelayMagnetometer());
             }
         }
     }

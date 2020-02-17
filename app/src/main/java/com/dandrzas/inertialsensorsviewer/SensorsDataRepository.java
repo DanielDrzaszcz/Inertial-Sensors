@@ -4,13 +4,11 @@ import java.util.Observable;
 
 public class SensorsDataRepository extends Observable {
 
-    private float[] AccelerometerValue = new float[6];
-    private float[] GyroscopeValue = new float[6];
-    private float[] MagnetometerValue = new float[3];
     private static SensorsDataRepository ourInstance;
-    private float minDelayAccelerometer;
-    private float minDelayGyroscope;
-    private float minDelayMagnetometer;
+
+    private SensorData sensorAccelerometer = new SensorData();
+    private SensorData sensorGyroscope = new SensorData();
+    private SensorData sensorMagnetometer = new SensorData();
 
     private SensorsDataRepository()
     {
@@ -26,63 +24,62 @@ public class SensorsDataRepository extends Observable {
     }
 
     public float[] getAccelerometerValue() {
-        return AccelerometerValue;
+        return sensorAccelerometer.getValue();
     }
 
     public void setAccelerometerValue(float[] accelerometerValue) {
-        this.AccelerometerValue = accelerometerValue;
+        sensorAccelerometer.setValue(accelerometerValue);
         setChanged();
         notifyObservers(1);
     }
 
     public float[] getGyroscopeValue() {
-        return GyroscopeValue;
+        return sensorGyroscope.getValue();
     }
 
     public void setGyroscopeValue(float[] gyroscopeValue) {
-        GyroscopeValue = gyroscopeValue;
+        sensorGyroscope.setValue(gyroscopeValue);
         setChanged();
         notifyObservers(2);
     }
 
     public float[] getMagnetometerValue() {
-        return MagnetometerValue;
+        return sensorMagnetometer.getValue();
     }
 
     public void setMagnetometerValue(float[] magnetometerValue) {
-        MagnetometerValue = magnetometerValue;
+        sensorMagnetometer.setValue(magnetometerValue);
         setChanged();
         notifyObservers(3);
     }
 
     public float getMinDelayAccelerometer() {
-        return minDelayAccelerometer;
+        return sensorAccelerometer.getMinDelay();
     }
 
     public void setMinDelayAccelerometer(float minDelayAccelerometer) {
-        this.minDelayAccelerometer = minDelayAccelerometer;
+        sensorAccelerometer.setMinDelay(minDelayAccelerometer);
         setChanged();
         notifyObservers(4);
     }
 
     public float getMinDelayGyroscope() {
-        return minDelayGyroscope;
+        return sensorGyroscope.getMinDelay();
     }
 
     public void setMinDelayGyroscope(float minDelayGyroscope) {
-        this.minDelayGyroscope = minDelayGyroscope;
+        sensorGyroscope.setMinDelay(minDelayGyroscope);
         setChanged();
         notifyObservers(5);
     }
 
     public float getMinDelayMagnetometer() {
-        return minDelayMagnetometer;
+        return sensorMagnetometer.getMinDelay();
     }
 
     public void setMinDelayMagnetometer(float minDelayMagnetometer) {
-        this.minDelayMagnetometer = minDelayMagnetometer;
+        sensorMagnetometer.setMinDelay(minDelayMagnetometer);
         setChanged();
         notifyObservers(6);
     }
-
 }
