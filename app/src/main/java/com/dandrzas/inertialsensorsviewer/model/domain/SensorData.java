@@ -1,4 +1,4 @@
-package com.dandrzas.inertialsensorsviewer;
+package com.dandrzas.inertialsensorsviewer.model.domain;
 
 public class SensorData
 {

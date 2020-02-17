@@ -1,4 +1,6 @@
-package com.dandrzas.inertialsensorsviewer;
+package com.dandrzas.inertialsensorsviewer.model.data;
+
+import com.dandrzas.inertialsensorsviewer.model.domain.SensorData;
 
 import java.util.Observable;
 

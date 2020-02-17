@@ -1,4 +1,4 @@
-package com.dandrzas.inertialsensorsviewer;
+package com.dandrzas.inertialsensorsviewer.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Button;
 
+import com.dandrzas.inertialsensorsviewer.R;
+import com.dandrzas.inertialsensorsviewer.datasource.SensorsDataReadService;
+import com.dandrzas.inertialsensorsviewer.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;

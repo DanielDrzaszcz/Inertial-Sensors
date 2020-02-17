@@ -1,7 +1,6 @@
-package com.dandrzas.inertialsensorsviewer;
+package com.dandrzas.inertialsensorsviewer.datasource;
 
 import android.Manifest;
-import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
@@ -14,9 +13,10 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+
+import com.dandrzas.inertialsensorsviewer.model.data.SensorsDataRepository;
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
