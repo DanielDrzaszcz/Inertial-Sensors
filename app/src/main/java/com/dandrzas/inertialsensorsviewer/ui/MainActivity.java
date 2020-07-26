@@ -1,4 +1,4 @@
-package com.dandrzas.inertialsensorsviewer.view;
+package com.dandrzas.inertialsensorsviewer.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Button;
 
+import com.dandrzas.inertialsensorslibrary.data.DataManager;
 import com.dandrzas.inertialsensorsviewer.R;
-import com.dandrzas.inertialsensorsviewer.datasource.SensorsDataReadService;
-import com.dandrzas.inertialsensorsviewer.viewmodel.MainActivityViewModel;
+import com.dandrzas.inertialsensorsviewer.ui.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
@@ -34,13 +34,16 @@ public class MainActivity extends AppCompatActivity {
     private int bottomMenuSelectedItem = 1;
     private FloatingActionButton buttonStart;
     private float previousTouchY;
-    private final int permissionMemoryWriteCode = 1;
+    private final int PERMISSSION_MEMORY_WRITE_CODE = 1;
+    private DataManager dataManager;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DataManager.getInstance().setContext(this);
+        dataManager = DataManager.getInstance();
 
         // Bindowanie elementów UI
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -50,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
         Button button_zoom_out = findViewById(R.id.button_zoom_out);
         buttonStart = findViewById(R.id.floatingActionButton_start);
 
-        // Wyświetlenie stanu pracy Service na FOA po ponownym stworzeniu Activity
-        if (SensorsDataReadService.isEnable()) {
-            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+        // Processing state display after Activity recreate
+        if (dataManager.isComputingRunning()) {
+            buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause_white_24dp));
         } else {
-            buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
+            buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_white_24dp));
         }
 
         // Podpięcie pod LiveData z ViewModel
@@ -91,21 +94,20 @@ public class MainActivity extends AppCompatActivity {
         // Obsługa kliknięcia w FOA - Service start
         buttonStart.setOnClickListener(view ->
         {
-            boolean isEnable = SensorsDataReadService.isEnable();
+            boolean isEnable = dataManager.isComputingRunning();
 
             if (!isEnable) {
-
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    SensorsDataReadService.start(getApplicationContext());
-                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+                    dataManager.startComputing();
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause_white_24dp));
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionMemoryWriteCode);
-                    buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_pause_white_24dp));
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSSION_MEMORY_WRITE_CODE);
+                    buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pause_white_24dp));
                 }
 
             } else {
-                SensorsDataReadService.stop(getApplicationContext());
-                buttonStart.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_play_white_24dp));
+                dataManager.stopComputing();
+                buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_white_24dp));
             }
         });
 
@@ -190,12 +192,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    // Start serwisu po żądaniu od użytkownika uprawnienia do zapisu danych do pamięci zewnętrznej
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == permissionMemoryWriteCode)
-            SensorsDataReadService.start(getApplicationContext());
+        if (requestCode == PERMISSSION_MEMORY_WRITE_CODE)
+            dataManager.startComputing();
     }
 
     // Konfiguracja osi i legendy wykresu

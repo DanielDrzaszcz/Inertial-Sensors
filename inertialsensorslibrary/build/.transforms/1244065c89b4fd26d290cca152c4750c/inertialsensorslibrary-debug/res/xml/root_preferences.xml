@@ -1,0 +1,57 @@
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/app_config_header">
+
+    <ListPreference
+        app:defaultValue="system_default_algorithm"
+        app:entries="@array/algorithms_entries"
+        app:entryValues="@array/algorithms_values"
+        app:key="selected_algorithm"
+        app:title="@string/selected_algorithm"
+        app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="@string/complementary_filter_header">
+
+        <EditTextPreference
+            app:key="parameter_alfa"
+            app:title="@string/parameter_alfa"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="0.5" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/accelerometer_config_header">
+        <SwitchPreference
+            app:key="accelerometer_filter_enable"
+            app:title="@string/accelerometer_filter_enable"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="false">
+        </SwitchPreference>
+        <EditTextPreference
+            app:key="accelerometer_low_pass_gain"
+            app:title="@string/accelerometer_filter_gain"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="0.95" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/magnetometer_config_header">
+        <SwitchPreference
+            app:key="magnetometer_filter_enable"
+            app:title="@string/magnetometer_filter_enable"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="false">
+        </SwitchPreference>
+        <EditTextPreference
+            app:key="magnetometer_low_pass_gain"
+            app:title="@string/magnetometer_filter_gain"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="0.95" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+    </PreferenceCategory>
+
+</PreferenceScreen>

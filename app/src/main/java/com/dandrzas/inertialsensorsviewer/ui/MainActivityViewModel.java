@@ -1,10 +1,15 @@
-package com.dandrzas.inertialsensorsviewer.viewmodel;
+package com.dandrzas.inertialsensorsviewer.ui;
 
 import android.graphics.Color;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.dandrzas.inertialsensorsviewer.model.data.SensorsDataRepository;
+
+import com.dandrzas.inertialsensorslibrary.Constants;
+import com.dandrzas.inertialsensorslibrary.data.DataManager;
+import com.dandrzas.inertialsensorslibrary.data.SensorData;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.Observable;
@@ -27,7 +32,6 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> graphSeriesX;
     private LineGraphSeries<DataPoint> graphSeriesY;
     private LineGraphSeries<DataPoint> graphSeriesZ;
-    private SensorsDataRepository sensorsDataRepository;
     private final float graphInitialMaxYAccelerometer = 40;
     private final float graphInitialMaxYGyroscope = 10;
     private final float graphInitialMaxYMagnetometer = 60;
@@ -41,12 +45,15 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private int graphMaxXGyroscope = 3000;
     private int graphMaxXMagnetometer = 3000;
     private int selectedSensor = 1;
+    private DataManager dataManager;
 
     public MainActivityViewModel() {
 
         // Podłączenie do warstwy danych
-        sensorsDataRepository = SensorsDataRepository.getInstance();
-        sensorsDataRepository.addObserver(this);
+        dataManager = DataManager.getInstance();
+        dataManager.getAccelerometer().addObserver(this);
+        dataManager.getGyroscope().addObserver(this);
+        dataManager.getMagnetometer().addObserver(this);
 
         // Utworzenie i konfiguracja serii danych
         initAccelerometerSeries();
@@ -126,11 +133,12 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     // Pobranie danych z warstwy danych przy zmianie wartości
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof SensorsDataRepository) {
+        if (o instanceof SensorData) {
 
-            if (arg.equals(1)) {
-                float[] valuesAccelerometer = ((SensorsDataRepository) o).getAccelerometerValue();
+            if (arg.equals(Constants.ACCELEROMETER_ID)) {
+                float[] valuesAccelerometer = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd1 = false;
+                graphMaxXAccelerometer = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
                 if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer) {
                     scrollToEnd1 = true; // uruchom przesuwanie wartości w serii danych
                 }
@@ -139,9 +147,10 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 graphAccelerometerSeriesZ.appendData(new DataPoint(graphAccelerometerSeriesZ.getHighestValueX() + 1, valuesAccelerometer[2]), scrollToEnd1, graphMaxXAccelerometer);
             }
 
-            if (arg.equals(2)) {
-                float[] valuesGyroscope = ((SensorsDataRepository) o).getGyroscopeValue();
+            if (arg.equals(Constants.GYROSCOPE_ID)) {
+                float[] valuesGyroscope = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd2 = false;
+                graphMaxXGyroscope = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
                 if (graphGyroscopeSeriesY.getHighestValueX() >= graphMaxXGyroscope) {
                     scrollToEnd2 = true;
                 }
@@ -150,27 +159,16 @@ public class MainActivityViewModel extends ViewModel implements Observer {
                 graphGyroscopeSeriesZ.appendData(new DataPoint(graphGyroscopeSeriesZ.getHighestValueX() + 1, valuesGyroscope[2]), scrollToEnd2, graphMaxXGyroscope);
             }
 
-            if (arg.equals(3)) {
-                float[] valuesMagnetometer = ((SensorsDataRepository) o).getMagnetometerValue();
+            if (arg.equals(Constants.MAGNETOMETER_ID)) {
+                float[] valuesMagnetometer = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd3 = false;
+                graphMaxXMagnetometer = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
                 if (graphMagnetometerSeriesY.getHighestValueX() >= graphMaxXMagnetometer) {
                     scrollToEnd3 = true;
                 }
                 graphMagnetometerSeriesX.appendData(new DataPoint(graphMagnetometerSeriesX.getHighestValueX() + 1, valuesMagnetometer[0]), scrollToEnd3, graphMaxXMagnetometer);
                 graphMagnetometerSeriesY.appendData(new DataPoint(graphMagnetometerSeriesY.getHighestValueX() + 1, valuesMagnetometer[1]), scrollToEnd3, graphMaxXMagnetometer);
                 graphMagnetometerSeriesZ.appendData(new DataPoint(graphMagnetometerSeriesZ.getHighestValueX() + 1, valuesMagnetometer[2]), scrollToEnd3, graphMaxXMagnetometer);
-            }
-
-            if (arg.equals(4)) {
-                graphMaxXAccelerometer = (int) (15000 / sensorsDataRepository.getMinDelayAccelerometer()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
-            }
-
-            if (arg.equals(5)) {
-                graphMaxXGyroscope = (int) (15000 / sensorsDataRepository.getMinDelayGyroscope()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
-            }
-
-            if (arg.equals(6)) {
-                graphMaxXMagnetometer = (int) (15000 / sensorsDataRepository.getMinDelayMagnetometer()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
             }
         }
     }
