@@ -1,7 +1,6 @@
-package com.dandrzas.inertialsensorsviewer.ui;
+package com.dandrzas.inertialsensorsviewer.ui.sensorsdata;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,10 +11,11 @@ import com.dandrzas.inertialsensorslibrary.data.DataManager;
 import com.dandrzas.inertialsensorslibrary.data.SensorData;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivityViewModel extends ViewModel implements Observer {
+public class SensorsDataViewModel extends ViewModel  implements Observer {
 
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesX;
     private LineGraphSeries<DataPoint> graphAccelerometerSeriesY;
@@ -47,7 +47,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     private int selectedSensor = 1;
     private DataManager dataManager;
 
-    public MainActivityViewModel() {
+    public SensorsDataViewModel() {
 
         // Podłączenie do warstwy danych
         dataManager = DataManager.getInstance();
@@ -174,7 +174,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
     }
 
     // Przełączenie przekazywanych do widoku serii danych
-    public void setSelectedSensor(int selectedSensor) {
+    void setSelectedSensor(int selectedSensor) {
 
         this.selectedSensor = selectedSensor;
         graphMaxYAccelerometer = graphInitialMaxYAccelerometer;
@@ -210,19 +210,19 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return selectedSensor;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
+    LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
         return graphSeriesXLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesY() {
+    LiveData<LineGraphSeries<DataPoint>> getGraphSeriesY() {
         return graphSeriesYLiveData;
     }
 
-    public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesZ() {
+    LiveData<LineGraphSeries<DataPoint>> getGraphSeriesZ() {
         return graphSeriesZLiveData;
     }
 
-    public int getGraphMaxX() {
+    int getGraphMaxX() {
         int graphSeriesMaxX = graphMaxXAccelerometer;
 
         switch (selectedSensor) {
@@ -253,7 +253,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphSeriesMaxX;
     }
 
-    public int getGraphMinX() {
+    int getGraphMinX() {
 
         switch (selectedSensor) {
             case 1:
@@ -274,7 +274,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return (int) (graphAccelerometerSeriesX.getLowestValueX());
     }
 
-    public void setGraphMinY(float newMinYValue) {
+    void setGraphMinY(float newMinYValue) {
         switch (selectedSensor) {
             case 1:
                 this.graphMinYAccelerometer = newMinYValue;
@@ -288,7 +288,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
     }
 
-    public float getGraphMinY() {
+    float getGraphMinY() {
         switch (selectedSensor) {
             case 1:
                 return graphMinYAccelerometer;
@@ -300,7 +300,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         return graphMinYAccelerometer;
     }
 
-    public void setGraphMaxY(float newMaxYValue) {
+    void setGraphMaxY(float newMaxYValue) {
         switch (selectedSensor) {
             case 1:
                 this.graphMaxYAccelerometer = newMaxYValue;
@@ -314,7 +314,7 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
     }
 
-    public float getGraphMaxY() {
+    float getGraphMaxY() {
         switch (selectedSensor) {
             case 1:
                 return graphMaxYAccelerometer;
@@ -325,5 +325,5 @@ public class MainActivityViewModel extends ViewModel implements Observer {
         }
         return graphMaxYAccelerometer;
     }
-
 }
+

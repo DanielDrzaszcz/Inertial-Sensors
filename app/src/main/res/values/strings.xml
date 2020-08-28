@@ -4,4 +4,18 @@
     <string name="title_accelerometer">Akcelerometr</string>
     <string name="title_gyroscope">Żyroskop</string>
     <string name="title_magnetometer">Magnetometr</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Sensory Inercyjne</string>
+    <string name="nav_header_subtitle"></string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Ustawienia</string>
+
+    <string name="menu_sensorsdata">Dane z czujników</string>
+    <string name="menu_gallery"></string>
+    <string name="menu_slideshow"></string>
+    <string name="menu_tools"></string>
+    <string name="menu_share"></string>
+    <string name="menu_send"></string>
 </resources>
