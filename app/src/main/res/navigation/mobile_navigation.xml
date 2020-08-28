@@ -36,9 +36,9 @@
         tools:layout="@layout/fragment_pedometer" />
 
     <fragment
-        android:id="@+id/nav_send"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:id="@+id/nav_movement"
+        android:name="com.dandrzas.inertialsensorsviewer.ui.movement.MovementMainFragment"
+        android:label="@string/menu_movement"
+        tools:layout="@layout/fragment_movement_main" />
 
 </navigation>

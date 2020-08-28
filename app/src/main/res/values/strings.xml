@@ -13,12 +13,31 @@
     <string name="action_settings">Ustawienia</string>
 
     <string name="menu_sensorsdata">Dane z czujników</string>
-    <string name="menu_orientation">Orientacja urządzenia</string>
+    <string name="menu_orientation">Orientacja</string>
     <string name="menu_compass">Kompas</string>
     <string name="menu_bubblelevel">Poziomica</string>
     <string name="menu_pedometer">Licznik kroków</string>
-    <string name="menu_send"></string>
+    <string name="menu_movement">Przemieszczenie</string>
 
     <string name="steps_count">Ilość kroków: </string>
 
+    <string name="movement">Przemieszczenie</string>
+    <string name="movement_x">x:</string>
+    <string name="movement_y">y:</string>
+    <string name="movement_z">z:</string>
+    <string name="velocity">Prędkość</string>
+    <string name="velocity_x">x:</string>
+    <string name="velocity_y">y:</string>
+    <string name="velocity_z">z:</string>
+
+    <!-- Tabs titles-->
+    <string name="tab_text_1">Trasa</string>
+    <string name="tab_text_2">Wykresy</string>
+
+    <!-- Trends Spinner axis choose elements -->
+    <string-array name="trends_spinner_axis">
+        <item>Wybrana oś: X</item>
+        <item>Wybrana oś: Y</item>
+        <item>Wybrana oś: Z</item>
+    </string-array>
 </resources>

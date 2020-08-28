@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.movement.MovementTraceFragment">
+
+    <TextView
+        android:id="@+id/text_view_movement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movement"
+        android:textSize="20sp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_movement_x"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_movement_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movement_x"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_movement_y"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_movement" />
+
+    <TextView
+        android:id="@+id/text_view_movement_y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movement_y"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_movement_z"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_movement_x" />
+
+    <TextView
+        android:id="@+id/text_view_movement_z"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/movement_z"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/chart_bubble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_velocity_y" />
+
+    <TextView
+        android:id="@+id/text_view_velocity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/velocity"
+        android:textSize="20sp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_velocity_x"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.77"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_velocity_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movement_x"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_velocity_y"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_velocity" />
+
+    <TextView
+        android:id="@+id/text_view_velocity_y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movement_y"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_velocity_z"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_velocity_x" />
+
+    <TextView
+        android:id="@+id/text_view_velocity_z"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/velocity_z"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/chart_bubble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_velocity_y" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:visibility="invisible"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/chart_bubble"
+        app:layout_constraintEnd_toEndOf="@+id/chart_bubble"
+        app:layout_constraintStart_toStartOf="@+id/chart_bubble"
+        app:layout_constraintTop_toTopOf="@+id/chart_bubble" />
+
+    <com.github.mikephil.charting.charts.BubbleChart
+        android:id="@+id/chart_bubble"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="68dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.96" >
+
+    </com.github.mikephil.charting.charts.BubbleChart>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

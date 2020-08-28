@@ -24,13 +24,14 @@
             android:id="@+id/nav_pedometer"
             android:icon="@drawable/ic_pedometer_24dp"
             android:title="@string/menu_pedometer" />
+        <item
+            android:id="@+id/nav_movement"
+            android:icon="@drawable/ic_navigation_black_24dp"
+            android:title="@string/menu_movement" />
     </group>
 
         <group android:id="@+id/nav_group2">
-            <item
-                android:id="@+id/nav_send2"
-                android:icon="@drawable/ic_gyroscope_icon"
-                android:title="@string/menu_send" />
+
         </group>
 
 </menu>
