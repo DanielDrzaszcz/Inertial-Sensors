@@ -18,10 +18,10 @@
         tools:layout="@layout/fragment_orientation" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_compass"
+        android:name="com.dandrzas.inertialsensorsviewer.ui.compass.CompassFragment"
+        android:label="@string/menu_compass"
+        tools:layout="@layout/fragment_compass" />
 
     <fragment
         android:id="@+id/nav_tools"
