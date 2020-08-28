@@ -41,4 +41,9 @@
         android:label="@string/menu_movement"
         tools:layout="@layout/fragment_movement_main" />
 
+    <activity
+        android:id="@+id/nav_settings"
+        android:name="com.dandrzas.inertialsensorslibrary.ui.SettingsActivity"
+        android:label="@string/action_settings"
+        tools:layout="@layout/settings_activity" />
 </navigation>
