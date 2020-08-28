@@ -24,10 +24,10 @@
         tools:layout="@layout/fragment_compass" />
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_bubblelevel"
+        android:name="com.dandrzas.inertialsensorsviewer.ui.bubblelevel.BubbleLevelFragment"
+        android:label="@string/menu_bubblelevel"
+        tools:layout="@layout/fragment_bubblelevel" />
 
     <fragment
         android:id="@+id/nav_share"

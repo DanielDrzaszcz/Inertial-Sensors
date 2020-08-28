@@ -17,9 +17,9 @@
             android:icon="@drawable/ic_explore_black_24dp"
             android:title="@string/menu_compass" />
         <item
-            android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_gyroscope_icon"
-            android:title="@string/menu_tools" />
+            android:id="@+id/nav_bubblelevel"
+            android:icon="@drawable/ic_bubble_level"
+            android:title="@string/menu_bubblelevel" />
     </group>
 
     <item android:title="">
