@@ -13,7 +13,7 @@
     <string name="action_settings">Ustawienia</string>
 
     <string name="menu_sensorsdata">Dane z czujników</string>
-    <string name="menu_gallery"></string>
+    <string name="menu_orientation">Orientacja urządzenia</string>
     <string name="menu_slideshow"></string>
     <string name="menu_tools"></string>
     <string name="menu_share"></string>

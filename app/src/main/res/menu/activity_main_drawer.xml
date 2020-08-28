@@ -6,12 +6,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_sensorsdata"
-            android:icon="@drawable/ic_gyroscope_icon"
+            android:icon="@drawable/ic_gyroscope_black"
             android:title="@string/menu_sensorsdata" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_gyroscope_icon"
-            android:title="@string/menu_gallery" />
+            android:id="@+id/nav_orientation"
+            android:icon="@drawable/ic_rotation_black_24dp"
+            android:title="@string/menu_orientation" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_gyroscope_icon"

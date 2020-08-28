@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_sensorsdata" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_orientation"
+        android:name="com.dandrzas.inertialsensorsviewer.ui.orientation.OrientationFragment"
+        android:label="@string/menu_orientation"
+        tools:layout="@layout/fragment_orientation" />
 
     <fragment
         android:id="@+id/nav_slideshow"
