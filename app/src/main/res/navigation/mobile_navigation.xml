@@ -30,14 +30,15 @@
         tools:layout="@layout/fragment_bubblelevel" />
 
     <fragment
-        android:id="@+id/nav_share"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+        android:id="@+id/nav_pedometer"
+        android:name="com.dandrzas.inertialsensorsviewer.ui.pedometer.PedometerFragment"
+        android:label="@string/menu_pedometer"
+        tools:layout="@layout/fragment_pedometer" />
 
     <fragment
         android:id="@+id/nav_send"
         android:name="com.dandrzas.inertialsensorsviewer.ui.send.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
+
 </navigation>

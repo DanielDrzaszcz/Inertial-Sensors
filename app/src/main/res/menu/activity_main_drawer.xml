@@ -20,19 +20,17 @@
             android:id="@+id/nav_bubblelevel"
             android:icon="@drawable/ic_bubble_level"
             android:title="@string/menu_bubblelevel" />
+        <item
+            android:id="@+id/nav_pedometer"
+            android:icon="@drawable/ic_pedometer_24dp"
+            android:title="@string/menu_pedometer" />
     </group>
 
-    <item android:title="">
-        <menu>
+        <group android:id="@+id/nav_group2">
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_gyroscope_icon"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_send2"
                 android:icon="@drawable/ic_gyroscope_icon"
                 android:title="@string/menu_send" />
-        </menu>
-    </item>
+        </group>
 
 </menu>

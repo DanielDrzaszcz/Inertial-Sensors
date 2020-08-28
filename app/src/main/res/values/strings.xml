@@ -16,6 +16,9 @@
     <string name="menu_orientation">Orientacja urządzenia</string>
     <string name="menu_compass">Kompas</string>
     <string name="menu_bubblelevel">Poziomica</string>
-    <string name="menu_share"></string>
+    <string name="menu_pedometer">Licznik kroków</string>
     <string name="menu_send"></string>
+
+    <string name="steps_count">Ilość kroków: </string>
+
 </resources>
