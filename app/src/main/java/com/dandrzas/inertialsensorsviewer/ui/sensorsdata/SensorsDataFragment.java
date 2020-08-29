@@ -180,7 +180,7 @@ public class SensorsDataFragment extends Fragment {
         graph.getLegendRenderer().resetStyles();
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.onDataChanged(true, true);
     }
 

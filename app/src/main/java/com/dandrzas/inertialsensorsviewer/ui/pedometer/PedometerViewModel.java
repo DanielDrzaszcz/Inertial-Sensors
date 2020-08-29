@@ -3,7 +3,6 @@ package com.dandrzas.inertialsensorsviewer.ui.pedometer;
 import android.graphics.Color;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -70,7 +69,6 @@ public class PedometerViewModel extends ViewModel implements Observer {
 
     public void startComputing()
     {
-        dataManager.startSensorsListening();
         dataManager.startComputing();
     }
 

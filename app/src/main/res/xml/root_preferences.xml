@@ -51,6 +51,24 @@
             app:defaultValue="0.95" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/step_detect_algorithm_header">
+        <EditTextPreference
+            app:key="step_detect_algorithm_window_width"
+            app:title="@string/window_width"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="50" />
+        <EditTextPreference
+            app:key="step_detect_algorithm_threshold_1"
+            app:title="@string/threshold_1"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="2" />
+        <EditTextPreference
+            app:key="step_detect_algorithm_threshold_2"
+            app:title="@string/threshold_2"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="1" />
+    </PreferenceCategory>
+
     <PreferenceCategory>
     </PreferenceCategory>
 

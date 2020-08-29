@@ -1,8 +1,6 @@
 package com.dandrzas.inertialsensorsviewer.ui.orientation;
 
-import android.Manifest;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,21 +9,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
-
-import com.dandrzas.inertialsensorslibrary.Constants;
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
 import com.dandrzas.inertialsensorsviewer.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
@@ -68,33 +59,7 @@ public class OrientationFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Switching display graph
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
-        switch (selectedAlgorithm){
-            case "system_default_algorithm":
-                orientationViewModel.setSelectedAlgorithm(Constants.SYSTEM_ALGORITHM_ID);
-                break;
-            case "orientation_without_fusion":
-                orientationViewModel.setSelectedAlgorithm(Constants.ORIENTATION_WITHOUT_FUSION);
-                break;
-            case "complementary_filter":
-                orientationViewModel.setSelectedAlgorithm(Constants.COMPLEMENTARY_FILTER_ID);
-                break;
-            case "kalman_filter":
-                orientationViewModel.setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
-                break;
-            case "extended_kalman_filter":
-                orientationViewModel.setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
-                break;
-            case "mahony_filter":
-                orientationViewModel.setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
-                break;
-            case "madgwick_filter":
-                orientationViewModel.setSelectedAlgorithm(Constants.MADGWICK_FILTER_ID);
-                break;
-        }
+        orientationViewModel.changeSelectedAlgorithm();
         graphConfig();
     }
 
@@ -201,7 +166,7 @@ public class OrientationFragment extends Fragment {
         graph.getLegendRenderer().resetStyles();
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setBackgroundColor(Color.LTGRAY);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.onDataChanged(true, true);
     }
 

@@ -2,15 +2,13 @@ package com.dandrzas.inertialsensorsviewer.ui.orientation;
 
 import android.graphics.Color;
 import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.dandrzas.inertialsensorslibrary.Constants;
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
-import com.dandrzas.inertialsensorslibrary.data.OrientationAlgorithm;
-import com.dandrzas.inertialsensorslibrary.data.SystemAlgorithm;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.OrientationAlgorithm;
+import com.dandrzas.inertialsensorsviewer.data.SystemAlgorithm;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -39,7 +37,6 @@ public class OrientationViewModel extends ViewModel implements Observer {
     private float graphMaxY = graphInitialMaxY;
     private float graphMinY = (-1) * graphInitialMaxY;
     private int graphMaxX = 3000;
-    private int selectedAlgorithm;
     private final String TAG = OrientationViewModel.class.getSimpleName();
 
     public OrientationViewModel() {
@@ -85,7 +82,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        Log.d(TAG, " Selected Algorithm: " + selectedAlgorithm);
+        Log.d(TAG, " Selected Algorithm: " + dataManager.getSelectedAlgorithm());
 
         if (o instanceof OrientationAlgorithm) {
             if (arg.equals(Constants.COMPLEMENTARY_FILTER_ID)) {
@@ -126,11 +123,9 @@ public class OrientationViewModel extends ViewModel implements Observer {
     }
 
     // Przełączenie przekazywanych do widoku serii danych
-    public void setSelectedAlgorithm(int selectedAlgorithm) {
+    public void changeSelectedAlgorithm() {
 
-        this.selectedAlgorithm = selectedAlgorithm;
-
-        switch (selectedAlgorithm) {
+        switch (dataManager.getSelectedAlgorithm()) {
             case Constants.SYSTEM_ALGORITHM_ID:
                 graphSeriesX = systemAlgorithmSeriesX;
                 graphSeriesY = systemAlgorithmSeriesY;
@@ -150,10 +145,6 @@ public class OrientationViewModel extends ViewModel implements Observer {
         graphSeriesXLiveData.setValue(graphSeriesX);
         graphSeriesYLiveData.setValue(graphSeriesY);
         graphSeriesZLiveData.setValue(graphSeriesZ);
-    }
-
-    public int getSelectedAlgorithm() {
-        return selectedAlgorithm;
     }
 
     public LiveData<LineGraphSeries<DataPoint>> getGraphSeriesX() {
@@ -207,21 +198,6 @@ public class OrientationViewModel extends ViewModel implements Observer {
     public float getGraphMaxY() {
 
         return graphMaxY;
-    }
-
-    public void startComputing()
-    {
-        dataManager.startComputing();
-    }
-
-    public void stopComputing()
-    {
-        dataManager.stopComputing();
-    }
-
-    public boolean isComputingRunning()
-    {
-        return dataManager.isComputingRunning();
     }
 
 }

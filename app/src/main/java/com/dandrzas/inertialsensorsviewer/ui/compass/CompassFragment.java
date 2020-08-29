@@ -12,9 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
-
-import com.dandrzas.inertialsensorslibrary.Constants;
 import com.dandrzas.inertialsensorsviewer.R;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,37 +55,11 @@ public class CompassFragment extends Fragment {
         return root;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
         imageViewCompass.setRotation(0);
         textViewOrientation.setText("-°");
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
-        switch (selectedAlgorithm){
-            case "system_default_algorithm":
-                compassViewModel.setSelectedAlgorithm(Constants.SYSTEM_ALGORITHM_ID);
-                break;
-            case "orientation_without_fusion":
-                compassViewModel.setSelectedAlgorithm(Constants.ORIENTATION_WITHOUT_FUSION);
-                break;
-            case "complementary_filter":
-                compassViewModel.setSelectedAlgorithm(Constants.COMPLEMENTARY_FILTER_ID);
-                break;
-            case "kalman_filter":
-                compassViewModel.setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
-                break;
-            case "extended_kalman_filter":
-                compassViewModel.setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
-                break;
-            case "mahony_filter":
-                compassViewModel.setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
-                break;
-            case "madgwick_filter":
-                compassViewModel.setSelectedAlgorithm(Constants.MADGWICK_FILTER_ID);
-                break;
-        }
     }
 
 }

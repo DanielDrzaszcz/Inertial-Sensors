@@ -2,8 +2,6 @@ package com.dandrzas.inertialsensorsviewer.data;
 
 import android.util.Log;
 
-import com.dandrzas.inertialsensorslibrary.data.SensorData;
-
 import java.util.LinkedList;
 import java.util.Observable;
 
@@ -33,7 +31,7 @@ public class StepDetectAlgorithm extends Observable {
         this.sensorAccelerometer = sensorAccelerometer;
     }
 
-    public void clearData() {
+    private void clearData() {
         accelerationMagnitudeBuffer.clear();
         accelerationAverageBuffer.clear();
         accelerationVarianceBuffer.clear();
@@ -44,6 +42,7 @@ public class StepDetectAlgorithm extends Observable {
     }
 
     public void startComputing(boolean gyroscopeAvailable) {
+        clearData();
         isRunning = true;
     }
 

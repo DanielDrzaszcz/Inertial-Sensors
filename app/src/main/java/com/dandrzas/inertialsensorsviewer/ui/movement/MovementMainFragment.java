@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
-import com.dandrzas.inertialsensorslibrary.Constants;
 import com.dandrzas.inertialsensorsviewer.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -40,37 +39,4 @@ public class MovementMainFragment extends Fragment {
         return root;
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Switching source algorithm
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
-       /* switch (selectedAlgorithm) {
-            case "system_default_algorithm":
-                dataManager.setSelectedAlgorithm(Constants.SYSTEM_ALGORITHM_ID);
-                break;
-            case "orientation_without_fusion":
-                dataManager.setSelectedAlgorithm(Constants.ORIENTATION_WITHOUT_FUSION);
-                break;
-            case "complementary_filter":
-                dataManager.setSelectedAlgorithm(Constants.COMPLEMENTARY_FILTER_ID);
-                break;
-            case "kalman_filter":
-                dataManager.setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
-                break;
-            case "extended_kalman_filter":
-                dataManager.setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
-                break;
-            case "mahony_filter":
-                dataManager.setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
-                break;
-            case "madgwick_filter":
-                dataManager.setSelectedAlgorithm(Constants.MADGWICK_FILTER_ID);
-                break;
-        }
-*/
-    }
 }

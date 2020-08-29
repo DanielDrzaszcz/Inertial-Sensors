@@ -1,13 +1,16 @@
 package com.dandrzas.inertialsensorsviewer.ui.movement;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.InertialTrackingAlgorithm;
 import com.github.mikephil.charting.data.BubbleDataSet;
+import com.github.mikephil.charting.data.BubbleEntry;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -33,11 +36,11 @@ public class MovementTraceViewModel extends ViewModel implements Observer {
 
     public MovementTraceViewModel() {
         dataManager = DataManager.getInstance();
-        //dataManager.addObserver(this);
+        dataManager.addObserver(this);
         dataManager.getAlgorithmComplementaryInstance().addObserver(this);
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
-        //dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
+        dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
         progressBarVisible.setValue(false);
         chartDataVisible.setValue(false);
         initDataSeries();
@@ -45,7 +48,7 @@ public class MovementTraceViewModel extends ViewModel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-/*
+
         if(dataManager.isFirstUpdAfterStart()){
             bubbleEntries.clear();
             bubbleDataSet.clear();
@@ -97,7 +100,7 @@ public class MovementTraceViewModel extends ViewModel implements Observer {
                 progressBarVisible.setValue(false);
                 chartDataVisible.setValue(true);
             }
-        }*/
+        }
     }
 
     public MutableLiveData<Float[]> getMovementPos() {

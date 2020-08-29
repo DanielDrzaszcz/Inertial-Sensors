@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
-import com.dandrzas.inertialsensorslibrary.ui.SettingsActivity;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -43,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_sensorsdata, R.id.nav_orientation, R.id.nav_compass,
                 R.id.nav_bubblelevel, R.id.nav_pedometer, R.id.nav_movement)
@@ -63,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_white_24dp));
         }
 
-        // Obsługa kliknięcia w FOA - Service start
+        // FOA - Service start
         buttonStart.setOnClickListener(view ->
         {
             boolean isEnable = dataManager.isComputingRunning();
@@ -94,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -103,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivityForResult(intent, 666);

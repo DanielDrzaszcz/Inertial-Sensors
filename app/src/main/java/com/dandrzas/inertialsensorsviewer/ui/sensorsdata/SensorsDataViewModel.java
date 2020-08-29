@@ -1,14 +1,12 @@
 package com.dandrzas.inertialsensorsviewer.ui.sensorsdata;
 
 import android.graphics.Color;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.dandrzas.inertialsensorslibrary.Constants;
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
-import com.dandrzas.inertialsensorslibrary.data.SensorData;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.SensorData;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 

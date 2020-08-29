@@ -43,7 +43,7 @@
 
     <activity
         android:id="@+id/nav_settings"
-        android:name="com.dandrzas.inertialsensorslibrary.ui.SettingsActivity"
+        android:name="com.dandrzas.inertialsensorsviewer.SettingsActivity"
         android:label="@string/action_settings"
         tools:layout="@layout/settings_activity" />
 </navigation>

@@ -1,10 +1,8 @@
 package com.dandrzas.inertialsensorsviewer.ui.movement;
 
 import android.graphics.Color;
-
 import androidx.lifecycle.ViewModel;
-
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
 import com.dandrzas.inertialsensorsviewer.data.InertialTrackingAlgorithm;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -31,7 +29,7 @@ public class MovementTrendsViewModel extends ViewModel implements Observer {
 
     public MovementTrendsViewModel() {
         dataManager = DataManager.getInstance();
-        //dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
+        dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
         initDataSeries();
     }
 

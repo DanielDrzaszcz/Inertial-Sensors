@@ -2,9 +2,6 @@ package com.dandrzas.inertialsensorsviewer.data;
 
 import android.util.Log;
 
-import com.dandrzas.inertialsensorslibrary.data.IFOrientationAlgorithm;
-import com.dandrzas.inertialsensorslibrary.data.SensorData;
-
 import java.util.Observable;
 
 public class InertialTrackingAlgorithm  extends Observable {
@@ -72,7 +69,7 @@ public class InertialTrackingAlgorithm  extends Observable {
         Log.d("InrtialTrackingTestIni", "calcCounter: " + calcCounter);
     }
 
-    public void clearData()
+    private void clearData()
     {
         calculatedMovement[0] = 0;
         calculatedMovement[1] = 0;
@@ -88,6 +85,7 @@ public class InertialTrackingAlgorithm  extends Observable {
     }
 
     public void startComputing() {
+        clearData();
         isRunning = true;
     }
 

@@ -1,13 +1,10 @@
 package com.dandrzas.inertialsensorsviewer.ui.bubblelevel;
 
 import android.util.Log;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.dandrzas.inertialsensorslibrary.data.DataManager;
-import com.dandrzas.inertialsensorslibrary.data.IFOrientationAlgorithm;
+import com.dandrzas.inertialsensorsviewer.data.DataManager;
+import com.dandrzas.inertialsensorsviewer.data.IFOrientationAlgorithm;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,7 +12,6 @@ import java.util.Observer;
 public class BubbleLevelViewModel extends ViewModel implements Observer {
 
     private DataManager dataManager;
-    private int selectedAlgorithm;
     private final String TAG = BubbleLevelViewModel.class.getSimpleName();
     private float lineHorizontalRange;
     private MutableLiveData<Float> lineHorizontalBubblePos = new MutableLiveData<>();
@@ -53,8 +49,8 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
         float circlePixelsMoveX;
         float circlePixelsMoveY;
 
-        Log.d(TAG, " Selected Algorithm: " + selectedAlgorithm);
-        if ((int) arg == selectedAlgorithm) {
+        Log.d(TAG, " Selected Algorithm: " + dataManager.getSelectedAlgorithm());
+        if ((int) arg == dataManager.getSelectedAlgorithm()) {
 
             rotationX = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[0];
             rotationY = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[1];
@@ -124,28 +120,6 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             lineHorizontalBubblePos.setValue(lineHorizontalBubblePosZero - horizontalPixelsMoveY);
 
         }
-    }
-
-    public void setSelectedAlgorithm(int selectedAlgorithm) {
-
-        this.selectedAlgorithm = selectedAlgorithm;
-
-    }
-
-    public int getSelectedAlgorithm() {
-        return selectedAlgorithm;
-    }
-
-    public void startComputing() {
-        dataManager.startComputing();
-    }
-
-    public void stopComputing() {
-        dataManager.stopComputing();
-    }
-
-    public boolean isComputingRunning() {
-        return dataManager.isComputingRunning();
     }
 
     public void setLineHorizontalRange(float lineHorizontalRange) {

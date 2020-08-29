@@ -7,17 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
-
-import com.dandrzas.inertialsensorslibrary.Constants;
 import com.dandrzas.inertialsensorsviewer.R;
+import com.dandrzas.inertialsensorsviewer.data.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,34 +76,6 @@ public class BubbleLevelFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Switching selected algorithm
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
-        switch (selectedAlgorithm){
-            case "system_default_algorithm":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.SYSTEM_ALGORITHM_ID);
-                break;
-            case "orientation_without_fusion":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.ORIENTATION_WITHOUT_FUSION);
-                break;
-            case "complementary_filter":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.COMPLEMENTARY_FILTER_ID);
-                break;
-            case "kalman_filter":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
-                break;
-            case "extended_kalman_filter":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
-                break;
-            case "mahony_filter":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
-                break;
-            case "madgwick_filter":
-                bubbleLevelViewModel.setSelectedAlgorithm(Constants.MADGWICK_FILTER_ID);
-                break;
-        }
     }
-
 
 }

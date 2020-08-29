@@ -1,14 +1,11 @@
 <resources>
-    <string name="app_name">Inertial Sensors Viewer</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">Inertial Sensors</string>
     <string name="title_accelerometer">Akcelerometr</string>
     <string name="title_gyroscope">Żyroskop</string>
     <string name="title_magnetometer">Magnetometr</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Sensory Inercyjne</string>
-    <string name="nav_header_subtitle">Daniel Drząszcz</string>
+    <string name="nav_header_subtitle"></string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Ustawienia</string>
 
@@ -40,4 +37,33 @@
         <item>Wybrana oś: Y</item>
         <item>Wybrana oś: Z</item>
     </string-array>
+
+    <string name="title_activity_settings">Ustawienia</string>
+
+    <!-- Preference Titles -->
+    <string name="complementary_filter_header">Filtr komplementarny</string>
+    <string name="app_config_header">Algorytm wyznaczania orientacji</string>
+    <string name="accelerometer_config_header">Akcelerometr</string>
+    <string name="magnetometer_config_header">Magnetometr</string>
+    <string name="step_detect_algorithm_header">Algorytm detekcji kroku</string>
+
+    <!-- App configuration Preferences -->
+    <string name="selected_algorithm">Wybór algorytmu</string>
+
+    <!-- Complementary fiter Preferences -->
+    <string name="parameter_alfa">Współczynnik alfa</string>
+
+    <!-- Accelerometer Preferences -->
+    <string name="accelerometer_filter_enable">Filtr dolnoprzepustowy</string>
+    <string name="accelerometer_filter_gain">Wzmocnienie filtra</string>
+
+    <!-- Magnetometer Preferences -->
+    <string name="magnetometer_filter_enable">Filtr dolnoprzepustowy</string>
+    <string name="magnetometer_filter_gain">Wzmocnienie filtra</string>
+
+    <!-- Step detect Preferences -->
+    <string name="window_width">Szerokość okna uśredniania</string>
+    <string name="threshold_1">Próg 1</string>
+    <string name="threshold_2">Próg 2</string>
+
 </resources>
