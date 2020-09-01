@@ -7,43 +7,43 @@
 
     <fragment
         android:id="@+id/nav_sensorsdata"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.sensorsdata.SensorsDataFragment"
+        android:name="com.dandrzas.inertialsensors.ui.sensorsdata.SensorsDataFragment"
         android:label="@string/menu_sensorsdata"
         tools:layout="@layout/fragment_sensorsdata" />
 
     <fragment
         android:id="@+id/nav_orientation"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.orientation.OrientationFragment"
+        android:name="com.dandrzas.inertialsensors.ui.orientation.OrientationFragment"
         android:label="@string/menu_orientation"
         tools:layout="@layout/fragment_orientation" />
 
     <fragment
         android:id="@+id/nav_compass"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.compass.CompassFragment"
+        android:name="com.dandrzas.inertialsensors.ui.compass.CompassFragment"
         android:label="@string/menu_compass"
         tools:layout="@layout/fragment_compass" />
 
     <fragment
         android:id="@+id/nav_bubblelevel"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.bubblelevel.BubbleLevelFragment"
+        android:name="com.dandrzas.inertialsensors.ui.bubblelevel.BubbleLevelFragment"
         android:label="@string/menu_bubblelevel"
         tools:layout="@layout/fragment_bubblelevel" />
 
     <fragment
         android:id="@+id/nav_pedometer"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.pedometer.PedometerFragment"
+        android:name="com.dandrzas.inertialsensors.ui.pedometer.PedometerFragment"
         android:label="@string/menu_pedometer"
         tools:layout="@layout/fragment_pedometer" />
 
     <fragment
         android:id="@+id/nav_movement"
-        android:name="com.dandrzas.inertialsensorsviewer.ui.movement.MovementMainFragment"
+        android:name="com.dandrzas.inertialsensors.ui.movement.MovementMainFragment"
         android:label="@string/menu_movement"
         tools:layout="@layout/fragment_movement_main" />
 
     <activity
         android:id="@+id/nav_settings"
-        android:name="com.dandrzas.inertialsensorsviewer.SettingsActivity"
+        android:name="com.dandrzas.inertialsensors.SettingsActivity"
         android:label="@string/action_settings"
         tools:layout="@layout/settings_activity" />
 </navigation>

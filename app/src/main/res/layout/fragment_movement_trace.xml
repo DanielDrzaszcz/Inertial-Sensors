@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.movement.MovementTraceFragment">
+    tools:context="com.dandrzas.inertialsensors.ui.movement.MovementTraceFragment">
 
     <TextView
         android:id="@+id/text_view_movement"
