@@ -48,10 +48,12 @@ public class InertialTrackingAlgorithm  extends Observable {
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[0]: " + initialAcceleration[0]);
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[1]: " + initialAcceleration[1]);
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[2]: " + initialAcceleration[2]);
-            //alcCounter = 0;
         }
         calcLinearGravity();
         calculatedVelocity = calcIntegral(linearAcceleration, linearAccelerationPrev, calculatedVelocity);
+        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[0]);
+        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[1]);
+        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[2]);
 
         calculatedMovement = calcIntegral(calculatedVelocity, calculatedVelocityPrev, calculatedMovement);
         setChanged();
@@ -183,4 +185,9 @@ public class InertialTrackingAlgorithm  extends Observable {
     public IFOrientationAlgorithm getOrientationAlgorithm() {
         return orientationAlgorithm;
     }
+
+    public float getActualSampleTime() {
+        return actualSampleTime;
+    }
+
 }

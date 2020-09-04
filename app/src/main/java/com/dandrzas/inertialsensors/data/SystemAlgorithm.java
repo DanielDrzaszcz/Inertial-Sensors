@@ -8,12 +8,13 @@ public class SystemAlgorithm extends Observable implements IFOrientationAlgorith
     private float[] rollPitchYaw = new float[3];
     private float[] rotationMatrixNWURPY = new float[9];
     private float[] rotationMatrixRPYNWU = new float[9];
+    private float timestamp;
 
     public SystemAlgorithm() {
     }
 
-    public void calcOrientation(float[] systemRotationSensorVal) {
-
+    public void calcOrientation(float[] systemRotationSensorVal, float timestamp) {
+        this.timestamp = timestamp;
         SensorManager.getRotationMatrixFromVector(rotationMatrixNWURPY, systemRotationSensorVal);
         float[] systemOrientation = new float[4];
         SensorManager.getOrientation(rotationMatrixNWURPY, systemOrientation);
@@ -60,5 +61,10 @@ public class SystemAlgorithm extends Observable implements IFOrientationAlgorith
     @Override
     public float[] getRotationMatrixRPYNWU(boolean remapToVertical) {
         return rotationMatrixRPYNWU;
+    }
+
+    @Override
+    public float getSampleTime() {
+        return timestamp;
     }
 }

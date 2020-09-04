@@ -44,7 +44,7 @@ public class OrientationFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_orientation, container, false);
 
         ButterKnife.bind(this, root);
-        DataManager.getInstance().setContext(getContext());
+        DataManager.getInstance().init(getContext());
         // Podpięcie pod LiveData z ViewModel
         orientationViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         orientationViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());

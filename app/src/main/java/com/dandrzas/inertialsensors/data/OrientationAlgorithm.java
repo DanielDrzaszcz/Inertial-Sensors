@@ -96,6 +96,11 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
         isRunning = false;
     }
 
+    @Override
+    public float getSampleTime() {
+        return actualSampleTime;
+    }
+
     public float getPreviousSampleTime() {
         return previousSampleTime;
     }

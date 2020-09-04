@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import java.io.IOException;
 import java.util.Observable;
 
 
@@ -29,6 +30,7 @@ public class DataManager extends Observable implements SensorEventListener {
     private Context context;
     private boolean firstUpdAfterStart;
     private int selectedAlgorithm;
+    private CSVDataSaver csvDataSaver = CSVDataSaver.getInstance();
 
     private DataManager() {
   }
@@ -40,7 +42,7 @@ public class DataManager extends Observable implements SensorEventListener {
         return ourInstance;
     }
 
-    public void setContext(Context context){
+    public void init(Context context){
       this.context = context;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         algorithmComplementary.setParamAlfa(Float.parseFloat(preferences.getString("parameter_alfa", Float.toString(algorithmComplementary.getParamAlfa()))));
@@ -144,6 +146,7 @@ public class DataManager extends Observable implements SensorEventListener {
                     Log.d(TAG,  " Accelerometer: " + Float.toString(event.timestamp));
                     sensorAccelerometer.setSampleTime(event.timestamp);
                     sensorAccelerometer.setSampleValue(event.values);
+                    csvDataSaver.saveDataAccelerometer(event);
 
                     if(computingRunning){
                         algorithmComplementary.setUpdatedAccelerometer();
@@ -160,6 +163,7 @@ public class DataManager extends Observable implements SensorEventListener {
                     if(computingRunning){
                         algorithmComplementary.setUpdatedGyroscope();
                     }
+                    csvDataSaver.saveDataGyroscope(event);
                     break;
 
                 case Sensor.TYPE_MAGNETIC_FIELD:
@@ -170,10 +174,11 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmComplementary.setUpdatedMagnetometer();
                         algorithmWithoutFusion.setUpdatedMagnetometer();
                     }
+                    csvDataSaver.saveDataMagnetometer(event);
                     break;
 
                 case Sensor.TYPE_ROTATION_VECTOR:
-                    systemAlgorithm.calcOrientation(event.values);
+                    systemAlgorithm.calcOrientation(event.values, event.timestamp);
                     break;
             }
         firstUpdAfterStart = false;
