@@ -27,7 +27,8 @@ public class MadgwickFilter extends OrientationAlgorithm implements IFOrientatio
         if(firstCalcDone){
             update(gyroVal[0], gyroVal[1], gyroVal[2], accelVal[0], accelVal[1], accelVal[2], magnVal[0], magnVal[1], magnVal[2]);
             //update(gyroVal[0], gyroVal[1], gyroVal[2], accelVal[0], accelVal[1], accelVal[2]);
-            samplePeriod = (actualSampleTime-previousSampleTime)/1000000000;
+            double sampleTimeDiff= (actualSampleTime-previousSampleTime);
+            samplePeriod =  sampleTimeDiff/1000000000;
             Log.d("Madgwick time: ", Double.toString(samplePeriod));
             float roll = (float)Math.atan2(quaternion[0] * quaternion[1] + quaternion[2] * quaternion[3], 0.5f - quaternion[1] * quaternion[1] - quaternion[2] * quaternion[2]);
             float pitch = (float)Math.asin(-2.0f * (quaternion[1] * quaternion[3] - quaternion[0] * quaternion[2]));

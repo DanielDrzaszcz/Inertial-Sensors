@@ -99,7 +99,7 @@ public class CSVDataSaver implements Observer {
         }
     }
 
-    private void saveDataOrientation(float[] values, float timestamp) {
+    private void saveDataOrientation(float[] values, long timestamp) {
 
         if ((ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             csvDataOrientation = (((float) (timestamp - startTime) / 1000000000) + "#" + values[0] + "#" + values[1] + "#" + values[2]).split("#");
@@ -107,7 +107,7 @@ public class CSVDataSaver implements Observer {
         }
     }
 
-    private void saveDataMovement(float[] values, float timestamp) {
+    private void saveDataMovement(float[] values, long timestamp) {
 
         if ((ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             csvDataMovement = (((float) (timestamp - startTime) / 1000000000) + "#" + values[0] + "#" + values[1] + "#" + values[2]).split("#");
@@ -152,7 +152,7 @@ public class CSVDataSaver implements Observer {
             }
         }
         else if (o instanceof InertialTrackingAlgorithm) {
-                saveDataMovement(((InertialTrackingAlgorithm) o).getCalculatedMovement(), (float)(((InertialTrackingAlgorithm) o).getActualSampleTime()));
+                saveDataMovement(((InertialTrackingAlgorithm) o).getCalculatedMovement(), (((InertialTrackingAlgorithm) o).getActualSampleTime()));
         }
     }
 }

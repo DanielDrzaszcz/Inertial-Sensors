@@ -8,6 +8,6 @@ public interface IFOrientationAlgorithm {
 
     public float[] getRotationMatrixRPYNWU(boolean remapToVertical);
 
-    public float getSampleTime();
+    public long getSampleTime();
 
 }

@@ -13,8 +13,8 @@ public class InertialTrackingAlgorithm  extends Observable {
     private float[] linearAccelerationPrev = new float[3];
     private float[] calculatedVelocity = new float[3];
     private float[] calculatedVelocityPrev = new float[3];
-    private double previousSampleTime;
-    private double actualSampleTime;
+    private long previousSampleTime;
+    private long actualSampleTime;
     private boolean isRunning;
     private float parAccelerometerHPFGain = 0.99f;
     boolean firstCalcDone;
@@ -186,7 +186,7 @@ public class InertialTrackingAlgorithm  extends Observable {
         return orientationAlgorithm;
     }
 
-    public double getActualSampleTime() {
+    public long getActualSampleTime() {
         return actualSampleTime;
     }
 

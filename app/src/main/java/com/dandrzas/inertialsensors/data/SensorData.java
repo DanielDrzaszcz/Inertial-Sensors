@@ -6,7 +6,7 @@ import java.util.Observable;
 
 public class SensorData extends Observable {
     private float[] sampleValue = new float[3];
-    private double sampleTime;
+    private long sampleTime;
     private boolean filterLowPassEnable;
     private float filterLowPassGain = 0.95f;
     private int sensorID;
@@ -31,11 +31,11 @@ public class SensorData extends Observable {
         return sampleValue;
     }
 
-    public void setSampleTime(float value) {
+    public void setSampleTime(long value) {
         this.sampleTime = value;
     }
 
-    public double getSampleTime() {
+    public long getSampleTime() {
         return sampleTime;
     }
 

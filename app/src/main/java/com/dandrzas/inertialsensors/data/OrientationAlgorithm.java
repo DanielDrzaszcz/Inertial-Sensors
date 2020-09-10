@@ -17,8 +17,8 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
     protected float yawGyroscope;
     private float[] gyroscopeXYXPrev = new float[3];
     protected float[] rollPitchYaw = new float[3];
-    protected double previousSampleTime;
-    protected double actualSampleTime;
+    protected long previousSampleTime;
+    protected long actualSampleTime;
     private boolean isRunning;
     private boolean isUpdatedAccelerometer;
     private boolean isUpdatedGyroscope;
@@ -97,8 +97,8 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
     }
 
     @Override
-    public float getSampleTime() {
-        return (float) actualSampleTime;
+    public long getSampleTime() {
+        return actualSampleTime;
     }
 
     public float getPreviousSampleTime() {
