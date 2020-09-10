@@ -7,7 +7,7 @@ import java.util.Observable;
 
 public class StepDetectAlgorithm extends Observable {
     private SensorData sensorAccelerometer;
-    private float actualSampleTime;
+    private double actualSampleTime;
     private boolean isRunning;
     private float accelerationMagnitude;
     private float accelerationAverage;

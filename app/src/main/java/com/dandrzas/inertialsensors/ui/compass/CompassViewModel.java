@@ -22,6 +22,7 @@ public class CompassViewModel extends ViewModel implements Observer{
         dataManager.getAlgorithmComplementaryInstance().addObserver(this);
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
+        dataManager.getAlgorithmMadgwickFilter().addObserver(this);
     }
 
     // Pobranie danych z warstwy danych przy zmianie wartości

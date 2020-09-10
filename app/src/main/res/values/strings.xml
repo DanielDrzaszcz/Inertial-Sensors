@@ -9,7 +9,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Ustawienia</string>
 
-    <string name="menu_sensorsdata">Dane z czujników</string>
+    <string name="menu_sensorsdata">Sensory</string>
     <string name="menu_orientation">Orientacja</string>
     <string name="menu_compass">Kompas</string>
     <string name="menu_bubblelevel">Poziomica</string>
@@ -46,6 +46,7 @@
     <string name="accelerometer_config_header">Akcelerometr</string>
     <string name="magnetometer_config_header">Magnetometr</string>
     <string name="step_detect_algorithm_header">Algorytm detekcji kroku</string>
+    <string name="madgwick_filter_header">Filtr Madgwicka</string>
 
     <!-- App configuration Preferences -->
     <string name="selected_algorithm">Wybór algorytmu</string>
@@ -65,5 +66,8 @@
     <string name="window_width">Szerokość okna uśredniania</string>
     <string name="threshold_1">Próg 1</string>
     <string name="threshold_2">Próg 2</string>
+
+    <!-- Madgwick fiter Preferences -->
+    <string name="parameter_beta">Współczynnik beta</string>
 
 </resources>

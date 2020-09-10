@@ -23,6 +23,15 @@
             app:defaultValue="0.5" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/madgwick_filter_header">
+
+        <EditTextPreference
+            app:key="parameter_beta"
+            app:title="@string/parameter_beta"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="0.1" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/accelerometer_config_header">
         <SwitchPreference
             app:key="accelerometer_filter_enable"

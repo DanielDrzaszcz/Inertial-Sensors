@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.dandrzas.inertialsensors.data.IFOrientationAlgorithm;
 import com.dandrzas.inertialsensors.data.DataManager;
+import com.dandrzas.inertialsensors.data.MadgwickFilter;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -30,23 +31,24 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
         dataManager.getAlgorithmComplementaryInstance().addObserver(this);
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
+        dataManager.getAlgorithmMadgwickFilter().addObserver(this);
     }
 
 
     @Override
     public void update(Observable o, Object arg) {
         float rotationX = 0;
-        float percentRotationX;
+        float circlePercentRotationX;
         float rotationY = 0;
-        float percentRotationY;
+        float circlePercentRotationY;
         float rotationZ = 0;
-        float percentRotationZHorizontal;
-        float percentRotationZVertical;
+        float percentLineHorizontal;
+        float percentLineVertical;
         float rotationXRemapped = 0;
         float rotationYRemapped = 0;
         float rotationZRemapped = 0;
-        float verticalPixelsMoveX;
-        float horizontalPixelsMoveY;
+        float verticalPixelsMove;
+        float horizontalPixelsMove;
         float circlePixelsMoveX;
         float circlePixelsMoveY;
 
@@ -56,26 +58,27 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             rotationX = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[0];
             rotationY = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[1];
             rotationZ = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[2];
+
             rotationXRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[0];
             rotationYRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[1];
             rotationZRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[2];
 
-
             // Circle position
-            if (rotationX > 45) {
-                rotationX = 45;
+            circlePercentRotationX = rotationX / 45;
+            circlePercentRotationY = rotationY / 45;
+            if (circlePercentRotationX > 1) {
+                circlePercentRotationX = 1;
             }
-            if (rotationX < -45) {
-                rotationX = -45;
+            if (circlePercentRotationX < -1) {
+                circlePercentRotationX = -1;
             }
-            if (rotationY > 45) {
-                rotationY = 45;
+            if (circlePercentRotationY > 1) {
+                circlePercentRotationY = 1;
             }
-            if (rotationY < -45) {
-                rotationY = -45;
+            if (circlePercentRotationY < -1) {
+                circlePercentRotationY = -1;
             }
-            percentRotationX = rotationX / 45;
-            percentRotationY = rotationY / 45;
+
             double RMax = 45;
             double RAct = Math.sqrt(rotationX * rotationX + rotationY * rotationY);
             double k = RMax / RAct;
@@ -83,11 +86,11 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             Log.d("CircleTest RAct: ", Double.toString(RAct));
             Log.d("CircleTest k: ", Double.toString(k));
             if (RAct <= RMax) {
-                circlePixelsMoveX = circleBubblePosZero[0] - (percentRotationY * circleRange / 2);
-                circlePixelsMoveY = circleBubblePosZero[1] - (percentRotationX * circleRange / 2);
+                circlePixelsMoveX = circleBubblePosZero[0] - (circlePercentRotationY * circleRange / 2);
+                circlePixelsMoveY = circleBubblePosZero[1] - (circlePercentRotationX * circleRange / 2);
             } else {
-                circlePixelsMoveX = (float) (circleBubblePosZero[0] - (k * percentRotationY * circleRange / 2));
-                circlePixelsMoveY = (float) (circleBubblePosZero[1] - (k * percentRotationX * circleRange / 2));
+                circlePixelsMoveX = (float) (circleBubblePosZero[0] - (k * circlePercentRotationY * circleRange / 2));
+                circlePixelsMoveY = (float) (circleBubblePosZero[1] - (k * circlePercentRotationX * circleRange / 2));
             }
             Float[] circlePixelsMove = {circlePixelsMoveX, circlePixelsMoveY};
             circleBubblePos.setValue(circlePixelsMove);
@@ -95,30 +98,41 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             Log.d(TAG, " circlePixelsMoveY: " + circlePixelsMoveY);
 
             // Line vertical position
-            percentRotationZVertical = (rotationZRemapped + 90) / 90;
-            if (percentRotationZVertical > 1) {
-                percentRotationZVertical = 1;
+            if((o instanceof MadgwickFilter)) {
+                percentLineVertical = rotationXRemapped / 90;
             }
-            if (percentRotationZVertical < -1) {
-                percentRotationZVertical = -1;
+            else{
+                percentLineVertical = (rotationZRemapped + 90) / 90;
             }
-            verticalPixelsMoveX = percentRotationZVertical * lineVerticalRange / 2;
+            if (percentLineVertical > 1) {
+                percentLineVertical = 1;
+            }
+            if (percentLineVertical < -1) {
+                percentLineVertical = -1;
+            }
+            verticalPixelsMove = percentLineVertical * lineVerticalRange / 2;
             Log.d(TAG, " rotationX: " + rotationXRemapped);
-            Log.d(TAG, " pixelsMoveX: " + verticalPixelsMoveX);
+            Log.d(TAG, " pixelsMoveX: " + verticalPixelsMove);
             Log.d(TAG, " lineVerticalRange: " + lineVerticalRange);
             Log.d(TAG, " rotationZ: " + rotationZRemapped);
-            lineVerticalBubblePos.setValue(lineVerticalBubblePosZero - verticalPixelsMoveX);
+            lineVerticalBubblePos.setValue(lineVerticalBubblePosZero - verticalPixelsMove);
 
             // Line horizontal position
-            percentRotationZHorizontal = rotationZRemapped / 90;
-            if (percentRotationZHorizontal > 1) {
-                percentRotationZHorizontal = 1;
+            if((o instanceof MadgwickFilter)) {
+                percentLineHorizontal = rotationY / 90;
             }
-            if (percentRotationZHorizontal < -1) {
-                percentRotationZHorizontal = -1;
+            else{
+                percentLineHorizontal = rotationZRemapped / 90;
             }
-            horizontalPixelsMoveY = percentRotationZHorizontal * lineHorizontalRange / 2;
-            lineHorizontalBubblePos.setValue(lineHorizontalBubblePosZero - horizontalPixelsMoveY);
+
+            if (percentLineHorizontal > 1) {
+                percentLineHorizontal = 1;
+            }
+            if (percentLineHorizontal < -1) {
+                percentLineHorizontal = -1;
+            }
+            horizontalPixelsMove = percentLineHorizontal * lineHorizontalRange / 2;
+            lineHorizontalBubblePos.setValue(lineHorizontalBubblePosZero - horizontalPixelsMove);
 
         }
     }

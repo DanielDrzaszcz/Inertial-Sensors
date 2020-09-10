@@ -13,8 +13,8 @@ public class InertialTrackingAlgorithm  extends Observable {
     private float[] linearAccelerationPrev = new float[3];
     private float[] calculatedVelocity = new float[3];
     private float[] calculatedVelocityPrev = new float[3];
-    private float previousSampleTime;
-    private float actualSampleTime;
+    private double previousSampleTime;
+    private double actualSampleTime;
     private boolean isRunning;
     private float parAccelerometerHPFGain = 0.99f;
     boolean firstCalcDone;
@@ -95,7 +95,7 @@ public class InertialTrackingAlgorithm  extends Observable {
         isRunning = false;
     }
 
-    public float getPreviousSampleTime() {
+    public double getPreviousSampleTime() {
         return previousSampleTime;
     }
 
@@ -155,9 +155,9 @@ public class InertialTrackingAlgorithm  extends Observable {
         float NS2S = 1.0f / 1000000000.0f;
         float[] integratedSignal = new float[3];
 
-        integratedSignal[0] = actIntegratedValue[0] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[0]+orgSignal[0])/2);
-        integratedSignal[1] = actIntegratedValue[1] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[1]+orgSignal[1])/2);
-        integratedSignal[2] = actIntegratedValue[2] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[2]+orgSignal[2])/2);
+        integratedSignal[0] = (float)(actIntegratedValue[0] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[0]+orgSignal[0])/2));
+        integratedSignal[1] = (float)(actIntegratedValue[1] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[1]+orgSignal[1])/2));
+        integratedSignal[2] = (float)(actIntegratedValue[2] + ((actualSampleTime-previousSampleTime)*NS2S)*((orgSignalPrev[2]+orgSignal[2])/2));
 
         return integratedSignal;
     }
@@ -186,7 +186,7 @@ public class InertialTrackingAlgorithm  extends Observable {
         return orientationAlgorithm;
     }
 
-    public float getActualSampleTime() {
+    public double getActualSampleTime() {
         return actualSampleTime;
     }
 

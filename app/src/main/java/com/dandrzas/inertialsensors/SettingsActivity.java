@@ -15,7 +15,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
 import com.dandrzas.inertialsensors.data.Constants;
-import com.dandrzas.inertialsensors.R;
 import com.dandrzas.inertialsensors.data.DataManager;
 
 
@@ -72,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
                 );
             }
 
+            // Complementary filter config
 
             EditTextPreference parameterAlfaPreference = findPreference("parameter_alfa");
             if (parameterAlfaPreference != null) {
@@ -91,6 +91,29 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
+
+            // Madgwick filter config
+
+            EditTextPreference parameterBetaPreference = findPreference("parameter_beta");
+            if (parameterBetaPreference != null) {
+                parameterBetaPreference.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+
+            parameterBetaPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmMadgwickFilter().setParBeta(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
+
 
             // Accelerometer filter enable field config
             SwitchPreference accelerometerFilterEnable = findPreference("accelerometer_filter_enable");

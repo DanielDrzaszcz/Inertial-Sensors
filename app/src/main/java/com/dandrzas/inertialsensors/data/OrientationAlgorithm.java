@@ -17,8 +17,8 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
     protected float yawGyroscope;
     private float[] gyroscopeXYXPrev = new float[3];
     protected float[] rollPitchYaw = new float[3];
-    private float previousSampleTime;
-    private float actualSampleTime;
+    protected double previousSampleTime;
+    protected double actualSampleTime;
     private boolean isRunning;
     private boolean isUpdatedAccelerometer;
     private boolean isUpdatedGyroscope;
@@ -75,7 +75,7 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
         isUpdatedMagnetometer = false;
     }
 
-    private void clearData()
+    protected void clearData()
     {
         rollPitchYaw[0] = 0;
         rollPitchYaw[1] = 0;
@@ -98,11 +98,11 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     @Override
     public float getSampleTime() {
-        return actualSampleTime;
+        return (float) actualSampleTime;
     }
 
     public float getPreviousSampleTime() {
-        return previousSampleTime;
+        return (float) previousSampleTime;
     }
 
     public boolean isUpdatedAccelerometer() {
@@ -111,6 +111,9 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedAccelerometer() {
         isUpdatedAccelerometer = true;
+        if(this instanceof MadgwickFilter) {
+            Log.d("Madgwick : ", " accelerometer update" + Double.toString(sensorAccelerometer.getSampleTime()));
+        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorAccelerometer.getSampleTime();
             calc();
@@ -123,6 +126,9 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedGyroscope() {
         isUpdatedGyroscope = true;
+        if(this instanceof MadgwickFilter) {
+            Log.d("Madgwick : ", " gyro update" + Double.toString(sensorGyroscope.getSampleTime()));
+        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorGyroscope.getSampleTime();
             calc();
@@ -135,6 +141,9 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedMagnetometer() {
         isUpdatedMagnetometer = true;
+        if(this instanceof MadgwickFilter){
+            Log.d("Madgwick : ", " magnetometer update" + Double.toString(sensorMagnetometer.getSampleTime()));
+        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorMagnetometer.getSampleTime();
             calc();
@@ -165,9 +174,9 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
         float NS2S = 1.0f / 1000000000.0f;
 
         if(gyroInitDone){
-            rollGyroscope = rollGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[0]+sensorGyroscope.getSampleValue()[0])/2);
-            pitchGyroscope = pitchGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[1]+sensorGyroscope.getSampleValue()[1])/2);
-            yawGyroscope= (yawGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[2]+sensorGyroscope.getSampleValue()[2])/2));
+            rollGyroscope = (float)(rollGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[0]+sensorGyroscope.getSampleValue()[0])/2));
+            pitchGyroscope = (float)(pitchGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[1]+sensorGyroscope.getSampleValue()[1])/2));
+            yawGyroscope= (float)((yawGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[2]+sensorGyroscope.getSampleValue()[2])/2)));
         }
         else{
             rollGyroscope = rollAccelerometer;

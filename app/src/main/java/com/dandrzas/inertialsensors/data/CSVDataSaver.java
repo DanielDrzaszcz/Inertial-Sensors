@@ -73,6 +73,7 @@ public class CSVDataSaver implements Observer {
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
+        dataManager.getAlgorithmMadgwickFilter().addObserver(this);
     }
 
     public void saveDataAccelerometer(SensorEvent event) {
@@ -151,7 +152,7 @@ public class CSVDataSaver implements Observer {
             }
         }
         else if (o instanceof InertialTrackingAlgorithm) {
-                saveDataMovement(((InertialTrackingAlgorithm) o).getCalculatedMovement(), ((InertialTrackingAlgorithm) o).getActualSampleTime());
+                saveDataMovement(((InertialTrackingAlgorithm) o).getCalculatedMovement(), (float)(((InertialTrackingAlgorithm) o).getActualSampleTime()));
         }
     }
 }
