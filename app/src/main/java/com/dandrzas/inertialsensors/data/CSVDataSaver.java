@@ -56,7 +56,6 @@ public class CSVDataSaver implements Observer {
         return ourInstance;
     }
 
-
     public void init(Context context) throws IOException {
         this.context = context;
         // Utworzenie katalogu do zapisu danych
@@ -73,6 +72,7 @@ public class CSVDataSaver implements Observer {
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
+        dataManager.getAlgorithmMadgwickFilter().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
     }
 

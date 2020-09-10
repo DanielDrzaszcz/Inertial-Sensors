@@ -5,8 +5,8 @@
         <item>Filtr komplementarny</item>
         <item>Filtr Kalmana</item>
         <item>Rozszerzony filtr Kalmana</item>
-        <item>Filtr Mahony’ego</item>
-        <item>Filtr Madgwicka</item>
+        <item>Filtr Mahony"'"ego</item>
+        <item>Filtr Madgwick"'"a</item>
     </string-array>
 
     <string-array name="algorithms_values">

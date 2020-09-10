@@ -83,7 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-
             parameterAlfaPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -105,11 +104,50 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-
             parameterBetaPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmMadgwickFilter().setParBeta(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
+
+
+            // Mahony filter config
+
+            EditTextPreference parameterKiPreference = findPreference("parameter_ki");
+            if (parameterKiPreference != null) {
+                parameterKiPreference.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+            parameterKiPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmMahonyFilter().setParKi(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
+
+
+            EditTextPreference parameterKpPreference = findPreference("parameter_kp");
+            if (parameterKpPreference != null) {
+                parameterKpPreference.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+            parameterKpPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmMahonyFilter().setParKp(Float.parseFloat(newValue.toString()));
                     return true;
                 }
             });

@@ -30,6 +30,9 @@ public class OrientationViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> madgwickFilterSeriesX = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> madgwickFilterSeriesY = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> madgwickFilterSeriesZ = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> mahonyFilterSeriesX = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> mahonyFilterSeriesY = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> mahonyFilterSeriesZ = new LineGraphSeries<>();
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesXLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesYLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesZLiveData;
@@ -50,12 +53,14 @@ public class OrientationViewModel extends ViewModel implements Observer {
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
+        dataManager.getAlgorithmMahonyFilter().addObserver(this);
 
         // Utworzenie i konfiguracja serii danych
         initDataSeries(complementaryFilterSeriesX, complementaryFilterSeriesY, complementaryFilterSeriesZ);
         initDataSeries(systemAlgorithmSeriesX, systemAlgorithmSeriesY, systemAlgorithmSeriesZ);
         initDataSeries(algorithmWithoutFusionSeriesX, algorithmWithoutFusionSeriesY, algorithmWithoutFusionSeriesZ);
         initDataSeries(madgwickFilterSeriesX, madgwickFilterSeriesY, madgwickFilterSeriesZ);
+        initDataSeries(mahonyFilterSeriesX, mahonyFilterSeriesY, mahonyFilterSeriesZ);
 
         // Ustawienie startowej serii danych
         graphSeriesX = complementaryFilterSeriesX;
@@ -125,6 +130,18 @@ public class OrientationViewModel extends ViewModel implements Observer {
                 madgwickFilterSeriesY.appendData(new DataPoint(madgwickFilterSeriesY.getHighestValueX() + 1, valuesMadgwickFilter[1]), scrollToEnd1, graphMaxX);
                 madgwickFilterSeriesZ.appendData(new DataPoint(madgwickFilterSeriesZ.getHighestValueX() + 1, valuesMadgwickFilter[2]), scrollToEnd1, graphMaxX);
             }
+            else if(arg.equals(Constants.MAHONY_FILTER_ID)){
+                float[] valuesMahonyFilter = ((OrientationAlgorithm) o).getRollPitchYaw(false);
+                Log.d("Madgwick Orient VM update: ", Float.toString(valuesMahonyFilter[0]) + " " + Float.toString(valuesMahonyFilter[0]) + " " + Float.toString(valuesMahonyFilter[1]));
+
+                boolean scrollToEnd1 = false;
+                if (mahonyFilterSeriesX.getHighestValueX() >= graphMaxX) {
+                    scrollToEnd1 = true;
+                }
+                mahonyFilterSeriesX.appendData(new DataPoint(mahonyFilterSeriesX.getHighestValueX() + 1, valuesMahonyFilter[0]), scrollToEnd1, graphMaxX);
+                mahonyFilterSeriesY.appendData(new DataPoint(mahonyFilterSeriesY.getHighestValueX() + 1, valuesMahonyFilter[1]), scrollToEnd1, graphMaxX);
+                mahonyFilterSeriesZ.appendData(new DataPoint(mahonyFilterSeriesZ.getHighestValueX() + 1, valuesMahonyFilter[2]), scrollToEnd1, graphMaxX);
+            }
         }
         else if (arg.equals(Constants.SYSTEM_ALGORITHM_ID)) {
             float[] valuesSystemAlgorithm = ((SystemAlgorithm) o).getRollPitchYaw(false);
@@ -163,6 +180,11 @@ public class OrientationViewModel extends ViewModel implements Observer {
                 graphSeriesX = madgwickFilterSeriesX;
                 graphSeriesY = madgwickFilterSeriesY;
                 graphSeriesZ = madgwickFilterSeriesZ;
+                break;
+            case Constants.MAHONY_FILTER_ID:
+                graphSeriesX = mahonyFilterSeriesX;
+                graphSeriesY = mahonyFilterSeriesY;
+                graphSeriesZ = mahonyFilterSeriesZ;
                 break;
         }
         graphSeriesXLiveData.setValue(graphSeriesX);

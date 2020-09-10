@@ -22,6 +22,7 @@ public class DataManager extends Observable implements SensorEventListener {
     private SystemAlgorithm systemAlgorithm = new SystemAlgorithm();
     private OrientationWithoutFusion algorithmWithoutFusion = new OrientationWithoutFusion(sensorAccelerometer, sensorMagnetometer);
     private MadgwickFilter algorithmMadgwickFilter = new MadgwickFilter(sensorAccelerometer, sensorGyroscope, sensorMagnetometer);
+    private MahonyFilter algorithmMahonyFilter = new MahonyFilter(sensorAccelerometer, sensorGyroscope, sensorMagnetometer);
     private StepDetectAlgorithm stepDetectAlgorithm = new StepDetectAlgorithm(sensorAccelerometer);
     private InertialTrackingAlgorithm inertialTrackingAlgorithm = new InertialTrackingAlgorithm(sensorAccelerometer, algorithmWithoutFusion);
     private SensorManager mSensorManager;
@@ -49,6 +50,8 @@ public class DataManager extends Observable implements SensorEventListener {
         sensorAccelerometer.setFilterLowPassEnable(preferences.getBoolean("accelerometer_filter_enable", sensorAccelerometer.isFilterLowPassEnable()));
         sensorAccelerometer.setFilterLowPassGain(Float.parseFloat(preferences.getString("accelerometer_low_pass_gain", Float.toString(sensorAccelerometer.getFilterLowPassGain()))));
         algorithmMadgwickFilter.setParBeta(Float.parseFloat(preferences.getString("parameter_beta", Float.toString(algorithmMadgwickFilter.getParBeta()))));
+        algorithmMahonyFilter.setParKi(Float.parseFloat(preferences.getString("parameter_ki", Float.toString(algorithmMahonyFilter.getParKi()))));
+        algorithmMahonyFilter.setParKp(Float.parseFloat(preferences.getString("parameter_kp", Float.toString(algorithmMahonyFilter.getParKp()))));
 
         String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
         switch (selectedAlgorithm){
@@ -100,6 +103,10 @@ public class DataManager extends Observable implements SensorEventListener {
         return algorithmMadgwickFilter;
     }
 
+    public MahonyFilter getAlgorithmMahonyFilter() {
+        return algorithmMahonyFilter;
+    }
+
     public SensorData getAccelerometer() {
         return sensorAccelerometer;
     }
@@ -120,6 +127,7 @@ public class DataManager extends Observable implements SensorEventListener {
         algorithmComplementary.startComputing(sensorGyroscope!=null);
         algorithmWithoutFusion.startComputing(false);
         algorithmMadgwickFilter.startComputing(sensorGyroscope!=null);
+        algorithmMahonyFilter.startComputing(sensorGyroscope!=null);
         stepDetectAlgorithm.startComputing(false);
         inertialTrackingAlgorithm.startComputing();
         setChanged();
@@ -134,6 +142,7 @@ public class DataManager extends Observable implements SensorEventListener {
         algorithmComplementary.stopComputing();
         algorithmWithoutFusion.stopComputing();
         algorithmMadgwickFilter.stopComputing();
+        algorithmMahonyFilter.stopComputing();
         stepDetectAlgorithm.stopComputing();
         inertialTrackingAlgorithm.stopComputing();
         setChanged();
@@ -159,6 +168,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmComplementary.setUpdatedAccelerometer();
                         algorithmWithoutFusion.setUpdatedAccelerometer();
                         algorithmMadgwickFilter.setUpdatedAccelerometer();
+                        algorithmMahonyFilter.setUpdatedAccelerometer();
                         stepDetectAlgorithm.setUpdatedAccelerometer();
                         inertialTrackingAlgorithm.calc();
                     }
@@ -171,6 +181,7 @@ public class DataManager extends Observable implements SensorEventListener {
                     if(computingRunning){
                         algorithmComplementary.setUpdatedGyroscope();
                         algorithmMadgwickFilter.setUpdatedGyroscope();
+                        algorithmMahonyFilter.setUpdatedGyroscope();
                     }
                     csvDataSaver.saveDataGyroscope(event);
                     break;
@@ -183,6 +194,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmComplementary.setUpdatedMagnetometer();
                         algorithmWithoutFusion.setUpdatedMagnetometer();
                         algorithmMadgwickFilter.setUpdatedMagnetometer();
+                        algorithmMahonyFilter.setUpdatedMagnetometer();
                     }
                     csvDataSaver.saveDataMagnetometer(event);
                     break;

@@ -10,6 +10,13 @@ public class MadgwickFilter extends OrientationAlgorithm implements IFOrientatio
     private float[] quaternion;
     boolean firstCalcDone;
 
+    public MadgwickFilter(SensorData sensorAccelerometer, SensorData sensorGyroscope, SensorData sensorMagnetometer) {
+        this.sensorAccelerometer = sensorAccelerometer;
+        this.sensorGyroscope = sensorGyroscope;
+        this.sensorMagnetometer = sensorMagnetometer;
+        this.quaternion = new float[] { 1f, 0f, 0f, 0f };
+    }
+
     @Override
     protected void calc() {
 
@@ -72,28 +79,6 @@ public class MadgwickFilter extends OrientationAlgorithm implements IFOrientatio
         firstCalcDone = false;
     }
 
-    public double getSamplePeriod() {
-        return samplePeriod;
-    }
-
-    public float getParBeta() {
-        return parBeta;
-    }
-
-    public void setParBeta(float parBeta) {
-        this.parBeta = parBeta;
-    }
-
-    public float[] getQuaternion() {
-        return quaternion;
-    }
-
-    public MadgwickFilter(SensorData sensorAccelerometer, SensorData sensorGyroscope, SensorData sensorMagnetometer) {
-        this.sensorAccelerometer = sensorAccelerometer;
-        this.sensorGyroscope = sensorGyroscope;
-        this.sensorMagnetometer = sensorMagnetometer;
-        this.quaternion = new float[] { 1f, 0f, 0f, 0f };
-    }
 
     /**
      * Algorithm AHRS update method. Requires only gyroscope and accelerometer
@@ -343,6 +328,22 @@ public class MadgwickFilter extends OrientationAlgorithm implements IFOrientatio
         quaternion[1] = q2 * norm;
         quaternion[2] = q3 * norm;
         quaternion[3] = q4 * norm;
+    }
+
+    public double getSamplePeriod() {
+        return samplePeriod;
+    }
+
+    public float getParBeta() {
+        return parBeta;
+    }
+
+    public void setParBeta(float parBeta) {
+        this.parBeta = parBeta;
+    }
+
+    public float[] getQuaternion() {
+        return quaternion;
     }
 
 }

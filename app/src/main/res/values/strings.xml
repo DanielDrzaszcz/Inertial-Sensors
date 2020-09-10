@@ -46,7 +46,8 @@
     <string name="accelerometer_config_header">Akcelerometr</string>
     <string name="magnetometer_config_header">Magnetometr</string>
     <string name="step_detect_algorithm_header">Algorytm detekcji kroku</string>
-    <string name="madgwick_filter_header">Filtr Madgwicka</string>
+    <string name="madgwick_filter_header">Filtr Madgwick"'"a</string>
+    <string name="mahony_filter_header">Filtr Mahony"'"ego</string>
 
     <!-- App configuration Preferences -->
     <string name="selected_algorithm">Wybór algorytmu</string>
@@ -69,5 +70,9 @@
 
     <!-- Madgwick fiter Preferences -->
     <string name="parameter_beta">Współczynnik beta</string>
+
+    <!-- Mahony fiter Preferences -->
+    <string name="parameter_kp">Wzmocnienie Kp</string>
+    <string name="parameter_ki">Wzmocnienie Ki</string>
 
 </resources>

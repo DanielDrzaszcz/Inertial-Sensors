@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.dandrzas.inertialsensors.data.IFOrientationAlgorithm;
 import com.dandrzas.inertialsensors.data.DataManager;
 import com.dandrzas.inertialsensors.data.MadgwickFilter;
+import com.dandrzas.inertialsensors.data.MahonyFilter;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -32,6 +33,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
         dataManager.getSystemAlgrithmInstance().addObserver(this);
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
+        dataManager.getAlgorithmMahonyFilter().addObserver(this);
     }
 
 
@@ -98,7 +100,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             Log.d(TAG, " circlePixelsMoveY: " + circlePixelsMoveY);
 
             // Line vertical position
-            if((o instanceof MadgwickFilter)) {
+            if((o instanceof MadgwickFilter || o instanceof MahonyFilter)) {
                 percentLineVertical = rotationXRemapped / 90;
             }
             else{
@@ -118,7 +120,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             lineVerticalBubblePos.setValue(lineVerticalBubblePosZero - verticalPixelsMove);
 
             // Line horizontal position
-            if((o instanceof MadgwickFilter)) {
+            if((o instanceof MadgwickFilter || o instanceof MahonyFilter)) {
                 percentLineHorizontal = rotationY / 90;
             }
             else{

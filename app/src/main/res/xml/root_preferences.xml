@@ -1,15 +1,14 @@
-
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/app_config_header">
 
-    <ListPreference
-        app:defaultValue="system_default_algorithm"
-        app:entries="@array/algorithms_entries"
-        app:entryValues="@array/algorithms_values"
-        app:key="selected_algorithm"
-        app:title="@string/selected_algorithm"
-        app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:defaultValue="system_default_algorithm"
+            app:entries="@array/algorithms_entries"
+            app:entryValues="@array/algorithms_values"
+            app:key="selected_algorithm"
+            app:title="@string/selected_algorithm"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
@@ -17,68 +16,78 @@
     <PreferenceCategory app:title="@string/complementary_filter_header">
 
         <EditTextPreference
+            app:defaultValue="0.5"
             app:key="parameter_alfa"
             app:title="@string/parameter_alfa"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="0.5" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/madgwick_filter_header">
 
         <EditTextPreference
+            app:defaultValue="0.1"
             app:key="parameter_beta"
             app:title="@string/parameter_beta"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="0.1" />
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/mahony_filter_header">
+        <EditTextPreference
+            app:defaultValue="1.0"
+            app:key="parameter_kp"
+            app:title="@string/parameter_kp"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="0.0"
+            app:key="parameter_ki"
+            app:title="@string/parameter_ki"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/accelerometer_config_header">
         <SwitchPreference
+            app:defaultValue="false"
             app:key="accelerometer_filter_enable"
             app:title="@string/accelerometer_filter_enable"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="false">
-        </SwitchPreference>
+            app:useSimpleSummaryProvider="true"></SwitchPreference>
         <EditTextPreference
+            app:defaultValue="0.95"
             app:key="accelerometer_low_pass_gain"
             app:title="@string/accelerometer_filter_gain"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="0.95" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/magnetometer_config_header">
         <SwitchPreference
+            app:defaultValue="false"
             app:key="magnetometer_filter_enable"
             app:title="@string/magnetometer_filter_enable"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="false">
-        </SwitchPreference>
+            app:useSimpleSummaryProvider="true"></SwitchPreference>
         <EditTextPreference
+            app:defaultValue="0.95"
             app:key="magnetometer_low_pass_gain"
             app:title="@string/magnetometer_filter_gain"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="0.95" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/step_detect_algorithm_header">
         <EditTextPreference
+            app:defaultValue="50"
             app:key="step_detect_algorithm_window_width"
             app:title="@string/window_width"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="50" />
+            app:useSimpleSummaryProvider="true" />
         <EditTextPreference
+            app:defaultValue="2"
             app:key="step_detect_algorithm_threshold_1"
             app:title="@string/threshold_1"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="2" />
+            app:useSimpleSummaryProvider="true" />
         <EditTextPreference
+            app:defaultValue="1"
             app:key="step_detect_algorithm_threshold_2"
             app:title="@string/threshold_2"
-            app:useSimpleSummaryProvider="true"
-            app:defaultValue="1" />
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory>
-    </PreferenceCategory>
+    <PreferenceCategory></PreferenceCategory>
 
 </PreferenceScreen>
