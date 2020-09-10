@@ -190,4 +190,8 @@ public class InertialTrackingAlgorithm  extends Observable {
         return actualSampleTime;
     }
 
+    public void setOrientationAlgorithm(IFOrientationAlgorithm orientationAlgorithm) {
+        this.orientationAlgorithm = orientationAlgorithm;
+    }
+
 }

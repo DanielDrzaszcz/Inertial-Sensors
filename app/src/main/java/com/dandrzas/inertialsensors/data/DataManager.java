@@ -56,25 +56,25 @@ public class DataManager extends Observable implements SensorEventListener {
         String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
         switch (selectedAlgorithm){
             case "system_default_algorithm":
-                this.selectedAlgorithm = Constants.SYSTEM_ALGORITHM_ID;
+                setSelectedAlgorithm(Constants.SYSTEM_ALGORITHM_ID);
                 break;
             case "orientation_without_fusion":
-                this.selectedAlgorithm = Constants.ORIENTATION_WITHOUT_FUSION;
+                setSelectedAlgorithm(Constants.ORIENTATION_WITHOUT_FUSION);
                 break;
             case "complementary_filter":
-                this.selectedAlgorithm = Constants.COMPLEMENTARY_FILTER_ID;
+                setSelectedAlgorithm(Constants.COMPLEMENTARY_FILTER_ID);
                 break;
             case "kalman_filter":
-                this.selectedAlgorithm = Constants.KALMAN_FILTER_ID;
+                setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
                 break;
             case "extended_kalman_filter":
-                this.selectedAlgorithm = Constants.EXTENDED_KALMAN_FILTER_ID;
+                setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
                 break;
             case "mahony_filter":
-                this.selectedAlgorithm = Constants.MAHONY_FILTER_ID;
+                setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
                 break;
             case "madgwick_filter":
-                this.selectedAlgorithm = Constants.MADGWICK_FILTER_ID;
+                setSelectedAlgorithm(Constants.MADGWICK_FILTER_ID);
                 break;
         }
     }
@@ -257,5 +257,27 @@ public class DataManager extends Observable implements SensorEventListener {
 
     public void setSelectedAlgorithm(int selectedAlgorithm) {
         this.selectedAlgorithm = selectedAlgorithm;
+
+        switch (selectedAlgorithm) {
+            case Constants.SYSTEM_ALGORITHM_ID:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(systemAlgorithm);
+                break;
+            case Constants.ORIENTATION_WITHOUT_FUSION:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmWithoutFusion);
+                break;
+            case Constants.COMPLEMENTARY_FILTER_ID:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmComplementary);
+                break;
+            case Constants.KALMAN_FILTER_ID:
+                break;
+            case Constants.EXTENDED_KALMAN_FILTER_ID:
+                break;
+            case Constants.MAHONY_FILTER_ID:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmMahonyFilter);
+                break;
+            case Constants.MADGWICK_FILTER_ID:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmMadgwickFilter);
+                break;
+        }
     }
 }

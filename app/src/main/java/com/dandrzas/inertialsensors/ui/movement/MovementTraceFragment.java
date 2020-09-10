@@ -99,9 +99,9 @@ public class MovementTraceFragment extends Fragment {
         textViewVelocityY.setText(getResources().getString(R.string.velocity_y) + " 0.000 m");
         textViewVelocityZ.setText(getResources().getString(R.string.velocity_z) + " 0.000 m");
         movementTraceViewModel.getVelocity().observe(getViewLifecycleOwner(), value -> {
-            textViewVelocityX.setText(getResources().getString(R.string.velocity_x) + " " + df.format(value[0]) + " m");
-            textViewVelocityY.setText(getResources().getString(R.string.velocity_y) + " " + df.format(value[1]) + " m");
-            textViewVelocityZ.setText(getResources().getString(R.string.velocity_z) + " " + df.format(value[2]) + " m");
+            textViewVelocityX.setText(getResources().getString(R.string.velocity_x) + " " + df.format(value[0]) + " m/s");
+            textViewVelocityY.setText(getResources().getString(R.string.velocity_y) + " " + df.format(value[1]) + " m/s");
+            textViewVelocityZ.setText(getResources().getString(R.string.velocity_z) + " " + df.format(value[2]) + " m/s");
         });
 
         movementTraceViewModel.getChartXMax().observe(getViewLifecycleOwner(), value->{
