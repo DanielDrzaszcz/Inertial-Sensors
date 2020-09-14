@@ -73,7 +73,8 @@ public class CSVDataSaver implements Observer {
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
-        dataManager.getAlgorithmMadgwickFilter().addObserver(this);
+        dataManager.getAlgorithmMahonyFilter().addObserver(this);
+        dataManager.getAlgorithmKalmanFilter().addObserver(this);
     }
 
     public void saveDataAccelerometer(SensorEvent event) {

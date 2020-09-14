@@ -161,7 +161,9 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
         float yawArcTangArgY = sinPitch*sensorMagnetometer.getSampleValue()[2] - cosPitch*sensorMagnetometer.getSampleValue()[0];
         float yawAngArgX = cosRoll*sensorMagnetometer.getSampleValue()[1] + sinRoll*sinPitch*sensorMagnetometer.getSampleValue()[0] + cosPitch*sinRoll*sensorMagnetometer.getSampleValue()[2];
-        float yawMagnetometerTemp = (float)(Math.atan2(yawArcTangArgY, yawAngArgX));
+        // float yawArcTangArgY = sinRoll*sensorMagnetometer.getSampleValue()[2] - cosRoll*sensorMagnetometer.getSampleValue()[1];
+         //float yawAngArgX = cosPitch*sensorMagnetometer.getSampleValue()[0] + sinRoll*sinPitch*sensorMagnetometer.getSampleValue()[1] + cosRoll*sinPitch*sensorMagnetometer.getSampleValue()[2];
+        float yawMagnetometerTemp = (float)((-1)*Math.atan2(yawArcTangArgY, yawAngArgX));
 
         rollAccelerometer = (-1)*rollAccelerometerTemp;
         pitchAccelerometer = (-1)*pitchAccelerometerTemp;
@@ -175,13 +177,28 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
         if(gyroInitDone){
             rollGyroscope = (float)(rollGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[0]+sensorGyroscope.getSampleValue()[0])/2));
+            if(rollGyroscope>Math.PI){
+                rollGyroscope -= 2*Math.PI;
+            } else if(rollGyroscope<(-1)*Math.PI){
+                rollGyroscope += 2*Math.PI;
+            }
             pitchGyroscope = (float)(pitchGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[1]+sensorGyroscope.getSampleValue()[1])/2));
+            if(pitchGyroscope>Math.PI){
+                pitchGyroscope -= 2*Math.PI;
+            } else if(pitchGyroscope<(-1)*Math.PI){
+                pitchGyroscope += 2*Math.PI;
+            }
             yawGyroscope= (float)((yawGyroscope + ((actualSampleTime-previousSampleTime)*NS2S)*((gyroscopeXYXPrev[2]+sensorGyroscope.getSampleValue()[2])/2)));
+            if(yawGyroscope>Math.PI){
+                yawGyroscope -= 2*Math.PI;
+            } else if(yawGyroscope<(-1)*Math.PI){
+                yawGyroscope += 2*Math.PI;
+            }
         }
         else{
             rollGyroscope = rollAccelerometer;
             pitchGyroscope = pitchAccelerometer;
-            yawGyroscope = (-1)*yawMagnetometer;
+            yawGyroscope = yawMagnetometer;
             gyroInitDone = true;
         }
 

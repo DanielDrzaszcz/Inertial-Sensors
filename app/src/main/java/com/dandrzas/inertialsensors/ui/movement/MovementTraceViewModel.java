@@ -43,6 +43,7 @@ public class MovementTraceViewModel extends ViewModel implements Observer {
         dataManager.getInertialTrackingAlgorithmInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
         dataManager.getAlgorithmMahonyFilter().addObserver(this);
+        dataManager.getAlgorithmKalmanFilter().addObserver(this);
         progressBarVisible.setValue(false);
         chartDataVisible.setValue(false);
         initDataSeries();

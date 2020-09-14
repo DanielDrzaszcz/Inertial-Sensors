@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/app_config_header">
-
         <ListPreference
             app:defaultValue="system_default_algorithm"
             app:entries="@array/algorithms_entries"
@@ -9,16 +8,32 @@
             app:key="selected_algorithm"
             app:title="@string/selected_algorithm"
             app:useSimpleSummaryProvider="true" />
-
     </PreferenceCategory>
 
 
     <PreferenceCategory app:title="@string/complementary_filter_header">
-
         <EditTextPreference
-            app:defaultValue="0.5"
+            app:defaultValue="0.8"
             app:key="parameter_alfa"
             app:title="@string/parameter_alfa"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/kalman_filter_header">
+        <EditTextPreference
+            app:defaultValue="0.00001"
+            app:key="parameter_q_angle"
+            app:title="@string/parameter_q_angle"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="0.00003"
+            app:key="parameter_q_bias"
+            app:title="@string/parameter_q_bias"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="0.0002"
+            app:key="parameter_r"
+            app:title="@string/parameter_r"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

@@ -34,18 +34,18 @@ public class CompassFragment extends Fragment {
         ButterKnife.bind(this, root);
         compassViewModel.getOrientation().observe(this, value -> {
             String direction = "";
-            imageViewCompass.setRotation((-1)*value);
+            imageViewCompass.setRotation(value);
             if((value>=315)||(value<45)){
                 direction = "N";
             }
             else if((value>=45)&&(value<135)){
-                direction = "E";
+                direction = "W";
             }
             else if((value>=135)&&(value<225)){
                 direction = "S";
             }
             else if((value>=225)&&(value<315)){
-                direction = "W";
+                direction = "E";
             }
             textViewOrientation.setText( value + " ° " + direction);
         });

@@ -30,7 +30,7 @@ public class SystemAlgorithm extends Observable implements IFOrientationAlgorith
 
         rollPitchYaw[0] = (float)((-1)*(systemOrientation[1] * 180) / Math.PI);
         rollPitchYaw[1] = (float)((systemOrientation[2] * 180) / Math.PI);
-        rollPitchYaw[2] = (float)((systemOrientation[0] * 180) / Math.PI);
+        rollPitchYaw[2] = (float)((-1)*(systemOrientation[0] * 180) / Math.PI);
 
         setChanged();
         notifyObservers(Constants.SYSTEM_ALGORITHM_ID);

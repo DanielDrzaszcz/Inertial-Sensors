@@ -3,7 +3,7 @@ package com.dandrzas.inertialsensors.data;
 
 public class ComplementaryFilter extends OrientationAlgorithm {
 
-    private float paramAlfa = 0.5f;
+    private float paramAlfa = 0.8f;
     private final String TAG = ComplementaryFilter.class.getSimpleName();
 
     public ComplementaryFilter(SensorData sensorAccelerometer, SensorData sensorGyroscope, SensorData sensorMagnetometer)
@@ -20,7 +20,7 @@ public class ComplementaryFilter extends OrientationAlgorithm {
 
         float pitch = paramAlfa*pitchGyroscope + (1-paramAlfa)*pitchAccelerometer;
         float roll = paramAlfa*rollGyroscope + (1-paramAlfa)*rollAccelerometer;
-        float yaw = (-1)*paramAlfa*yawGyroscope + (1-paramAlfa)*yawMagnetometer;
+        float yaw = paramAlfa*yawGyroscope + (1-paramAlfa)*yawMagnetometer;
 
         rollPitchYaw[0] = (float) (Math.toDegrees(roll));
         rollPitchYaw[1] = (float) (Math.toDegrees(pitch));

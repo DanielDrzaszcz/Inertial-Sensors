@@ -35,8 +35,11 @@ public class MahonyFilter extends OrientationAlgorithm implements IFOrientationA
             Log.d("Mahony update: ", "kp: " + Float.toString(parKp) + "ki: " + Float.toString(parKi));
             float roll = (float)Math.atan2(quaternion[0] * quaternion[1] + quaternion[2] * quaternion[3], 0.5f - quaternion[1] * quaternion[1] - quaternion[2] * quaternion[2]);
             float pitch = (float)Math.asin(-2.0f * (quaternion[1] * quaternion[3] - quaternion[0] * quaternion[2]));
-            float yaw  = (float)Math.atan2((-1)*(quaternion[1] * quaternion[2] + quaternion[0] * quaternion[3]), 0.5f - quaternion[2] * quaternion[2] - quaternion[3] * quaternion[3]);
-
+            float yaw  = (float)Math.atan2(quaternion[1] * quaternion[2] + quaternion[0] * quaternion[3], 0.5f - quaternion[2] * quaternion[2] - quaternion[3] * quaternion[3]);
+            yaw += 0.5*Math.PI;
+            if(yaw>Math.PI){
+                yaw -= 2*Math.PI;
+            }
             rollPitchYaw[0] = (float) Math.toDegrees(roll);
             rollPitchYaw[1] = (float) Math.toDegrees(pitch);
             rollPitchYaw[2] = (float) Math.toDegrees(yaw);
@@ -64,8 +67,11 @@ public class MahonyFilter extends OrientationAlgorithm implements IFOrientationA
 
             float remappedRoll = (float)Math.atan2(remappedQuaternion[0] * remappedQuaternion[1] + remappedQuaternion[2] * remappedQuaternion[3], 0.5f - remappedQuaternion[1] * remappedQuaternion[1] - remappedQuaternion[2] * remappedQuaternion[2]);
             float remappedPitch = (float)Math.asin(-2.0f * (remappedQuaternion[1] * remappedQuaternion[3] - remappedQuaternion[0] * remappedQuaternion[2]));
-            float remappedYaw  = (float)Math.atan2((-1)*(remappedQuaternion[1] * remappedQuaternion[2] + remappedQuaternion[0] * remappedQuaternion[3]), 0.5f - remappedQuaternion[2] * remappedQuaternion[2] - remappedQuaternion[3] * remappedQuaternion[3]);
-
+            float remappedYaw  = (float)Math.atan2(remappedQuaternion[1] * remappedQuaternion[2] + remappedQuaternion[0] * remappedQuaternion[3], 0.5f - remappedQuaternion[2] * remappedQuaternion[2] - remappedQuaternion[3] * remappedQuaternion[3]);
+            remappedYaw += 0.5*Math.PI;
+            if(remappedYaw>Math.PI){
+                remappedYaw -= 2*Math.PI;
+            }
             remappedOrientation[0] = (float) Math.toDegrees(remappedRoll);
             remappedOrientation[1] = (float) Math.toDegrees(remappedPitch);
             remappedOrientation[2] = (float) Math.toDegrees(remappedYaw);

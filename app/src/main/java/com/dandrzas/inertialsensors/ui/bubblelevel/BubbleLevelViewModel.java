@@ -34,6 +34,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
         dataManager.getAlgorithmMahonyFilter().addObserver(this);
+        dataManager.getAlgorithmKalmanFilter().addObserver(this);
     }
 
 

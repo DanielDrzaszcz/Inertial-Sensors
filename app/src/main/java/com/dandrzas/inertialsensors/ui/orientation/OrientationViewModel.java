@@ -33,6 +33,9 @@ public class OrientationViewModel extends ViewModel implements Observer {
     private LineGraphSeries<DataPoint> mahonyFilterSeriesX = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> mahonyFilterSeriesY = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> mahonyFilterSeriesZ = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> kalmanFilterSeriesX = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> kalmanFilterSeriesY = new LineGraphSeries<>();
+    private LineGraphSeries<DataPoint> kalmanFilterSeriesZ = new LineGraphSeries<>();
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesXLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesYLiveData;
     private MutableLiveData<LineGraphSeries<DataPoint>> graphSeriesZLiveData;
@@ -54,6 +57,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         dataManager.getAlgorithmWithoutFusionInstance().addObserver(this);
         dataManager.getAlgorithmMadgwickFilter().addObserver(this);
         dataManager.getAlgorithmMahonyFilter().addObserver(this);
+        dataManager.getAlgorithmKalmanFilter().addObserver(this);
 
         // Utworzenie i konfiguracja serii danych
         initDataSeries(complementaryFilterSeriesX, complementaryFilterSeriesY, complementaryFilterSeriesZ);
@@ -61,6 +65,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         initDataSeries(algorithmWithoutFusionSeriesX, algorithmWithoutFusionSeriesY, algorithmWithoutFusionSeriesZ);
         initDataSeries(madgwickFilterSeriesX, madgwickFilterSeriesY, madgwickFilterSeriesZ);
         initDataSeries(mahonyFilterSeriesX, mahonyFilterSeriesY, mahonyFilterSeriesZ);
+        initDataSeries(kalmanFilterSeriesX, kalmanFilterSeriesY, kalmanFilterSeriesZ);
 
         // Ustawienie startowej serii danych
         graphSeriesX = complementaryFilterSeriesX;
@@ -142,6 +147,18 @@ public class OrientationViewModel extends ViewModel implements Observer {
                 mahonyFilterSeriesY.appendData(new DataPoint(mahonyFilterSeriesY.getHighestValueX() + 1, valuesMahonyFilter[1]), scrollToEnd1, graphMaxX);
                 mahonyFilterSeriesZ.appendData(new DataPoint(mahonyFilterSeriesZ.getHighestValueX() + 1, valuesMahonyFilter[2]), scrollToEnd1, graphMaxX);
             }
+            else if(arg.equals(Constants.KALMAN_FILTER_ID)){
+                float[] valuesKalmanFilter = ((OrientationAlgorithm) o).getRollPitchYaw(false);
+                Log.d("Kalman Orient VM update: ", Float.toString(valuesKalmanFilter[0]) + " " + Float.toString(valuesKalmanFilter[0]) + " " + Float.toString(valuesKalmanFilter[1]));
+
+                boolean scrollToEnd1 = false;
+                if (kalmanFilterSeriesX.getHighestValueX() >= graphMaxX) {
+                    scrollToEnd1 = true;
+                }
+                kalmanFilterSeriesX.appendData(new DataPoint(kalmanFilterSeriesX.getHighestValueX() + 1, valuesKalmanFilter[0]), scrollToEnd1, graphMaxX);
+                kalmanFilterSeriesY.appendData(new DataPoint(kalmanFilterSeriesY.getHighestValueX() + 1, valuesKalmanFilter[1]), scrollToEnd1, graphMaxX);
+                kalmanFilterSeriesZ.appendData(new DataPoint(kalmanFilterSeriesZ.getHighestValueX() + 1, valuesKalmanFilter[2]), scrollToEnd1, graphMaxX);
+            }
         }
         else if (arg.equals(Constants.SYSTEM_ALGORITHM_ID)) {
             float[] valuesSystemAlgorithm = ((SystemAlgorithm) o).getRollPitchYaw(false);
@@ -185,6 +202,11 @@ public class OrientationViewModel extends ViewModel implements Observer {
                 graphSeriesX = mahonyFilterSeriesX;
                 graphSeriesY = mahonyFilterSeriesY;
                 graphSeriesZ = mahonyFilterSeriesZ;
+                break;
+            case Constants.KALMAN_FILTER_ID:
+                graphSeriesX = kalmanFilterSeriesX;
+                graphSeriesY = kalmanFilterSeriesY;
+                graphSeriesZ = kalmanFilterSeriesZ;
                 break;
         }
         graphSeriesXLiveData.setValue(graphSeriesX);

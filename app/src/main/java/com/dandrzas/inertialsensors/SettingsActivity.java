@@ -55,9 +55,6 @@ public class SettingsActivity extends AppCompatActivity {
                                 case "kalman_filter":
                                     DataManager.getInstance().setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
                                     break;
-                                case "extended_kalman_filter":
-                                    DataManager.getInstance().setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
-                                    break;
                                 case "mahony_filter":
                                     DataManager.getInstance().setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
                                     break;
@@ -72,7 +69,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             // Complementary filter config
-
             EditTextPreference parameterAlfaPreference = findPreference("parameter_alfa");
             if (parameterAlfaPreference != null) {
                 parameterAlfaPreference.setOnBindEditTextListener(
@@ -92,8 +88,60 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
 
-            // Madgwick filter config
+            // Kalman filter config
+            EditTextPreference parameterQAngle = findPreference("parameter_q_angle");
+            if (parameterQAngle != null) {
+                parameterQAngle.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+            parameterQAngle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmKalmanFilter().setParQAngle(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
+            EditTextPreference parameterQBias = findPreference("parameter_q_bias");
+            if (parameterQBias != null) {
+                parameterQBias.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+            parameterQBias.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmKalmanFilter().setParQBias(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
+            EditTextPreference parameterR = findPreference("parameter_r");
+            if (parameterR != null) {
+                parameterR.setOnBindEditTextListener(
+                        new EditTextPreference.OnBindEditTextListener() {
+                            @Override
+                            public void onBindEditText(@NonNull EditText editText) {
+                                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            }
+                        });
+            }
+            parameterR.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    DataManager.getInstance().getAlgorithmKalmanFilter().setParRMeasure(Float.parseFloat(newValue.toString()));
+                    return true;
+                }
+            });
 
+            // Madgwick filter config
             EditTextPreference parameterBetaPreference = findPreference("parameter_beta");
             if (parameterBetaPreference != null) {
                 parameterBetaPreference.setOnBindEditTextListener(
@@ -114,7 +162,6 @@ public class SettingsActivity extends AppCompatActivity {
 
 
             // Mahony filter config
-
             EditTextPreference parameterKiPreference = findPreference("parameter_ki");
             if (parameterKiPreference != null) {
                 parameterKiPreference.setOnBindEditTextListener(
@@ -132,8 +179,6 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
-
             EditTextPreference parameterKpPreference = findPreference("parameter_kp");
             if (parameterKpPreference != null) {
                 parameterKpPreference.setOnBindEditTextListener(

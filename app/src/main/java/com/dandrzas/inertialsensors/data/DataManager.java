@@ -23,6 +23,7 @@ public class DataManager extends Observable implements SensorEventListener {
     private OrientationWithoutFusion algorithmWithoutFusion = new OrientationWithoutFusion(sensorAccelerometer, sensorMagnetometer);
     private MadgwickFilter algorithmMadgwickFilter = new MadgwickFilter(sensorAccelerometer, sensorGyroscope, sensorMagnetometer);
     private MahonyFilter algorithmMahonyFilter = new MahonyFilter(sensorAccelerometer, sensorGyroscope, sensorMagnetometer);
+    private KalmanFilter algorithmKalmanFilter = new KalmanFilter(sensorAccelerometer, sensorGyroscope, sensorMagnetometer);
     private StepDetectAlgorithm stepDetectAlgorithm = new StepDetectAlgorithm(sensorAccelerometer);
     private InertialTrackingAlgorithm inertialTrackingAlgorithm = new InertialTrackingAlgorithm(sensorAccelerometer, algorithmWithoutFusion);
     private SensorManager mSensorManager;
@@ -52,6 +53,9 @@ public class DataManager extends Observable implements SensorEventListener {
         algorithmMadgwickFilter.setParBeta(Float.parseFloat(preferences.getString("parameter_beta", Float.toString(algorithmMadgwickFilter.getParBeta()))));
         algorithmMahonyFilter.setParKi(Float.parseFloat(preferences.getString("parameter_ki", Float.toString(algorithmMahonyFilter.getParKi()))));
         algorithmMahonyFilter.setParKp(Float.parseFloat(preferences.getString("parameter_kp", Float.toString(algorithmMahonyFilter.getParKp()))));
+        algorithmKalmanFilter.setParQAngle(Float.parseFloat(preferences.getString("parameter_q_angle", Float.toString(algorithmKalmanFilter.getParQAngle()))));
+        algorithmKalmanFilter.setParQBias(Float.parseFloat(preferences.getString("parameter_q_bias", Float.toString(algorithmKalmanFilter.getParQBias()))));
+        algorithmKalmanFilter.setParRMeasure(Float.parseFloat(preferences.getString("parameter_r", Float.toString(algorithmKalmanFilter.getParRMeasure()))));
 
         String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
         switch (selectedAlgorithm){
@@ -66,9 +70,6 @@ public class DataManager extends Observable implements SensorEventListener {
                 break;
             case "kalman_filter":
                 setSelectedAlgorithm(Constants.KALMAN_FILTER_ID);
-                break;
-            case "extended_kalman_filter":
-                setSelectedAlgorithm(Constants.EXTENDED_KALMAN_FILTER_ID);
                 break;
             case "mahony_filter":
                 setSelectedAlgorithm(Constants.MAHONY_FILTER_ID);
@@ -103,6 +104,10 @@ public class DataManager extends Observable implements SensorEventListener {
         return algorithmMadgwickFilter;
     }
 
+    public KalmanFilter getAlgorithmKalmanFilter() {
+        return algorithmKalmanFilter;
+    }
+
     public MahonyFilter getAlgorithmMahonyFilter() {
         return algorithmMahonyFilter;
     }
@@ -128,6 +133,7 @@ public class DataManager extends Observable implements SensorEventListener {
         algorithmWithoutFusion.startComputing(false);
         algorithmMadgwickFilter.startComputing(sensorGyroscope!=null);
         algorithmMahonyFilter.startComputing(sensorGyroscope!=null);
+        algorithmKalmanFilter.startComputing(sensorGyroscope!=null);
         stepDetectAlgorithm.startComputing(false);
         inertialTrackingAlgorithm.startComputing();
         setChanged();
@@ -143,6 +149,7 @@ public class DataManager extends Observable implements SensorEventListener {
         algorithmWithoutFusion.stopComputing();
         algorithmMadgwickFilter.stopComputing();
         algorithmMahonyFilter.stopComputing();
+        algorithmKalmanFilter.stopComputing();
         stepDetectAlgorithm.stopComputing();
         inertialTrackingAlgorithm.stopComputing();
         setChanged();
@@ -158,7 +165,7 @@ public class DataManager extends Observable implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
             switch (event.sensor.getType()){
-                case Sensor.TYPE_ACCELEROMETER:
+                case Sensor.TYPE_ACCELEROMETER_UNCALIBRATED:
                     Log.d(TAG,  " Accelerometer: " + Float.toString(event.timestamp));
                     sensorAccelerometer.setSampleTime(event.timestamp);
                     sensorAccelerometer.setSampleValue(event.values);
@@ -169,12 +176,13 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmWithoutFusion.setUpdatedAccelerometer();
                         algorithmMadgwickFilter.setUpdatedAccelerometer();
                         algorithmMahonyFilter.setUpdatedAccelerometer();
+                        algorithmKalmanFilter.setUpdatedAccelerometer();
                         stepDetectAlgorithm.setUpdatedAccelerometer();
                         inertialTrackingAlgorithm.calc();
                     }
                     break;
 
-                case Sensor.TYPE_GYROSCOPE:
+                case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
                     Log.d(TAG+"G",  " Gyroscope: " + Float.toString(event.timestamp));
                     sensorGyroscope.setSampleTime(event.timestamp);
                     sensorGyroscope.setSampleValue(event.values);
@@ -182,6 +190,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmComplementary.setUpdatedGyroscope();
                         algorithmMadgwickFilter.setUpdatedGyroscope();
                         algorithmMahonyFilter.setUpdatedGyroscope();
+                        algorithmKalmanFilter.setUpdatedGyroscope();
                     }
                     csvDataSaver.saveDataGyroscope(event);
                     break;
@@ -195,6 +204,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmWithoutFusion.setUpdatedMagnetometer();
                         algorithmMadgwickFilter.setUpdatedMagnetometer();
                         algorithmMahonyFilter.setUpdatedMagnetometer();
+                        algorithmKalmanFilter.setUpdatedMagnetometer();
                     }
                     csvDataSaver.saveDataMagnetometer(event);
                     break;
@@ -220,14 +230,14 @@ public class DataManager extends Observable implements SensorEventListener {
         mSensorManager = (SensorManager) context.getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
 
         // Accelerometer
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
         if (mAccelerometer != null) {
             sensorAccelerometer.setMinDelay(mAccelerometer.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
         // Gyroscope
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
         if (mGyroscope != null) {
             sensorGyroscope.setMinDelay(mGyroscope.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
@@ -269,8 +279,7 @@ public class DataManager extends Observable implements SensorEventListener {
                 inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmComplementary);
                 break;
             case Constants.KALMAN_FILTER_ID:
-                break;
-            case Constants.EXTENDED_KALMAN_FILTER_ID:
+                inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmKalmanFilter);
                 break;
             case Constants.MAHONY_FILTER_ID:
                 inertialTrackingAlgorithm.setOrientationAlgorithm(algorithmMahonyFilter);

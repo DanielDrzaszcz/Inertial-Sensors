@@ -48,6 +48,7 @@
     <string name="step_detect_algorithm_header">Algorytm detekcji kroku</string>
     <string name="madgwick_filter_header">Filtr Madgwick"'"a</string>
     <string name="mahony_filter_header">Filtr Mahony"'"ego</string>
+    <string name="kalman_filter_header">Filtr Kalmana</string>
 
     <!-- App configuration Preferences -->
     <string name="selected_algorithm">Wybór algorytmu</string>
@@ -75,4 +76,8 @@
     <string name="parameter_kp">Wzmocnienie Kp</string>
     <string name="parameter_ki">Wzmocnienie Ki</string>
 
+    <!-- Kalman fiter Preferences -->
+    <string name="parameter_q_angle">Wariancja procesu Q: kąt</string>
+    <string name="parameter_q_bias">Wariancja procesu Q: bias</string>
+    <string name="parameter_r">Wariancja pomiaru R</string>
 </resources>

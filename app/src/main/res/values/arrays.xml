@@ -4,7 +4,6 @@
         <item>Brak fuzji</item>
         <item>Filtr komplementarny</item>
         <item>Filtr Kalmana</item>
-        <item>Rozszerzony filtr Kalmana</item>
         <item>Filtr Mahony"'"ego</item>
         <item>Filtr Madgwick"'"a</item>
     </string-array>
@@ -14,7 +13,6 @@
         <item>orientation_without_fusion</item>
         <item>complementary_filter</item>
         <item>kalman_filter</item>
-        <item>extended_kalman_filter</item>
         <item>mahony_filter</item>
         <item>madgwick_filter</item>
     </string-array>
