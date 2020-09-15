@@ -47,15 +47,15 @@ public class DataManager extends Observable implements SensorEventListener {
     public void init(Context context){
       this.context = context;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        algorithmComplementary.setParamAlfa(Float.parseFloat(preferences.getString("parameter_alfa", Float.toString(algorithmComplementary.getParamAlfa()))));
+        algorithmComplementary.setParamAlfa(Float.parseFloat(preferences.getString("compl_filter_par_alfa", Float.toString(algorithmComplementary.getParamAlfa()))));
         sensorAccelerometer.setFilterLowPassEnable(preferences.getBoolean("accelerometer_filter_enable", sensorAccelerometer.isFilterLowPassEnable()));
         sensorAccelerometer.setFilterLowPassGain(Float.parseFloat(preferences.getString("accelerometer_low_pass_gain", Float.toString(sensorAccelerometer.getFilterLowPassGain()))));
-        algorithmMadgwickFilter.setParBeta(Float.parseFloat(preferences.getString("parameter_beta", Float.toString(algorithmMadgwickFilter.getParBeta()))));
-        algorithmMahonyFilter.setParKi(Float.parseFloat(preferences.getString("parameter_ki", Float.toString(algorithmMahonyFilter.getParKi()))));
-        algorithmMahonyFilter.setParKp(Float.parseFloat(preferences.getString("parameter_kp", Float.toString(algorithmMahonyFilter.getParKp()))));
-        algorithmKalmanFilter.setParQAngle(Float.parseFloat(preferences.getString("parameter_q_angle", Float.toString(algorithmKalmanFilter.getParQAngle()))));
-        algorithmKalmanFilter.setParQBias(Float.parseFloat(preferences.getString("parameter_q_bias", Float.toString(algorithmKalmanFilter.getParQBias()))));
-        algorithmKalmanFilter.setParRMeasure(Float.parseFloat(preferences.getString("parameter_r", Float.toString(algorithmKalmanFilter.getParRMeasure()))));
+        algorithmMadgwickFilter.setParBeta(Float.parseFloat(preferences.getString("madgwick_par_beta", Float.toString(algorithmMadgwickFilter.getParBeta()))));
+        algorithmMahonyFilter.setParKi(Float.parseFloat(preferences.getString("mahony_par_ki", Float.toString(algorithmMahonyFilter.getParKi()))));
+        algorithmMahonyFilter.setParKp(Float.parseFloat(preferences.getString("mahony_par_kp", Float.toString(algorithmMahonyFilter.getParKp()))));
+        algorithmKalmanFilter.setParQAngle(Float.parseFloat(preferences.getString("kalman_par_q_angle", Float.toString(algorithmKalmanFilter.getParQAngle()))));
+        algorithmKalmanFilter.setParQBias(Float.parseFloat(preferences.getString("kalman_par_q_bias", Float.toString(algorithmKalmanFilter.getParQBias()))));
+        algorithmKalmanFilter.setParRMeasure(Float.parseFloat(preferences.getString("kalman_par_r", Float.toString(algorithmKalmanFilter.getParRMeasure()))));
 
         String selectedAlgorithm = preferences.getString("selected_algorithm", "system_default_algorithm");
         switch (selectedAlgorithm){

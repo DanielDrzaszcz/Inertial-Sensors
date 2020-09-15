@@ -106,9 +106,9 @@ public class InertialTrackingAlgorithm  extends Observable {
         acceleration[2] = sensorAccelerometer.getSampleValue()[2];
 
         // Convert acceleration to global coordinates
-        accelerationGlobal[0] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[0] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[1] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[2];
-        accelerationGlobal[1] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[3] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[4] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[5];
-        accelerationGlobal[2] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[6] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[7] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU(false)[8];
+        accelerationGlobal[0] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU()[0] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU()[1] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU()[2];
+        accelerationGlobal[1] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU()[3] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU()[4] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU()[5];
+        accelerationGlobal[2] = acceleration[0] * orientationAlgorithm.getRotationMatrixRPYNWU()[6] + acceleration[1] * orientationAlgorithm.getRotationMatrixRPYNWU()[7] + acceleration[2] * orientationAlgorithm.getRotationMatrixRPYNWU()[8];
 
   /*      accelerationGlobal[0] = acceleration[0];
         accelerationGlobal[1] = acceleration[1];
@@ -118,7 +118,6 @@ public class InertialTrackingAlgorithm  extends Observable {
             gravity[0] = 0;
             gravity[1] = 0;
             gravity[2] = 0;
-            Log.d("InrtialTrackingTest: ", "firstCalcDone");
             linearAcceleration[0] = 0;
             linearAcceleration[1] = 0;
             linearAcceleration[2] = 0;

@@ -54,12 +54,12 @@ public class SystemAlgorithm extends Observable implements IFOrientationAlgorith
         }    }
 
     @Override
-    public float[] getRotationMatrixNWURPY(boolean remapToVertical) {
+    public float[] getRotationMatrixNWURPY() {
         return rotationMatrixNWURPY;
     }
 
     @Override
-    public float[] getRotationMatrixRPYNWU(boolean remapToVertical) {
+    public float[] getRotationMatrixRPYNWU() {
         return rotationMatrixRPYNWU;
     }
 

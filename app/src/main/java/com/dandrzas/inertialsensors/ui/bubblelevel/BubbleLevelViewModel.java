@@ -61,14 +61,11 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             rotationX = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[0];
             rotationY = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[1];
             rotationZ = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[2];
-
             rotationXRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[0];
-            rotationYRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[1];
-            rotationZRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[2];
 
             // Circle position
-            circlePercentRotationX = rotationX / 45;
-            circlePercentRotationY = rotationY / 45;
+            circlePercentRotationX = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[0] / 45;
+            circlePercentRotationY = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[1] / 45;
             if (circlePercentRotationX > 1) {
                 circlePercentRotationX = 1;
             }
@@ -105,7 +102,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
                 percentLineVertical = rotationXRemapped / 90;
             }
             else{
-                percentLineVertical = (rotationZRemapped + 90) / 90;
+                percentLineVertical = rotationX / 90;
             }
             if (percentLineVertical > 1) {
                 percentLineVertical = 1;
@@ -114,20 +111,10 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
                 percentLineVertical = -1;
             }
             verticalPixelsMove = percentLineVertical * lineVerticalRange / 2;
-            Log.d(TAG, " rotationX: " + rotationXRemapped);
-            Log.d(TAG, " pixelsMoveX: " + verticalPixelsMove);
-            Log.d(TAG, " lineVerticalRange: " + lineVerticalRange);
-            Log.d(TAG, " rotationZ: " + rotationZRemapped);
             lineVerticalBubblePos.setValue(lineVerticalBubblePosZero - verticalPixelsMove);
 
             // Line horizontal position
-            if((o instanceof MadgwickFilter || o instanceof MahonyFilter)) {
-                percentLineHorizontal = rotationY / 90;
-            }
-            else{
-                percentLineHorizontal = rotationZRemapped / 90;
-            }
-
+            percentLineHorizontal = rotationY / 90;
             if (percentLineHorizontal > 1) {
                 percentLineHorizontal = 1;
             }

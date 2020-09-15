@@ -14,26 +14,26 @@
     <PreferenceCategory app:title="@string/complementary_filter_header">
         <EditTextPreference
             app:defaultValue="0.8"
-            app:key="parameter_alfa"
-            app:title="@string/parameter_alfa"
+            app:key="compl_filter_par_alfa"
+            app:title="@string/compl_filter_par_alfa"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/kalman_filter_header">
         <EditTextPreference
             app:defaultValue="0.00001"
-            app:key="parameter_q_angle"
-            app:title="@string/parameter_q_angle"
+            app:key="kalman_par_q_angle"
+            app:title="@string/kalman_par_q_angle"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="0.00003"
-            app:key="parameter_q_bias"
-            app:title="@string/parameter_q_bias"
+            app:key="kalman_par_q_bias"
+            app:title="@string/kalman_par_q_bias"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="0.0002"
-            app:key="parameter_r"
-            app:title="@string/parameter_r"
+            app:key="kalman_par_r"
+            app:title="@string/kalman_par_r"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
@@ -41,21 +41,21 @@
 
         <EditTextPreference
             app:defaultValue="0.1"
-            app:key="parameter_beta"
-            app:title="@string/parameter_beta"
+            app:key="madgwick_par_beta"
+            app:title="@string/madgwick_par_beta"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/mahony_filter_header">
         <EditTextPreference
             app:defaultValue="1.0"
-            app:key="parameter_kp"
-            app:title="@string/parameter_kp"
+            app:key="mahony_par_kp"
+            app:title="@string/mahony_par_kp"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="0.0"
-            app:key="parameter_ki"
-            app:title="@string/parameter_ki"
+            app:key="mahony_par_ki"
+            app:title="@string/mahony_par_ki"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
@@ -89,17 +89,17 @@
         <EditTextPreference
             app:defaultValue="50"
             app:key="step_detect_algorithm_window_width"
-            app:title="@string/window_width"
+            app:title="@string/step_detect_window_width"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="2"
             app:key="step_detect_algorithm_threshold_1"
-            app:title="@string/threshold_1"
+            app:title="@string/step_detect_threshold_1"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="1"
             app:key="step_detect_algorithm_threshold_2"
-            app:title="@string/threshold_2"
+            app:title="@string/step_detect_threshold_2"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

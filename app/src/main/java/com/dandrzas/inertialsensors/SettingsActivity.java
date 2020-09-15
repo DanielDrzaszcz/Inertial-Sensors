@@ -69,9 +69,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             // Complementary filter config
-            EditTextPreference parameterAlfaPreference = findPreference("parameter_alfa");
-            if (parameterAlfaPreference != null) {
-                parameterAlfaPreference.setOnBindEditTextListener(
+            EditTextPreference compl_filter_par_alfa = findPreference("compl_filter_par_alfa");
+            if (compl_filter_par_alfa != null) {
+                compl_filter_par_alfa.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -79,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterAlfaPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            compl_filter_par_alfa.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmComplementaryInstance().setParamAlfa(Float.parseFloat(newValue.toString()));
@@ -89,9 +89,9 @@ public class SettingsActivity extends AppCompatActivity {
 
 
             // Kalman filter config
-            EditTextPreference parameterQAngle = findPreference("parameter_q_angle");
-            if (parameterQAngle != null) {
-                parameterQAngle.setOnBindEditTextListener(
+            EditTextPreference kalman_par_q_angle = findPreference("kalman_par_q_angle");
+            if (kalman_par_q_angle != null) {
+                kalman_par_q_angle.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -99,16 +99,16 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterQAngle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            kalman_par_q_angle.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmKalmanFilter().setParQAngle(Float.parseFloat(newValue.toString()));
                     return true;
                 }
             });
-            EditTextPreference parameterQBias = findPreference("parameter_q_bias");
-            if (parameterQBias != null) {
-                parameterQBias.setOnBindEditTextListener(
+            EditTextPreference kalman_par_q_bias = findPreference("kalman_par_q_bias");
+            if (kalman_par_q_bias != null) {
+                kalman_par_q_bias.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -116,16 +116,16 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterQBias.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            kalman_par_q_bias.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmKalmanFilter().setParQBias(Float.parseFloat(newValue.toString()));
                     return true;
                 }
             });
-            EditTextPreference parameterR = findPreference("parameter_r");
-            if (parameterR != null) {
-                parameterR.setOnBindEditTextListener(
+            EditTextPreference kalman_par_r = findPreference("kalman_par_r");
+            if (kalman_par_r != null) {
+                kalman_par_r.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -133,7 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterR.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            kalman_par_r.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmKalmanFilter().setParRMeasure(Float.parseFloat(newValue.toString()));
@@ -142,9 +142,9 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             // Madgwick filter config
-            EditTextPreference parameterBetaPreference = findPreference("parameter_beta");
-            if (parameterBetaPreference != null) {
-                parameterBetaPreference.setOnBindEditTextListener(
+            EditTextPreference madgwick_par_beta = findPreference("madgwick_par_beta");
+            if (madgwick_par_beta != null) {
+                madgwick_par_beta.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -152,7 +152,7 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterBetaPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            madgwick_par_beta.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmMadgwickFilter().setParBeta(Float.parseFloat(newValue.toString()));
@@ -162,9 +162,9 @@ public class SettingsActivity extends AppCompatActivity {
 
 
             // Mahony filter config
-            EditTextPreference parameterKiPreference = findPreference("parameter_ki");
-            if (parameterKiPreference != null) {
-                parameterKiPreference.setOnBindEditTextListener(
+            EditTextPreference mahony_par_ki = findPreference("mahony_par_ki");
+            if (mahony_par_ki != null) {
+                mahony_par_ki.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -172,16 +172,16 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterKiPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            mahony_par_ki.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmMahonyFilter().setParKi(Float.parseFloat(newValue.toString()));
                     return true;
                 }
             });
-            EditTextPreference parameterKpPreference = findPreference("parameter_kp");
-            if (parameterKpPreference != null) {
-                parameterKpPreference.setOnBindEditTextListener(
+            EditTextPreference mahony_par_kp = findPreference("mahony_par_kp");
+            if (mahony_par_kp != null) {
+                mahony_par_kp.setOnBindEditTextListener(
                         new EditTextPreference.OnBindEditTextListener() {
                             @Override
                             public void onBindEditText(@NonNull EditText editText) {
@@ -189,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
             }
-            parameterKpPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            mahony_par_kp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     DataManager.getInstance().getAlgorithmMahonyFilter().setParKp(Float.parseFloat(newValue.toString()));

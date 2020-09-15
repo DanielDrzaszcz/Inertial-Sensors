@@ -54,7 +54,7 @@
     <string name="selected_algorithm">Wybór algorytmu</string>
 
     <!-- Complementary fiter Preferences -->
-    <string name="parameter_alfa">Współczynnik alfa</string>
+    <string name="compl_filter_par_alfa">Współczynnik alfa</string>
 
     <!-- Accelerometer Preferences -->
     <string name="accelerometer_filter_enable">Filtr dolnoprzepustowy</string>
@@ -65,19 +65,19 @@
     <string name="magnetometer_filter_gain">Wzmocnienie filtra</string>
 
     <!-- Step detect Preferences -->
-    <string name="window_width">Szerokość okna uśredniania</string>
-    <string name="threshold_1">Próg 1</string>
-    <string name="threshold_2">Próg 2</string>
+    <string name="step_detect_window_width">Szerokość okna uśredniania</string>
+    <string name="step_detect_threshold_1">Próg 1</string>
+    <string name="step_detect_threshold_2">Próg 2</string>
 
     <!-- Madgwick fiter Preferences -->
-    <string name="parameter_beta">Współczynnik beta</string>
+    <string name="madgwick_par_beta">Współczynnik beta</string>
 
     <!-- Mahony fiter Preferences -->
-    <string name="parameter_kp">Wzmocnienie Kp</string>
-    <string name="parameter_ki">Wzmocnienie Ki</string>
+    <string name="mahony_par_kp">Wzmocnienie Kp</string>
+    <string name="mahony_par_ki">Wzmocnienie Ki</string>
 
     <!-- Kalman fiter Preferences -->
-    <string name="parameter_q_angle">Wariancja procesu Q: kąt</string>
-    <string name="parameter_q_bias">Wariancja procesu Q: bias</string>
-    <string name="parameter_r">Wariancja pomiaru R</string>
+    <string name="kalman_par_q_angle">Wariancja procesu Q: kąt</string>
+    <string name="kalman_par_q_bias">Wariancja procesu Q: bias</string>
+    <string name="kalman_par_r">Wariancja pomiaru R</string>
 </resources>

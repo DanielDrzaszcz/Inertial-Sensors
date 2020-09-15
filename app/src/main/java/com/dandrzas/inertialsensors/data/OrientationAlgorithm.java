@@ -228,12 +228,12 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
     }
 
     @Override
-    public float[] getRotationMatrixNWURPY(boolean remapToVertical) {
+    public float[] getRotationMatrixNWURPY() {
         return rotationMatrixNWURPY;
     }
 
     @Override
-    public float[] getRotationMatrixRPYNWU(boolean remapToVertical) {
+    public float[] getRotationMatrixRPYNWU() {
         return rotationMatrixRPYNWU;
     }
 }

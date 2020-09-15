@@ -4,9 +4,9 @@ public interface IFOrientationAlgorithm {
 
     public float[] getRollPitchYaw(boolean remapToVertical);
 
-    public float[] getRotationMatrixNWURPY(boolean remapToVertical);
+    public float[] getRotationMatrixNWURPY();
 
-    public float[] getRotationMatrixRPYNWU(boolean remapToVertical);
+    public float[] getRotationMatrixRPYNWU();
 
     public long getSampleTime();
 

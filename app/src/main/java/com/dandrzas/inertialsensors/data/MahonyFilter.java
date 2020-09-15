@@ -9,7 +9,7 @@ public class MahonyFilter extends OrientationAlgorithm implements IFOrientationA
     private float parKp = 1f;
     private float[] eInt;
     private float[] quaternion;
-    boolean firstCalcDone;
+    private boolean firstCalcDone;
 
     public MahonyFilter(SensorData sensorAccelerometer, SensorData sensorGyroscope, SensorData sensorMagnetometer) {
         this.sensorAccelerometer = sensorAccelerometer;
@@ -98,7 +98,7 @@ public class MahonyFilter extends OrientationAlgorithm implements IFOrientationA
     public void update(float gx, float gy, float gz, float ax, float ay,
                        float az, float mx, float my, float mz) {
 
-        float q1 = quaternion[0], q2 = quaternion[1], q3 = quaternion[2], q4 = quaternion[3];   // short name local variable for readability
+        float q1 = quaternion[0], q2 = quaternion[1], q3 = quaternion[2], q4 = quaternion[3];
         float norm;
         float hx, hy, bx, bz;
         float vx, vy, vz, wx, wy, wz;
@@ -186,67 +186,6 @@ public class MahonyFilter extends OrientationAlgorithm implements IFOrientationA
         quaternion[2] = q3 * norm;
         quaternion[3] = q4 * norm;
 
-    }
-
-    public void update(float gx, float gy, float gz, float ax, float ay,
-                       float az) {
-        float q1 = quaternion[0], q2 = quaternion[1], q3 = quaternion[2], q4 = quaternion[3];   // short name local variable for readability
-        float norm;
-        float vx, vy, vz;
-        float ex, ey, ez;
-        float pa, pb, pc;
-
-        // Normalise accelerometer measurement
-        norm = (float)Math.sqrt(ax * ax + ay * ay + az * az);
-        if (norm == 0f) return; // handle NaN
-        norm = 1 / norm;        // use reciprocal for division
-        ax *= norm;
-        ay *= norm;
-        az *= norm;
-
-        // Estimated direction of gravity
-        vx = 2.0f * (q2 * q4 - q1 * q3);
-        vy = 2.0f * (q1 * q2 + q3 * q4);
-        vz = q1 * q1 - q2 * q2 - q3 * q3 + q4 * q4;
-
-        // Error is cross product between estimated direction and measured direction of gravity
-        ex = (ay * vz - az * vy);
-        ey = (az * vx - ax * vz);
-        ez = (ax * vy - ay * vx);
-        if (parKi > 0f)
-        {
-            eInt[0] += ex;      // accumulate integral error
-            eInt[1] += ey;
-            eInt[2] += ez;
-        }
-        else
-        {
-            eInt[0] = 0.0f;     // prevent integral wind up
-            eInt[1] = 0.0f;
-            eInt[2] = 0.0f;
-        }
-
-        // Apply feedback terms
-        gx = gx + parKp * ex + parKi * eInt[0];
-        gy = gy + parKp * ey + parKi * eInt[1];
-        gz = gz + parKp * ez + parKi * eInt[2];
-
-        // Integrate rate of change of quaternion
-        pa = q2;
-        pb = q3;
-        pc = q4;
-        q1 = (float)(q1 + (-q2 * gx - q3 * gy - q4 * gz) * (0.5f * samplePeriod));
-        q2 = (float)(pa + (q1 * gx + pb * gz - pc * gy) * (0.5f * samplePeriod));
-        q3 = (float)(pb + (q1 * gy - pa * gz + pc * gx) * (0.5f * samplePeriod));
-        q4 = (float)(pc + (q1 * gz + pa * gy - pb * gx) * (0.5f * samplePeriod));
-
-        // Normalise quaternion
-        norm = (float)Math.sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
-        norm = 1.0f / norm;
-        quaternion[0] = q1 * norm;
-        quaternion[1] = q2 * norm;
-        quaternion[2] = q3 * norm;
-        quaternion[3] = q4 * norm;
     }
 
     public double getSamplePeriod() {
