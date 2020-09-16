@@ -1,6 +1,5 @@
 package com.dandrzas.inertialsensors.ui.bubblelevel;
 
-import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -44,23 +43,18 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
         float circlePercentRotationX;
         float rotationY = 0;
         float circlePercentRotationY;
-        float rotationZ = 0;
         float percentLineHorizontal;
         float percentLineVertical;
         float rotationXRemapped = 0;
-        float rotationYRemapped = 0;
-        float rotationZRemapped = 0;
         float verticalPixelsMove;
         float horizontalPixelsMove;
         float circlePixelsMoveX;
         float circlePixelsMoveY;
 
-        Log.d(TAG, " Selected Algorithm: " + dataManager.getSelectedAlgorithm());
         if ((int) arg == dataManager.getSelectedAlgorithm()) {
 
             rotationX = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[0];
             rotationY = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[1];
-            rotationZ = ((IFOrientationAlgorithm) o).getRollPitchYaw(false)[2];
             rotationXRemapped = ((IFOrientationAlgorithm) o).getRollPitchYaw(true)[0];
 
             // Circle position
@@ -82,9 +76,7 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             double RMax = 45;
             double RAct = Math.sqrt(rotationX * rotationX + rotationY * rotationY);
             double k = RMax / RAct;
-            Log.d("CircleTest RMax: ", Double.toString(RMax));
-            Log.d("CircleTest RAct: ", Double.toString(RAct));
-            Log.d("CircleTest k: ", Double.toString(k));
+
             if (RAct <= RMax) {
                 circlePixelsMoveX = circleBubblePosZero[0] - (circlePercentRotationY * circleRange / 2);
                 circlePixelsMoveY = circleBubblePosZero[1] - (circlePercentRotationX * circleRange / 2);
@@ -94,8 +86,6 @@ public class BubbleLevelViewModel extends ViewModel implements Observer {
             }
             Float[] circlePixelsMove = {circlePixelsMoveX, circlePixelsMoveY};
             circleBubblePos.setValue(circlePixelsMove);
-            Log.d(TAG, " circlePixelsMoveX: " + circlePixelsMoveX);
-            Log.d(TAG, " circlePixelsMoveY: " + circlePixelsMoveY);
 
             // Line vertical position
             if((o instanceof MadgwickFilter || o instanceof MahonyFilter)) {

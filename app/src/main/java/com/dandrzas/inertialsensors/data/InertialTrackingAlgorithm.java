@@ -30,7 +30,6 @@ public class InertialTrackingAlgorithm  extends Observable {
 
     public void calc()
     {
-        Log.d(TAG, " DataChanged: " + calculatedMovement[0] + " " + calculatedMovement[1] + " " + calculatedMovement[2]);
         actualSampleTime = sensorAccelerometer.getSampleTime();
         if(!firstCalcDone){
             previousSampleTime = actualSampleTime;
@@ -45,15 +44,15 @@ public class InertialTrackingAlgorithm  extends Observable {
             initialAcceleration[0] = accelerationGlobal[0];
             initialAcceleration[1] = accelerationGlobal[1];
             initialAcceleration[2] = accelerationGlobal[2];
-            Log.d("InrtialTrackingTestIni ", "initialAcceleration[0]: " + initialAcceleration[0]);
+            /*Log.d("InrtialTrackingTestIni ", "initialAcceleration[0]: " + initialAcceleration[0]);
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[1]: " + initialAcceleration[1]);
-            Log.d("InrtialTrackingTestIni ", "initialAcceleration[2]: " + initialAcceleration[2]);
+            Log.d("InrtialTrackingTestIni ", "initialAcceleration[2]: " + initialAcceleration[2]);*/
         }
         calcLinearGravity();
         calculatedVelocity = calcIntegral(linearAcceleration, linearAccelerationPrev, calculatedVelocity);
-        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[0]);
+        /*Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[0]);
         Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[1]);
-        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[2]);
+        Log.d("InrtialTrackingTest: ", "velocity: " + calculatedVelocity[2]);*/
 
         calculatedMovement = calcIntegral(calculatedVelocity, calculatedVelocityPrev, calculatedMovement);
         setChanged();
@@ -68,7 +67,7 @@ public class InertialTrackingAlgorithm  extends Observable {
         previousSampleTime = actualSampleTime;
         firstCalcDone = true;
         calcCounter++;
-        Log.d("InrtialTrackingTestIni", "calcCounter: " + calcCounter);
+        //Log.d("InrtialTrackingTestIni", "calcCounter: " + calcCounter);
     }
 
     private void clearData()
@@ -137,17 +136,17 @@ public class InertialTrackingAlgorithm  extends Observable {
         }
 
         float totalGravity = (float) Math.sqrt(gravity[0]*gravity[0]+gravity[1]*gravity[1]+gravity[2]*gravity[2]);
-
+/*
         Log.d("InrtialTrackingTest: ", "gravity: " + gravity[0]);
         Log.d("InrtialTrackingTest: ", "gravity: " + gravity[1]);
         Log.d("InrtialTrackingTest: ", "gravity: " + gravity[2]);
-        Log.d("InrtialTrackingTest: ", "total gravity: " + totalGravity);
+        Log.d("InrtialTrackingTest: ", "total gravity: " + totalGravity);*/
 
         float totalAcceleration = (float) Math.sqrt(linearAcceleration[0]*linearAcceleration[0]+linearAcceleration[1]*linearAcceleration[1]+linearAcceleration[2]*linearAcceleration[2]);
-        Log.d("InrtialTrackingTest: ", "linearAcceleration: " + linearAcceleration[0]);
+       /* Log.d("InrtialTrackingTest: ", "linearAcceleration: " + linearAcceleration[0]);
         Log.d("InrtialTrackingTest: ", "linearAcceleration: " + linearAcceleration[1]);
         Log.d("InrtialTrackingTest: ", "linearAcceleration: " + linearAcceleration[2]);
-        Log.d("InrtialTrackingTest: ", "total linearAcceleration: " + totalAcceleration);
+        Log.d("InrtialTrackingTest: ", "total linearAcceleration: " + totalAcceleration);*/
     }
 
     private float[] calcIntegral(float[] orgSignal, float[] orgSignalPrev, float[] actIntegratedValue){

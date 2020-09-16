@@ -52,7 +52,7 @@ public class PedometerViewModel extends ViewModel implements Observer {
 
             boolean scrollToEnd1 = false;
             if (accelerationMagnitudeSeries.getHighestValueX() >= graphMaxX) {
-                scrollToEnd1 = true; // uruchom przesuwanie wartości w serii danych
+                scrollToEnd1 = true;
             }
             accelerationMagnitudeSeries.appendData(new DataPoint(accelerationMagnitudeSeries.getHighestValueX() + 1, accelerationMagnitude), scrollToEnd1, graphMaxX);
             accelerationAverageSeries.appendData(new DataPoint(accelerationAverageSeries.getHighestValueX() + 1, accelerationAverage), scrollToEnd1, graphMaxX);
@@ -111,7 +111,7 @@ public class PedometerViewModel extends ViewModel implements Observer {
         int graphSeriesMaxX = graphMaxX;
 
         if (accelerationMagnitudeSeries.getHighestValueX() >= graphMaxX) {
-            graphSeriesMaxX = (int) (accelerationMagnitudeSeries.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+            graphSeriesMaxX = (int) (accelerationMagnitudeSeries.getHighestValueX());
         } else {
             graphSeriesMaxX = graphMaxX;
         }
@@ -122,7 +122,7 @@ public class PedometerViewModel extends ViewModel implements Observer {
     public int getGraphMinX() {
 
         if (accelerationMagnitudeSeries.getHighestValueX() >= graphMaxX) {
-            return (int) (accelerationMagnitudeSeries.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+            return (int) (accelerationMagnitudeSeries.getLowestValueX());
         } else return 0;
     }
 

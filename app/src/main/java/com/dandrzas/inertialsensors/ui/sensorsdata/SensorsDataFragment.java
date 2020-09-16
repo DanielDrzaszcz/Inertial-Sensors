@@ -35,22 +35,20 @@ public class SensorsDataFragment extends Fragment {
                 ViewModelProviders.of(this).get(SensorsDataViewModel.class);
         View root = inflater.inflate(R.layout.fragment_sensorsdata, container, false);
 
-        // Bindowanie elementów UI
+        // UI binding
         BottomNavigationView navView = root.findViewById(R.id.bottom_nav_view);
         sensorsDataViewModel = ViewModelProviders.of(this).get(SensorsDataViewModel.class);
         graph = root.findViewById(R.id.graph_view);
         Button button_zoom_in = root.findViewById(R.id.button_zoom_in);
         Button button_zoom_out = root.findViewById(R.id.button_zoom_out);
 
-
-        // Podpięcie pod LiveData z ViewModel
         sensorsDataViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         sensorsDataViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
         sensorsDataViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
 
         graphConfig();
 
-        // Obsługa bottom navigation menu
+        // bottom navigation menu
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -74,7 +72,7 @@ public class SensorsDataFragment extends Fragment {
             }
         });
 
-        // Obsługa kliknięcia w przycisk Zoom in
+        //  Zoom in
         button_zoom_in.setOnClickListener(view -> {
             double actualMinY = sensorsDataViewModel.getGraphMinY();
             double actualMaxY = sensorsDataViewModel.getGraphMaxY();
@@ -89,7 +87,7 @@ public class SensorsDataFragment extends Fragment {
             graph.onDataChanged(true, true);
         });
 
-        // Obsługa kliknięcia w przycisk Zoom out
+        // Zoom out
         button_zoom_out.setOnClickListener(view -> {
             double actualMinY = sensorsDataViewModel.getGraphMinY();
             double actualMaxY = sensorsDataViewModel.getGraphMaxY();
@@ -103,7 +101,7 @@ public class SensorsDataFragment extends Fragment {
             graph.onDataChanged(true, true);
         });
 
-        // Touch eventy Graph View - przesunięcie wyświetlanego zakresu osi Y
+        // Touch events -  Y axis range movement
         graph.setOnTouchListener((v, event) ->
                 {
                     float y = event.getY();
@@ -122,13 +120,13 @@ public class SensorsDataFragment extends Fragment {
                             actualYRange = actualMaxY - actualMinY;
                         else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
 
-                        // Przesunięcie w górę
+                        // Up
                         if (dy < -2) {
                             sensorsDataViewModel.setGraphMinY((float) (actualMinY - 0.02 * actualYRange));
                             sensorsDataViewModel.setGraphMaxY((float) (actualMaxY - 0.02 * actualYRange));
                         }
 
-                        // Przesunięcie w dół
+                        // Down
                         if (dy > 2) {
                             sensorsDataViewModel.setGraphMinY((float) (actualMinY + 0.02 * actualYRange));
                             sensorsDataViewModel.setGraphMaxY((float) (actualMaxY + 0.02 * actualYRange));
@@ -148,7 +146,7 @@ public class SensorsDataFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
+        graph.getSeries().get(0).clearReference(graph); // clean reference to avoid memory leaks
         graph.getSeries().get(1).clearReference(graph);
         graph.getSeries().get(2).clearReference(graph);
         sensorsDataViewModel.getGraphSeriesX().removeObservers(this);
@@ -158,7 +156,7 @@ public class SensorsDataFragment extends Fragment {
     }
 
 
-    // Konfiguracja osi i legendy wykresu
+    // Axes and legend config
     private void graphConfig() {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(sensorsDataViewModel.getGraphMinY());
@@ -184,11 +182,11 @@ public class SensorsDataFragment extends Fragment {
         graph.onDataChanged(true, true);
     }
 
-    // Implementacja interfejsu Runnable do przełączenia wyświetlanych danych z czujników w osobnym wątku
+    // Runnable implementation to switching sensors data in the other thread
     private class SensorDataSwitch implements Runnable {
         @Override
         public void run() {
-            graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
+            graph.getSeries().get(0).clearReference(graph); // clean reference to avoid memory leaks
             graph.getSeries().get(1).clearReference(graph);
             graph.getSeries().get(2).clearReference(graph);
             graph.removeAllSeries();
@@ -196,7 +194,6 @@ public class SensorsDataFragment extends Fragment {
         }
     }
 
-    // Implementacja obserwatora do odbierania danych z ViewModel
     private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>> {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {

@@ -50,7 +50,7 @@ public class MovementTrendsViewModel extends ViewModel implements Observer {
 
             boolean scrollToEnd1 = false;
             if (rawAccelerationSeries.getHighestValueX() >= graphMaxX) {
-                scrollToEnd1 = true; // uruchom przesuwanie wartości w serii danych
+                scrollToEnd1 = true; // start data shift
             }
 
             rawAccelerationSeries.appendData(new DataPoint(rawAccelerationSeries.getHighestValueX() + 1, rawAcceleration[selectedAxis]), scrollToEnd1, graphMaxX);
@@ -99,7 +99,7 @@ public class MovementTrendsViewModel extends ViewModel implements Observer {
         int graphSeriesMaxX = graphMaxX;
 
         if (rawAccelerationSeries.getHighestValueX() >= graphMaxX) {
-            graphSeriesMaxX = (int) (rawAccelerationSeries.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+            graphSeriesMaxX = (int) (rawAccelerationSeries.getHighestValueX());
         } else {
             graphSeriesMaxX = graphMaxX;
         }
@@ -111,7 +111,7 @@ public class MovementTrendsViewModel extends ViewModel implements Observer {
     public int getGraphMinX() {
 
         if (rawAccelerationSeries.getHighestValueX() >= graphMaxX) {
-            return (int) (rawAccelerationSeries.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+            return (int) (rawAccelerationSeries.getLowestValueX());
         } else return 0;
     }
 

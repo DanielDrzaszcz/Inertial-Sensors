@@ -59,7 +59,6 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
         rotationMatrixRPYNWU[7]= rotationMatrixNWURPY[5];
         rotationMatrixRPYNWU[8]= rotationMatrixNWURPY[8];
 
-        Log.d(TAG, " DataChanged: " + rollPitchYaw[0] + " " + rollPitchYaw[1] + " " + rollPitchYaw[2]);
         previousSampleTime = actualSampleTime;
         isUpdatedAccelerometer = false;
         isUpdatedGyroscope = false;
@@ -111,9 +110,6 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedAccelerometer() {
         isUpdatedAccelerometer = true;
-        if(this instanceof MadgwickFilter) {
-            Log.d("Madgwick : ", " accelerometer update" + Double.toString(sensorAccelerometer.getSampleTime()));
-        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorAccelerometer.getSampleTime();
             calc();
@@ -126,9 +122,6 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedGyroscope() {
         isUpdatedGyroscope = true;
-        if(this instanceof MadgwickFilter) {
-            Log.d("Madgwick : ", " gyro update" + Double.toString(sensorGyroscope.getSampleTime()));
-        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorGyroscope.getSampleTime();
             calc();
@@ -141,9 +134,6 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
 
     public void setUpdatedMagnetometer() {
         isUpdatedMagnetometer = true;
-        if(this instanceof MadgwickFilter){
-            Log.d("Madgwick : ", " magnetometer update" + Double.toString(sensorMagnetometer.getSampleTime()));
-        }
         if(isRunning&&isUpdatedAccelerometer&&(isUpdatedGyroscope||(!isGyroscopeAvailable))&&isUpdatedMagnetometer){
             actualSampleTime = sensorMagnetometer.getSampleTime();
             calc();

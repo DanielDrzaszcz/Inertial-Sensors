@@ -70,7 +70,6 @@ public class MovementTrendsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 movementTrendsViewModel.setSelectedAxis((int)id);
-                Log.d("Spinner: ", Long.toString(id));
             }
 
             @Override

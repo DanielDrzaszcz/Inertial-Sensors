@@ -50,7 +50,6 @@ public class OrientationViewModel extends ViewModel implements Observer {
     private final String TAG = OrientationViewModel.class.getSimpleName();
 
     public OrientationViewModel() {
-        // Podłączenie do warstwy danych
         dataManager = DataManager.getInstance();
         dataManager.getAlgorithmComplementaryInstance().addObserver(this);
         dataManager.getSystemAlgrithmInstance().addObserver(this);
@@ -59,7 +58,6 @@ public class OrientationViewModel extends ViewModel implements Observer {
         dataManager.getAlgorithmMahonyFilter().addObserver(this);
         dataManager.getAlgorithmKalmanFilter().addObserver(this);
 
-        // Utworzenie i konfiguracja serii danych
         initDataSeries(complementaryFilterSeriesX, complementaryFilterSeriesY, complementaryFilterSeriesZ);
         initDataSeries(systemAlgorithmSeriesX, systemAlgorithmSeriesY, systemAlgorithmSeriesZ);
         initDataSeries(algorithmWithoutFusionSeriesX, algorithmWithoutFusionSeriesY, algorithmWithoutFusionSeriesZ);
@@ -67,7 +65,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         initDataSeries(mahonyFilterSeriesX, mahonyFilterSeriesY, mahonyFilterSeriesZ);
         initDataSeries(kalmanFilterSeriesX, kalmanFilterSeriesY, kalmanFilterSeriesZ);
 
-        // Ustawienie startowej serii danych
+        // setup of the start series
         graphSeriesX = complementaryFilterSeriesX;
         graphSeriesY = complementaryFilterSeriesY;
         graphSeriesZ = complementaryFilterSeriesZ;
@@ -79,7 +77,8 @@ public class OrientationViewModel extends ViewModel implements Observer {
         graphSeriesZLiveData = new MutableLiveData<>();
         graphSeriesZLiveData.setValue(graphSeriesZ);
     }
-    // Utworzenie i konfiguracja serii danych
+
+    // Data series config
     private void initDataSeries(LineGraphSeries<DataPoint> seriesX, LineGraphSeries<DataPoint> seriesY, LineGraphSeries<DataPoint> seriesZ) {
         seriesX.setThickness(2);
         seriesX.setColor(Color.BLUE);
@@ -94,7 +93,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         seriesZ.setTitle("Rotacja Z [°]");
     }
 
-    // Pobranie danych z warstwy danych przy zmianie wartości
+    // Orientation algorithm update
     @Override
     public void update(Observable o, Object arg) {
 
@@ -105,7 +104,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
                 float[] valuesComplementaryFilter = ((OrientationAlgorithm) o).getRollPitchYaw(false);
                 boolean scrollToEnd1 = false;
                 if (complementaryFilterSeriesY.getHighestValueX() >= graphMaxX) {
-                    scrollToEnd1 = true; // uruchom przesuwanie wartości w serii danych
+                    scrollToEnd1 = true;
                 }
                 complementaryFilterSeriesX.appendData(new DataPoint(complementaryFilterSeriesX.getHighestValueX() + 1, valuesComplementaryFilter[0]), scrollToEnd1, graphMaxX);
                 complementaryFilterSeriesY.appendData(new DataPoint(complementaryFilterSeriesY.getHighestValueX() + 1, valuesComplementaryFilter[1]), scrollToEnd1, graphMaxX);
@@ -174,7 +173,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         }
     }
 
-    // Przełączenie przekazywanych do widoku serii danych
+    // Change of the displayed algorithm data
     public void changeSelectedAlgorithm() {
 
         switch (dataManager.getSelectedAlgorithm()) {
@@ -231,7 +230,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
         int graphSeriesMaxX = graphMaxX;
 
         if (graphSeriesX.getHighestValueX() >= graphMaxX) {
-            graphSeriesMaxX = (int) (graphSeriesX.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+            graphSeriesMaxX = (int) (graphSeriesX.getHighestValueX());
         } else {
             graphSeriesMaxX = graphMaxX;
         }
@@ -243,7 +242,7 @@ public class OrientationViewModel extends ViewModel implements Observer {
     public int getGraphMinX() {
 
         if (graphSeriesX.getHighestValueX() >= graphMaxX) {
-            return (int) (graphSeriesX.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+            return (int) (graphSeriesX.getLowestValueX());
         } else return 0;
     }
 

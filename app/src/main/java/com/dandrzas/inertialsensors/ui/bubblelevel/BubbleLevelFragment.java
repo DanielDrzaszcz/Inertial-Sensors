@@ -62,7 +62,6 @@ public class BubbleLevelFragment extends Fragment {
         });
         bubbleLevelViewModel.getLineHorizontalBubblePos().observe(this, value->{
             imageView_bubbleHorizontal.setX(value);
-            Log.d(TAG, " przesuniecie: " + value);
         });
         bubbleLevelViewModel.getCircleBubblePos().observe(this, value ->{
             imageView_bubbleCircle.setX(value[0]);

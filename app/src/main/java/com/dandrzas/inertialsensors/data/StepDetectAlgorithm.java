@@ -93,7 +93,6 @@ public class StepDetectAlgorithm extends Observable {
             accelerationVarianceBuffer.remove(0);
             accelerationVarianceBuffer.add(accelerationVariance);
         }
-        Log.d("StepDetectTest: ", "accelerationVariance: " + accelerationVariance);
 
         // Treshold 1 calc
         if(accelerationVariance > parThreshold1){

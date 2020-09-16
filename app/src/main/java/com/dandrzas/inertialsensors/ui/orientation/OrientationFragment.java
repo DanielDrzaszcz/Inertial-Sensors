@@ -45,7 +45,6 @@ public class OrientationFragment extends Fragment {
 
         ButterKnife.bind(this, root);
         DataManager.getInstance().init(getContext());
-        // Podpięcie pod LiveData z ViewModel
         orientationViewModel.getGraphSeriesX().observe(this, new GraphSeriesObserver());
         orientationViewModel.getGraphSeriesY().observe(this, new GraphSeriesObserver());
         orientationViewModel.getGraphSeriesZ().observe(this, new GraphSeriesObserver());
@@ -63,7 +62,7 @@ public class OrientationFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
+        graph.getSeries().get(0).clearReference(graph); // clear reference to avoid memory leaks
         graph.getSeries().get(1).clearReference(graph);
         graph.getSeries().get(2).clearReference(graph);
         orientationViewModel.getGraphSeriesX().removeObservers(this);
@@ -102,7 +101,7 @@ public class OrientationFragment extends Fragment {
         graph.onDataChanged(true, false);
     }
 
-    // Touch eventy Graph View - przesunięcie wyświetlanego zakresu osi Y
+    // Axis Y range shift
     @OnTouch(R.id.graph_view)
     public boolean touchGraphView(MotionEvent event)
     {
@@ -114,20 +113,20 @@ public class OrientationFragment extends Fragment {
             double actualMaxY = orientationViewModel.getGraphMaxY();
             double actualYRange;
 
-            // Wyliczenie aktualnie wyświetlanego zakresu
+            // Calc range
             if ((actualMinY < 0) && actualMaxY > 0)
                 actualYRange = Math.abs(actualMaxY) + Math.abs(actualMinY);
             else if ((actualMaxY >= 0) && (actualMinY >= 0))
                 actualYRange = actualMaxY - actualMinY;
             else actualYRange = Math.abs(actualMinY) - Math.abs(actualMaxY);
 
-            // Przesunięcie w górę
+            // Down
             if (dy < -2) {
                 orientationViewModel.setGraphMinY((float) (actualMinY - 0.02 * actualYRange));
                 orientationViewModel.setGraphMaxY((float) (actualMaxY - 0.02 * actualYRange));
             }
 
-            // Przesunięcie w dół
+            // Up
             if (dy > 2) {
                 orientationViewModel.setGraphMinY((float) (actualMinY + 0.02 * actualYRange));
                 orientationViewModel.setGraphMaxY((float) (actualMaxY + 0.02 * actualYRange));
@@ -141,7 +140,7 @@ public class OrientationFragment extends Fragment {
         return false;
     }
 
-    // Konfiguracja osi i legendy wykresu
+    // Axes and legend config
     private void graphConfig() {
 
         graph.getViewport().setYAxisBoundsManual(true);
@@ -168,12 +167,11 @@ public class OrientationFragment extends Fragment {
         graph.onDataChanged(true, true);
     }
 
-    // Implementacja obserwatora do odbierania danych z ViewModel
     private class GraphSeriesObserver implements Observer<LineGraphSeries<DataPoint>> {
         @Override
         public void onChanged(LineGraphSeries<DataPoint> dataPointLineGraphSeries) {
             if(graph.getSeries().size()==3){
-                graph.getSeries().get(0).clearReference(graph); // usuń referencję aby zapobiec wyciekom pamięci
+                graph.getSeries().get(0).clearReference(graph); // clean reference to avoid memory leaks
                 graph.getSeries().get(1).clearReference(graph);
                 graph.getSeries().get(2).clearReference(graph);
                 graph.removeAllSeries();

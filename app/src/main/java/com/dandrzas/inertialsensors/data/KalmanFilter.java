@@ -31,7 +31,6 @@ public class KalmanFilter extends OrientationAlgorithm implements IFOrientationA
         rollPitchYaw[0] = (float) (Math.toDegrees(roll));
         rollPitchYaw[1] = (float) (Math.toDegrees(pitch));
         rollPitchYaw[2] = (float) Math.toDegrees(yaw);
-        Log.d(TAG, "parQAngle: " + Float.toString(parQAngle) + " parQBias: " + Float.toString(parQBias) + " parRMeasure: " + Float.toString(parRMeasure));
 
         setChanged();
         notifyObservers(Constants.KALMAN_FILTER_ID);

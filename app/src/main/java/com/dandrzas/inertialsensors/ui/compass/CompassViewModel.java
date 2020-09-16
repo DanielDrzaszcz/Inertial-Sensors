@@ -17,7 +17,6 @@ public class CompassViewModel extends ViewModel implements Observer{
     private MutableLiveData<Integer> orientation = new MutableLiveData<>();
 
     public CompassViewModel() {
-        // Podłączenie do warstwy danych
         dataManager = DataManager.getInstance();
         dataManager.getAlgorithmComplementaryInstance().addObserver(this);
         dataManager.getSystemAlgrithmInstance().addObserver(this);
@@ -27,7 +26,6 @@ public class CompassViewModel extends ViewModel implements Observer{
         dataManager.getAlgorithmKalmanFilter().addObserver(this);
     }
 
-    // Pobranie danych z warstwy danych przy zmianie wartości
     @Override
     public void update(Observable o, Object arg) {
         float orientation = 0;

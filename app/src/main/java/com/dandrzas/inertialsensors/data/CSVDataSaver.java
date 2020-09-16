@@ -13,8 +13,6 @@ import java.util.Observer;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Environment;

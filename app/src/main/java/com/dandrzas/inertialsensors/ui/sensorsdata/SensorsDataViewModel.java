@@ -48,22 +48,21 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
 
     public SensorsDataViewModel() {
 
-        // Podłączenie do warstwy danych
         dataManager = DataManager.getInstance();
         dataManager.getAccelerometer().addObserver(this);
         dataManager.getGyroscope().addObserver(this);
         dataManager.getMagnetometer().addObserver(this);
 
-        // Utworzenie i konfiguracja serii danych
+        // Data series init
         initAccelerometerSeries();
         initGyroscopeSeries();
         initMagnetometerSeries();
 
-        // Utworzenie LiveData przekazywanych do widoku
+        // Live data init
         graphSeriesX = new LineGraphSeries<>();
         graphSeriesY = new LineGraphSeries<>();
         graphSeriesZ = new LineGraphSeries<>();
-        graphSeriesX = graphAccelerometerSeriesX; // Ustawienie startowej serii danych
+        graphSeriesX = graphAccelerometerSeriesX;
         graphSeriesY = graphAccelerometerSeriesY;
         graphSeriesZ = graphAccelerometerSeriesZ;
         graphSeriesXLiveData = new MutableLiveData<>();
@@ -75,7 +74,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
 
     }
 
-    // Utworzenie i konfiguracja serii danych akcelerometru
+    // Accelerometer data series config
     private void initAccelerometerSeries() {
         graphAccelerometerSeriesX = new LineGraphSeries<>();
         graphAccelerometerSeriesX.setThickness(2);
@@ -93,7 +92,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         graphAccelerometerSeriesZ.setTitle("Oś Z [m/s2]");
     }
 
-    // Utworzenie i konfiguracja serii danych żyroskopu
+    // Gyroscope data series config
     private void initGyroscopeSeries() {
         graphGyroscopeSeriesX = new LineGraphSeries<>();
         graphGyroscopeSeriesX.setThickness(2);
@@ -111,7 +110,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         graphGyroscopeSeriesZ.setTitle("Oś Z [rad/s]");
     }
 
-    // Utworzenie i konfiguracja serii danych magnetometru
+    // Magnetometer data series config
     private void initMagnetometerSeries() {
         graphMagnetometerSeriesX = new LineGraphSeries<>();
         graphMagnetometerSeriesX.setThickness(2);
@@ -129,7 +128,6 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         graphMagnetometerSeriesZ.setTitle("Oś Z [uT]");
     }
 
-    // Pobranie danych z warstwy danych przy zmianie wartości
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof SensorData) {
@@ -137,7 +135,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
             if (arg.equals(Constants.ACCELEROMETER_ID)) {
                 float[] valuesAccelerometer = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd1 = false;
-                graphMaxXAccelerometer = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
+                graphMaxXAccelerometer = (int) (15000 / ((SensorData) o).getMinDelay()); // calculate the number of points on the X axis of the series so that the displayed reading time is 30 seconds, regardless of the sensor sampling frequency
                 if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer) {
                     scrollToEnd1 = true; // uruchom przesuwanie wartości w serii danych
                 }
@@ -149,7 +147,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
             if (arg.equals(Constants.GYROSCOPE_ID)) {
                 float[] valuesGyroscope = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd2 = false;
-                graphMaxXGyroscope = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
+                graphMaxXGyroscope = (int) (15000 / ((SensorData) o).getMinDelay()); // calculate the number of points on the X axis of the series so that the displayed reading time is 30 seconds, regardless of the sensor sampling frequency
                 if (graphGyroscopeSeriesY.getHighestValueX() >= graphMaxXGyroscope) {
                     scrollToEnd2 = true;
                 }
@@ -161,7 +159,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
             if (arg.equals(Constants.MAGNETOMETER_ID)) {
                 float[] valuesMagnetometer = ((SensorData) o).getSampleValue();
                 boolean scrollToEnd3 = false;
-                graphMaxXMagnetometer = (int) (15000 / ((SensorData) o).getMinDelay()); // wylicz ilość punktów na osi X serii tak aby czas wyświetlanego odczytu wynosił 30sek niezaleznie od częstotliwości próbkowania czujnika
+                graphMaxXMagnetometer = (int) (15000 / ((SensorData) o).getMinDelay()); // calculate the number of points on the X axis of the series so that the displayed reading time is 30 seconds, regardless of the sensor sampling frequency
                 if (graphMagnetometerSeriesY.getHighestValueX() >= graphMaxXMagnetometer) {
                     scrollToEnd3 = true;
                 }
@@ -172,7 +170,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         }
     }
 
-    // Przełączenie przekazywanych do widoku serii danych
+    // Displayed sensor data series switching
     void setSelectedSensor(int selectedSensor) {
 
         this.selectedSensor = selectedSensor;
@@ -227,7 +225,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         switch (selectedSensor) {
             case 1:
                 if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer) {
-                    graphSeriesMaxX = (int) (graphAccelerometerSeriesX.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+                    graphSeriesMaxX = (int) (graphAccelerometerSeriesX.getHighestValueX());
                 } else {
                     graphSeriesMaxX = graphMaxXAccelerometer;
                 }
@@ -235,7 +233,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
 
             case 2:
                 if (graphGyroscopeSeriesX.getHighestValueX() >= graphMaxXGyroscope) {
-                    graphSeriesMaxX = (int) (graphGyroscopeSeriesX.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+                    graphSeriesMaxX = (int) (graphGyroscopeSeriesX.getHighestValueX());
                 } else {
                     graphSeriesMaxX = graphMaxXGyroscope;
                 }
@@ -243,7 +241,7 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
 
             case 3:
                 if (graphMagnetometerSeriesX.getHighestValueX() >= graphMaxXMagnetometer) {
-                    graphSeriesMaxX = (int) (graphMagnetometerSeriesX.getHighestValueX()); // uwzględnia przesuwanie danych w serii
+                    graphSeriesMaxX = (int) (graphMagnetometerSeriesX.getHighestValueX());
                 } else {
                     graphSeriesMaxX = graphMaxXMagnetometer;
                 }
@@ -257,17 +255,17 @@ public class SensorsDataViewModel extends ViewModel  implements Observer {
         switch (selectedSensor) {
             case 1:
                 if (graphAccelerometerSeriesY.getHighestValueX() >= graphMaxXAccelerometer) {
-                    return (int) (graphAccelerometerSeriesX.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+                    return (int) (graphAccelerometerSeriesX.getLowestValueX());
                 } else return 0;
 
             case 2:
                 if (graphGyroscopeSeriesY.getHighestValueX() >= graphMaxXGyroscope) {
-                    return (int) (graphGyroscopeSeriesX.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+                    return (int) (graphGyroscopeSeriesX.getLowestValueX());
                 } else return 0;
 
             case 3:
                 if (graphMagnetometerSeriesY.getHighestValueX() >= graphMaxXMagnetometer) {
-                    return (int) (graphMagnetometerSeriesX.getLowestValueX()); // uwzględnia przesuwanie danych w serii
+                    return (int) (graphMagnetometerSeriesX.getLowestValueX());
                 } else return 0;
         }
         return (int) (graphAccelerometerSeriesX.getLowestValueX());
