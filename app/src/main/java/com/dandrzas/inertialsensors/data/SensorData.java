@@ -6,6 +6,7 @@ import java.util.Observable;
 
 public class SensorData extends Observable {
     private float[] sampleValue = new float[3];
+    private float[] sampleRawValue = new float[3];
     private long sampleTime;
     private boolean filterLowPassEnable;
     private float filterLowPassGain = 0.95f;
@@ -23,6 +24,7 @@ public class SensorData extends Observable {
         else{
             this.sampleValue = sampleValue;
         }
+        this.sampleRawValue = sampleValue;
         setChanged();
         notifyObservers(sensorID);
     }
@@ -70,6 +72,10 @@ public class SensorData extends Observable {
 
     public float getMinDelay() {
         return minDelay;
+    }
+
+    public float[] getSampleRawValue() {
+        return sampleRawValue;
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.Observable;
 
 public class StepDetectAlgorithm extends Observable {
     private SensorData sensorAccelerometer;
-    private double actualSampleTime;
+    private long actualSampleTime;
     private boolean isRunning;
     private float accelerationMagnitude;
     private float accelerationAverage;
@@ -201,5 +201,9 @@ public class StepDetectAlgorithm extends Observable {
 
     public void setParThreshold2(float parThreshold2) {
         this.parThreshold2 = parThreshold2;
+    }
+
+    public long getActualSampleTime() {
+        return actualSampleTime;
     }
 }

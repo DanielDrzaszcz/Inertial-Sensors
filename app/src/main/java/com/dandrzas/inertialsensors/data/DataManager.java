@@ -165,11 +165,11 @@ public class DataManager extends Observable implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
             switch (event.sensor.getType()){
-                case Sensor.TYPE_ACCELEROMETER_UNCALIBRATED:
+                case Sensor.TYPE_ACCELEROMETER:
                     Log.d(TAG,  " Accelerometer: " + Float.toString(event.timestamp));
                     sensorAccelerometer.setSampleTime(event.timestamp);
                     sensorAccelerometer.setSampleValue(event.values);
-                    csvDataSaver.saveDataAccelerometer(event);
+                    csvDataSaver.saveDataAccelerometer(sensorAccelerometer.getSampleValue(), sensorAccelerometer.getSampleRawValue(), sensorAccelerometer.getSampleTime());
 
                     if(computingRunning){
                         algorithmComplementary.setUpdatedAccelerometer();
@@ -182,7 +182,7 @@ public class DataManager extends Observable implements SensorEventListener {
                     }
                     break;
 
-                case Sensor.TYPE_GYROSCOPE_UNCALIBRATED:
+                case Sensor.TYPE_GYROSCOPE:
                     Log.d(TAG+"G",  " Gyroscope: " + Float.toString(event.timestamp));
                     sensorGyroscope.setSampleTime(event.timestamp);
                     sensorGyroscope.setSampleValue(event.values);
@@ -192,7 +192,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmMahonyFilter.setUpdatedGyroscope();
                         algorithmKalmanFilter.setUpdatedGyroscope();
                     }
-                    csvDataSaver.saveDataGyroscope(event);
+                    csvDataSaver.saveDataGyroscope(sensorGyroscope.getSampleValue(), sensorGyroscope.getSampleTime());
                     break;
 
                 case Sensor.TYPE_MAGNETIC_FIELD:
@@ -206,7 +206,7 @@ public class DataManager extends Observable implements SensorEventListener {
                         algorithmMahonyFilter.setUpdatedMagnetometer();
                         algorithmKalmanFilter.setUpdatedMagnetometer();
                     }
-                    csvDataSaver.saveDataMagnetometer(event);
+                    csvDataSaver.saveDataMagnetometer(sensorMagnetometer.getSampleValue(), sensorMagnetometer.getSampleRawValue(), sensorMagnetometer.getSampleTime());
                     break;
 
                 case Sensor.TYPE_ROTATION_VECTOR:
@@ -230,14 +230,14 @@ public class DataManager extends Observable implements SensorEventListener {
         mSensorManager = (SensorManager) context.getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
 
         // Accelerometer
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (mAccelerometer != null) {
             sensorAccelerometer.setMinDelay(mAccelerometer.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
         // Gyroscope
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
+        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if (mGyroscope != null) {
             sensorGyroscope.setMinDelay(mGyroscope.getMinDelay() / 1000);
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);

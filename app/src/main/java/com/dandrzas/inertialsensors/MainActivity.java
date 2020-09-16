@@ -89,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 dataManager.stopComputing();
+                try {
+                    csvDataSaver.closeFiles();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 buttonStart.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_white_24dp));
             }
         });
