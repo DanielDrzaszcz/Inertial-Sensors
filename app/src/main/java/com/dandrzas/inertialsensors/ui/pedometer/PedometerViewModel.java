@@ -23,7 +23,7 @@ public class PedometerViewModel extends ViewModel implements Observer {
     private final float graphInitialMinY = -5;
     private float graphMaxY = graphInitialMaxY;
     private float graphMinY = graphInitialMinY;
-    private int graphMaxX = 10000;
+    private int graphMaxX = 1000;
     private LineGraphSeries<DataPoint> accelerationMagnitudeSeries = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> accelerationAverageSeries = new LineGraphSeries<>();
     private LineGraphSeries<DataPoint> accelerationVarianceSeries = new LineGraphSeries<>();
@@ -62,8 +62,6 @@ public class PedometerViewModel extends ViewModel implements Observer {
             if(((StepDetectAlgorithm) o).isStepDetection()){
                 accelerationStepDetectSeries.appendData(new DataPoint(accelerationTreshold1Series.getHighestValueX() + 1, 0), scrollToEnd1, graphMaxX);
             }
-
-            Log.d(TAG, " accelerometerMagnitude: " + accelerationMagnitude);
         }
     }
 
