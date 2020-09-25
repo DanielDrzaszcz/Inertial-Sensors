@@ -166,7 +166,6 @@ public class DataManager extends Observable implements SensorEventListener {
 
             switch (event.sensor.getType()){
                 case Sensor.TYPE_ACCELEROMETER:
-                    Log.d(TAG,  " Accelerometer: " + Float.toString(event.timestamp));
                     sensorAccelerometer.setSampleTime(event.timestamp);
                     sensorAccelerometer.setSampleValue(event.values);
                     csvDataSaver.saveDataAccelerometer(sensorAccelerometer.getSampleValue(), sensorAccelerometer.getSampleRawValue(), sensorAccelerometer.getSampleTime());
@@ -183,7 +182,6 @@ public class DataManager extends Observable implements SensorEventListener {
                     break;
 
                 case Sensor.TYPE_GYROSCOPE:
-                    Log.d(TAG+"G",  " Gyroscope: " + Float.toString(event.timestamp));
                     sensorGyroscope.setSampleTime(event.timestamp);
                     sensorGyroscope.setSampleValue(event.values);
                     if(computingRunning){
@@ -196,7 +194,6 @@ public class DataManager extends Observable implements SensorEventListener {
                     break;
 
                 case Sensor.TYPE_MAGNETIC_FIELD:
-                    Log.d(TAG+"M",  "Magnetometer: " + (event.values[0]) + " "+ (event.values[1]) + " "+ (event.values[2]) + " ");
                     sensorMagnetometer.setSampleTime(event.timestamp);
                     sensorMagnetometer.setSampleValue(event.values);
                     if(computingRunning){
@@ -233,6 +230,7 @@ public class DataManager extends Observable implements SensorEventListener {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (mAccelerometer != null) {
             sensorAccelerometer.setMinDelay(mAccelerometer.getMinDelay() / 1000);
+            sensorAccelerometer.setName(mAccelerometer.getName());
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
@@ -240,6 +238,7 @@ public class DataManager extends Observable implements SensorEventListener {
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if (mGyroscope != null) {
             sensorGyroscope.setMinDelay(mGyroscope.getMinDelay() / 1000);
+            sensorGyroscope.setName(mGyroscope.getName());
             mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
         }
 
@@ -247,6 +246,7 @@ public class DataManager extends Observable implements SensorEventListener {
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if (mMagnetometer != null) {
             sensorMagnetometer.setMinDelay(mMagnetometer.getMinDelay() / 1000);
+            sensorMagnetometer.setName(mMagnetometer.getName());
             mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
 

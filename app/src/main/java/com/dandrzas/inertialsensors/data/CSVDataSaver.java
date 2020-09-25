@@ -34,12 +34,13 @@ public class CSVDataSaver implements Observer {
     private CSVWriter csvWriterOrientMadgwickAlgorithm;
     private CSVWriter csvWriterMovement;
     private CSVWriter csvWriterStepDetectAlgorithm;
+    private CSVWriter csvWriterSensorModels;
     private long startTime;
     private File filesCatalog;
     private Context context;
     private DataManager dataManager;
     private static CSVDataSaver ourInstance;
-
+    private boolean[] sensorsmodelsWriteDN = new boolean[3];
 
     public static CSVDataSaver getInstance() {
         if (ourInstance == null) {
@@ -118,7 +119,11 @@ public class CSVDataSaver implements Observer {
         csvWriterStepDetectAlgorithm = buildCSVWriter(dateActualString + "_Step_detection_algorithm.csv");
         csvWriterStepDetectAlgorithm.writeNext("Czas [sek]#Przyspieszenie[m/s2]#Przyspieszenie srednia[m/s2]#Przyspieszenie wariancja[m/s2]#Prog 1#Prog 2# Krok".split("#"));
 
-
+        csvWriterSensorModels = buildCSVWriter(dateActualString + "_Sensor_models.csv");
+        csvWriterSensorModels.writeNext("Sensor#Model".split("#"));
+        sensorsmodelsWriteDN[0]=false;
+        sensorsmodelsWriteDN[1]=false;
+        sensorsmodelsWriteDN[2]=false;
     }
 
     @Override
@@ -183,6 +188,10 @@ public class CSVDataSaver implements Observer {
             String[] csvDataRaw = (((float) (sampleTime - startTime) / 1000000000) + "#" + valuesRaw[0] + "#" + valuesRaw[1] + "#" + valuesRaw[2]).split("#");
             csvWriterAccelerometer.writeNext(csvData);
             csvWriterAccelerometerRaw.writeNext(csvDataRaw);
+            if(!sensorsmodelsWriteDN[0]){
+                csvWriterSensorModels.writeNext(("Akcelerometr#"+dataManager.getAccelerometer().getName()).split("#"));
+                sensorsmodelsWriteDN[0] = true;
+            }
         }
     }
 
@@ -190,6 +199,10 @@ public class CSVDataSaver implements Observer {
         if ((ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             String[] csvData = (((float) (sampleTime - startTime) / 1000000000) + "#" + values[0] + "#" + values[1] + "#" + values[2]).split("#");
             csvWriterGyroscope.writeNext(csvData);
+            if(!sensorsmodelsWriteDN[1]) {
+                csvWriterSensorModels.writeNext(("Zyroskop#" + dataManager.getGyroscope().getName()).split("#"));
+                sensorsmodelsWriteDN[1] = true;
+            }
         }
     }
 
@@ -199,6 +212,10 @@ public class CSVDataSaver implements Observer {
             String[] csvDataRaw = (((float) (sampleTime - startTime) / 1000000000) + "#" + valuesRaw[0] + "#" + valuesRaw[1] + "#" + valuesRaw[2]).split("#");
             csvWriterMagnetometer.writeNext(csvData);
             csvWriterMagnetometerRaw.writeNext(csvDataRaw);
+            if(!sensorsmodelsWriteDN[2]) {
+                csvWriterSensorModels.writeNext(("Magnetometr#"+dataManager.getMagnetometer().getName()).split("#"));
+                sensorsmodelsWriteDN[2] = true;
+            }
         }
     }
 
@@ -216,6 +233,7 @@ public class CSVDataSaver implements Observer {
         csvWriterOrientMadgwickAlgorithm.close();
         csvWriterMovement.close();
         csvWriterStepDetectAlgorithm.close();
+        csvWriterSensorModels.close();
     }
 
     private void saveOrientationData(float[] values, long timestamp, CSVWriter csvWriter) {

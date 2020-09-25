@@ -12,6 +12,7 @@ public class SensorData extends Observable {
     private float filterLowPassGain = 0.95f;
     private int sensorID;
     private float minDelay;
+    private String name;
 
     public SensorData(int sensorID) {
         this.sensorID = sensorID;
@@ -76,6 +77,14 @@ public class SensorData extends Observable {
 
     public float[] getSampleRawValue() {
         return sampleRawValue;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
