@@ -39,25 +39,26 @@ public abstract class OrientationAlgorithm extends Observable implements IFOrien
         double yawSin = Math.sin(Math.toRadians(rollPitchYaw[2]));
         double yawCos = Math.cos(Math.toRadians(rollPitchYaw[2]));
 
-        rotationMatrixNWURPY[0] = (float) (pitchCos * yawCos);
-        rotationMatrixNWURPY[1] = (float) (rollSin * pitchSin * yawCos - rollCos * yawSin);
-        rotationMatrixNWURPY[2] = (float) (rollCos * pitchSin * yawCos + rollSin * yawSin);
-        rotationMatrixNWURPY[3] = (float) (pitchCos * yawSin);
-        rotationMatrixNWURPY[4] = (float) (rollSin * pitchSin * yawSin + rollCos * yawCos);
-        rotationMatrixNWURPY[5] = (float) (rollCos * pitchSin * yawSin - rollSin * yawCos);
-        rotationMatrixNWURPY[6] = (float) ((-1) * pitchSin);
-        rotationMatrixNWURPY[7] = (float) (rollSin * pitchCos);
-        rotationMatrixNWURPY[8] = (float) (rollCos * pitchCos);
+        rotationMatrixRPYNWU[0] = (float) (yawSin * pitchCos);
+        rotationMatrixRPYNWU[1] = (float) (rollCos * yawCos + rollSin * yawSin * pitchSin);
+        rotationMatrixRPYNWU[2] = (float) ((-1) * rollSin * yawCos + rollCos * yawSin * pitchSin);
+        rotationMatrixRPYNWU[3] = (float) (yawCos * pitchCos);
+        rotationMatrixRPYNWU[4] = (float) ((-1) * rollCos * yawSin + rollSin * yawCos * pitchSin);
+        rotationMatrixRPYNWU[5] = (float) (rollSin * yawSin + rollCos * yawCos * pitchSin);
+        rotationMatrixRPYNWU[6] = (float) (pitchSin);
+        rotationMatrixRPYNWU[7] = (float) ((-1) * rollSin * pitchCos);
+        rotationMatrixRPYNWU[8] = (float) ((-1) * rollCos * pitchCos);
 
-        rotationMatrixRPYNWU[0]= rotationMatrixNWURPY[0];
-        rotationMatrixRPYNWU[1]= rotationMatrixNWURPY[3];
-        rotationMatrixRPYNWU[2]= rotationMatrixNWURPY[6];
-        rotationMatrixRPYNWU[3]= rotationMatrixNWURPY[1];
-        rotationMatrixRPYNWU[4]= rotationMatrixNWURPY[4];
-        rotationMatrixRPYNWU[5]= rotationMatrixNWURPY[7];
-        rotationMatrixRPYNWU[6]= rotationMatrixNWURPY[2];
-        rotationMatrixRPYNWU[7]= rotationMatrixNWURPY[5];
-        rotationMatrixRPYNWU[8]= rotationMatrixNWURPY[8];
+        rotationMatrixNWURPY[0]= rotationMatrixRPYNWU[0];
+        rotationMatrixNWURPY[1]= rotationMatrixRPYNWU[3];
+        rotationMatrixNWURPY[2]= rotationMatrixRPYNWU[6];
+        rotationMatrixNWURPY[3]= rotationMatrixRPYNWU[1];
+        rotationMatrixNWURPY[4]= rotationMatrixRPYNWU[4];
+        rotationMatrixNWURPY[5]= rotationMatrixRPYNWU[7];
+        rotationMatrixNWURPY[6]= rotationMatrixRPYNWU[2];
+        rotationMatrixNWURPY[7]= rotationMatrixRPYNWU[5];
+        rotationMatrixNWURPY[8]= rotationMatrixRPYNWU[8];
+
 
         previousSampleTime = actualSampleTime;
         isUpdatedAccelerometer = false;

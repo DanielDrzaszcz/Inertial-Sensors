@@ -1,7 +1,5 @@
 package com.dandrzas.inertialsensors.data;
 
-import android.util.Log;
-
 import java.util.Observable;
 
 public class InertialTrackingAlgorithm  extends Observable {
@@ -16,12 +14,14 @@ public class InertialTrackingAlgorithm  extends Observable {
     private long previousSampleTime;
     private long actualSampleTime;
     private boolean isRunning;
-    private float parAccelerometerHPFGain = 0.99f;
     boolean firstCalcDone;
     private float[] initialAcceleration = new float[3];
     private int calcCounter;
     private IFOrientationAlgorithm orientationAlgorithm;
     private float[] accelerationGlobal = new float[3];
+    private final int GRAVITYBUFFSIZE = 100;
+    private final long INITIALSAMPLES = 50000;
+    private float[][] gravityBuffer = new float[3][GRAVITYBUFFSIZE];
 
     public InertialTrackingAlgorithm(SensorData sensorAccelerometer, IFOrientationAlgorithm orientationAlgorithm) {
         this.sensorAccelerometer = sensorAccelerometer;
@@ -40,10 +40,29 @@ public class InertialTrackingAlgorithm  extends Observable {
             calculatedVelocityPrev[1]= calculatedVelocity[1];
             calculatedVelocityPrev[2]= calculatedVelocity[2];
         }
-        if(calcCounter==500){
-            initialAcceleration[0] = accelerationGlobal[0];
+        if(calcCounter==INITIALSAMPLES){
+           /* initialAcceleration[0] = accelerationGlobal[0];
             initialAcceleration[1] = accelerationGlobal[1];
             initialAcceleration[2] = accelerationGlobal[2];
+*/
+            float sum = 0;
+            for (float grav:gravityBuffer[0]) {
+                sum += grav;
+            }
+            initialAcceleration[0] = sum/GRAVITYBUFFSIZE;
+
+            sum = 0;
+            for (float grav:gravityBuffer[1]) {
+                sum += grav;
+            }
+            initialAcceleration[1] = sum/GRAVITYBUFFSIZE;
+
+            sum = 0;
+            for (float grav:gravityBuffer[2]) {
+                sum += grav;
+            }
+            initialAcceleration[2] = sum/GRAVITYBUFFSIZE;
+
             /*Log.d("InrtialTrackingTestIni ", "initialAcceleration[0]: " + initialAcceleration[0]);
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[1]: " + initialAcceleration[1]);
             Log.d("InrtialTrackingTestIni ", "initialAcceleration[2]: " + initialAcceleration[2]);*/
@@ -113,14 +132,19 @@ public class InertialTrackingAlgorithm  extends Observable {
         accelerationGlobal[1] = acceleration[1];
         accelerationGlobal[2] = acceleration[2];
 */
-        if(calcCounter<500) {
+        if(calcCounter<INITIALSAMPLES) {
             gravity[0] = 0;
             gravity[1] = 0;
             gravity[2] = 0;
             linearAcceleration[0] = 0;
             linearAcceleration[1] = 0;
             linearAcceleration[2] = 0;
-
+            if(INITIALSAMPLES-calcCounter<=GRAVITYBUFFSIZE){
+                int index = (int)(INITIALSAMPLES-calcCounter-1);
+                gravityBuffer[0][index] = accelerationGlobal[0];
+                gravityBuffer[1][index] = accelerationGlobal[1];
+                gravityBuffer[2][index] = accelerationGlobal[2];
+            }
         }
         else{
           /*  gravity[0] = parAccelerometerHPFGain * gravity[0] + (1 - parAccelerometerHPFGain) * acceleration[0];
