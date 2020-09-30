@@ -127,11 +127,15 @@ public class StepDetectAlgorithm extends Observable {
             int sampleIndex = parWindowSize;
             boolean threshold1OK = threshold1ValuesBuffer.get(sampleIndex) < threshold1ValuesBuffer.get(sampleIndex-1);
             boolean threshold2OK = false;
-            for(float thresholdVal: threshold2ValuesBuffer){
-                if(thresholdVal== parThreshold2){
-                    threshold2OK = true;
+            if(threshold1OK){
+                for(int i=0; (i< threshold2ValuesBuffer.size())&&(threshold1ValuesBuffer.get(sampleIndex) < parThreshold1);i++){
+                    float thresholdVal = threshold2ValuesBuffer.get(i);
+                    if((thresholdVal== parThreshold2)&&(i>=sampleIndex)){
+                        threshold2OK = true;
+                    }
                 }
             }
+
             if(threshold1OK && threshold2OK){
                 stepDetection = true;
                 stepsCounter++;
